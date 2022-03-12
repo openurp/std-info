@@ -1,0 +1,3 @@
+table.table-noborder, table.table-noborder * {
+  border-width: 0px;
+}

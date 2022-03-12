@@ -1,0 +1,5 @@
+[#ftl]
+[@b.navmenu]
+  [@ems.guard res="/studentInfo"][@b.navitem title="学生信息维护" href="/studentInfo" /][/@]
+  [@ems.guard res="/studentLog"][@b.navitem title="学生信息变动日志" href="/studentLog" /][/@]
+[/@]

@@ -1,0 +1,10 @@
+[#ftl]
+[@b.head/]
+[@b.toolbar title="学籍属性元"]
+  bar.addClose();
+[/@]
+[@b.tabs]
+  [@b.tab label="属性元信息" href="!search"/]
+  [@b.tab label="实体元信息" href="!entityMetaList" /]
+[/@]
+[@b.foot/]

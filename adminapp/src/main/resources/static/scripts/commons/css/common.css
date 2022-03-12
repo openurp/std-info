@@ -1,0 +1,132 @@
+.red.infoTable {
+  ;
+}
+
+.red.infoTable td {
+  background-color: MistyRose;
+}
+
+.red.infoTable td.title {
+  background-color: Salmon;
+}
+
+.red.infoTable tr:first-child td {
+  border-top-width: 0px;
+}
+
+.red.infoTable tr:last-child td {
+  border-bottom-width: 0px;
+}
+
+.red.infoTable tr > td:first-child {
+  border-left-width: 0px;
+}
+
+.red.infoTable tr > td:last-child {
+  border-right-width: 0px;
+}
+
+.gray.infoTable {
+  ;
+}
+
+.gray.infoTable td {
+  background-color: DimGray;
+  color: white;
+}
+
+.gray.infoTable td.title {
+  background-color: #333333;
+}
+
+.gray.infoTable tr:first-child td {
+  border-top-width: 0px;
+}
+
+.gray.infoTable tr:last-child td {
+  border-bottom-width: 0px;
+}
+
+.gray.infoTable tr > td:first-child {
+  border-left-width: 0px;
+}
+
+.gray.infoTable tr > td:last-child {
+  border-right-width: 0px;
+}
+
+.blue.infoTable {
+  ;
+}
+
+.blue.infoTable td {
+  background-color: LightBlue;
+}
+
+.blue.infoTable td.title {
+  background-color: DeepSkyBlue;
+}
+
+.blue.infoTable tr:first-child td {
+  border-top-width: 0px;
+}
+
+.blue.infoTable tr:last-child td {
+  border-bottom-width: 0px;
+}
+
+.blue.infoTable tr > td:first-child {
+  border-left-width: 0px;
+}
+
+.blue.infoTable tr > td:last-child {
+  border-right-width: 0px;
+}
+
+.yellow.infoTable {
+  ;
+}
+
+.yellow.infoTable td {
+  background-color: Khaki;
+}
+
+.yellow.infoTable td.title {
+  background-color: Yellow;
+}
+
+.yellow.infoTable tr:first-child td {
+  border-top-width: 0px;
+}
+
+.yellow.infoTable tr:last-child td {
+  border-bottom-width: 0px;
+}
+
+.yellow.infoTable tr > td:first-child {
+  border-left-width: 0px;
+}
+
+.yellow.infoTable tr > td:last-child {
+  border-right-width: 0px;
+}
+
+.list.infoTable {
+  ;
+}
+
+.list.infoTable thead th {
+  background-color: #F5EDDB;
+  text-align: center;
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+}
+
+.list.infoTable tbody > tr.red {
+  background-color: DarkSalmon;
+}
+
+.list.infoTable td {
+  height: 22px;
+}
