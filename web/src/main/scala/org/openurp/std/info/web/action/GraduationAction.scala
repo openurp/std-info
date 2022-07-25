@@ -64,10 +64,10 @@ class GraduationAction extends RestfulAction[Graduation] with ProjectSupport {
     null
   }
 
-  @mapping("diplomaDownload/{id}")
-  def diplomaDownload(@param("id") id: String): View = {
+  @mapping("certificationDownload/{id}")
+  def certificationDownload(@param("id") id: String): View = {
     val graduation = entityDao.get(classOf[Graduation], id.toLong)
-    val bytes = DocHelper.toDiplomaDoc(entityDao, graduation)
+    val bytes = DocHelper.toCertificationDoc(entityDao, graduation)
     val filename = if (graduation.std.project.minor) {
       new String(("专业证书-" + graduation.std.user.name).getBytes, "ISO8859-1")
     }

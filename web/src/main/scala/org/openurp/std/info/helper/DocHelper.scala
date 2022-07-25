@@ -17,14 +17,15 @@
 
 package org.openurp.std.info.helper
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.ClassLoaders
+import org.beangle.data.dao.EntityDao
+import org.openurp.std.info.model.{Graduation, MajorStudent}
+
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.time.LocalDate
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument
-import org.beangle.commons.collection.Collections
-import org.beangle.data.dao.EntityDao
-import org.openurp.std.info.model.{Graduation, MajorStudent}
 
 object DocHelper {
 
@@ -58,21 +59,22 @@ object DocHelper {
     })
 
     val chineseMap = Map("0" -> "0", "1" -> "一", "2" -> "二", "3" -> "三", "4" -> "四", "5" -> "五", "6" -> "六", "7" -> "七", "8" -> "八", "9" -> "九")
-    val y = LocalDate.now().getYear.toString
-    val m = LocalDate.now().getMonthValue.toString
-    val d = LocalDate.now().getDayOfMonth.toString
+    val date = graduation.degreeAwardOn.getOrElse(LocalDate.now())
+    val y = date.getYear.toString
+    val m = date.getMonthValue.toString
+    val d = date.getDayOfMonth.toString
     var year = new String("")
     for (c <- y) {
-      year = year + chineseMap.get(c.toString).get
+      year = year + chineseMap(c.toString)
     }
 
     val month: String = m.length match {
-      case 1 => chineseMap.get(m).get
+      case 1 => chineseMap(m)
       case 2 => "十" + chineseMap.get(m.charAt(1).toString)
     }
 
     val day: String = d.length match {
-      case 1 => chineseMap.get(d).get
+      case 1 => chineseMap(d)
       case _ =>
         if (d.charAt(0).toString == "1") "十" + chineseMap(d.charAt(1).toString)
         else chineseMap(d.charAt(0).toString) + "十" + chineseMap(d.charAt(1).toString)
@@ -82,16 +84,11 @@ object DocHelper {
     data.put("M", month)
     data.put("d", day)
 
-    val url = if (std.project.minor) {
-      this.getClass.getResource("/org/openurp/edu/student/info/minorDegreeDoc.docx")
-    }
-    else {
-      this.getClass.getResource("/org/openurp/edu/student/info/majorDegreeDoc.docx")
-    }
-    DocHelper.toDoc(url, data)
+    val url = ClassLoaders.getResource("org/openurp/std/info/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx"))
+    DocHelper.toDoc(url.get, data)
   }
 
-  def toDiplomaDoc(entityDao: EntityDao, graduation: Graduation): Array[Byte] = {
+  def toCertificationDoc(entityDao: EntityDao, graduation: Graduation): Array[Byte] = {
     val std = graduation.std
     val minors = entityDao.findBy(classOf[MajorStudent], "std", List(std))
     val data = Collections.newMap[String, String]
@@ -122,14 +119,14 @@ object DocHelper {
 
     data.put("code", graduation.certificateNo.getOrElse("--"))
 
-    val url = this.getClass.getResource("/org/openurp/edu/student/info/minorDiplomaDoc.docx")
+    val url = this.getClass.getResource("/org/openurp/std/info/minorCertificationDoc.docx")
     DocHelper.toDoc(url, data)
   }
 
   def toDoc(url: URL, data: collection.Map[String, String]): Array[Byte] = {
     val templateIs = url.openStream()
     val doc = new XWPFDocument(templateIs)
-    import scala.jdk.javaapi.CollectionConverters._
+    import scala.jdk.javaapi.CollectionConverters.*
 
     for (p <- asScala(doc.getParagraphs)) {
       val runs = p.getRuns

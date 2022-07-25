@@ -5,9 +5,9 @@
     bar.addItem("${b.text('action.export')}", "exportData()");
     bar.addItem("学位证书下载", "degreeDownload()");
     [#if project.minor]
-      bar.addItem("专业证书下载", "diplomaDownload()");
+      bar.addItem("专业证书下载", "certificationDownload()");
     [#else ]
-      bar.addItem("毕业证书下载", "diplomaDownload()");
+      bar.addItem("毕业证书下载", "certificationDownload()");
     [/#if]
   [/@]
   [@b.row]
@@ -38,11 +38,10 @@
     bg.form.addInput(form, "keys", "graduateOn,std.state.major.name,std.level.name,std.user.name,std.person.gender.name,std.person.code,std.user.code,std.person.nation.name,std.contact.mobile,std.contact.email,diplomaNo,code,degreeAwardOn,educationResult.name,degree.name");
     bg.form.addInput(form, "titles", "毕业年份,专业,学历,姓名,性别,身份证,学号,民族,手机,邮箱,学位证书号,毕业证书号,学位授予日期,毕结业情况,学位");
     bg.form.addInput(form, "fileName", "毕业信息");
-    bg.form.submit(form, "${b.url('!export')}","_self");
+    bg.form.submit(form, "${b.url('!exportData')}","_self");
   }
 
-  function degreeDownload()
-  {
+  function degreeDownload(){
     var url = "${b.url('!degreeDownload?id=aaa')}";
     var graduationId = bg.input.getCheckBoxValues("graduation.id");
     if(graduationId==""||graduationId.indexOf(',')!=-1){
@@ -53,9 +52,8 @@
     bg.form.submit(form,newUrl,"_blank");
   }
 
-  function diplomaDownload()
-  {
-    var url = "${b.url('!diplomaDownload?id=aaa')}";
+  function certificationDownload(){
+    var url = "${b.url('!certificationDownload?id=aaa')}";
     var graduationId = bg.input.getCheckBoxValues("graduation.id");
     if(graduationId==""||graduationId.indexOf(',')!=-1){
       alert("请仅选择一条进行操作!");

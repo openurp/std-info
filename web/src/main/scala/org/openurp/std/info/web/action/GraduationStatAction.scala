@@ -19,21 +19,25 @@ package org.openurp.std.info.web.action
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{EntityAction, RestfulAction}
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Department
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.code.person.model.Gender
-import org.openurp.std.info.data.GraduationStat
 import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.std.info.data.GraduationStat
 import org.openurp.std.info.helper.{DesciplineHelper, GraduationStatHelper}
 import org.openurp.std.info.model.Graduation
 
-class GraduationStatAction extends RestfulAction[Graduation] with ProjectSupport {
+class GraduationStatAction extends ActionSupport with EntityAction[Graduation] with ProjectSupport {
 
-  override protected def indexSetting(): Unit = {
-    put("years", entityDao.search(OqlBuilder.from(classOf[Graduation].getName, "graduation").select("distinct graduation.graduateOn").where("graduation.graduateOn is not null")))
+  def index(): View = {
+    val query = OqlBuilder.from(classOf[Graduation].getName, "graduation")
+      .select("distinct graduation.graduateOn").where("graduation.graduateOn is not null")
+    put("years", entityDao.search(query))
+    forward()
   }
 
   def stat(): View = {
@@ -41,7 +45,7 @@ class GraduationStatAction extends RestfulAction[Graduation] with ProjectSupport
     getDate("graduateOn").foreach(graduateOn => {
       builder.where("graduation.graduateOn = :graduateOn", graduateOn)
       put("desciplineHelper", new DesciplineHelper(graduateOn))
-      put("graduateOn",graduateOn)
+      put("graduateOn", graduateOn)
     })
     builder.where("graduation.std.state.major is not null")
     builder.where("graduation.std.state.department is not null")
@@ -71,5 +75,6 @@ class GraduationStatAction extends RestfulAction[Graduation] with ProjectSupport
     put("project", getProject)
     forward()
   }
+
 
 }
