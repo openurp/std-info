@@ -1,0 +1,7 @@
+[#ftl/]
+[@urp_base.semester name="register.semester.id" value=semester label="学年学期"/]
+[@b.textfield name="register.std.code" label="学号"/]
+[@b.textfield name="register.std.name" label="姓名"/]
+[@b.textfield name="register.std.state.grade" label="年级"/]
+[@b.select name="register.std.state.department.id" label="院系" items=departs empty="..."/]
+[@b.select name="register.unregisteredReason.id" label="未注册原因" items=unregisteredReasons empty="..."/]
