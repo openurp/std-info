@@ -1,4 +1,10 @@
 [#ftl]
+<style>
+.list.infoTable tbody > tr.red {
+  background-color: DarkSalmon;
+}
+
+</style>
   <table class="infoTable" align="center" width="100%">
     <tr>
       <td class="title" width="100px">学号姓名：</td>
@@ -66,29 +72,29 @@
   <div style="height: 5px"></div>
   <table class="list infoTable">
     <thead>
-      <tr>
-        <th>年级</th>
-        <th>院系</th>
-        <th width="15%">专业</th>
-        <th width="18%">行政班</th>
+      <tr style="text-align:center">
+        <th width="15%">时间</th>
+        <th width="6%">年级</th>
+        <th width="10%">院系</th>
+        <th>专业、方向</th>
+        <th>行政班</th>
         <th width="6%">是否在校</th>
         <th width="6%">状态</th>
-        <th>校区</th>
-        <th width="15%">有效期限</th>
-        <th>备注</th>
+        <th width="8%">校区</th>
+        <th width="6%">备注</th>
       </tr>
     </thead>
     <tbody>
       [#list student.states?sort_by("beginOn")?reverse as hisState]
-      <tr[#if (hisState.id!0) == student.state.id] class="red"[/#if] style="text-align:center">
+      <tr[#if (hisState.id!0) != student.state.id] class="text-muted"[/#if] style="text-align:center">
+        <td>${hisState.beginOn?string("yyyy-MM-dd")}~${(hisState.endOn?string("yyyy-MM-dd"))!}</td>
         <td>${hisState.grade}</td>
-        <td>${hisState.department.name}</td>
+        <td>${hisState.department.shortName!hisState.department.name}</td>
         <td>${(hisState.major.name)?if_exists} ${(hisState.direction.name)!}</td>
         <td>${(hisState.squad.shortName)?default((hisState.squad.name)!)}</td>
         <td>${hisState.inschool?string("是", "否")}</td>
         <td>${hisState.status.name}</td>
         <td>${(hisState.campus.name)!}</td>
-        <td>${hisState.beginOn?string("yyyy-MM-dd")}~${(hisState.endOn?string("yyyy-MM-dd"))!}</td>
         <td>${(hisState.remark?html)!}</td>
       </tr>
       [/#list]

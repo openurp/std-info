@@ -42,10 +42,10 @@ class StdSearchHelper(entityDao: EntityDao, project: Project, departs: Iterable[
     val date = LocalDate.now()
     Params.get("status").foreach(status => {
       status match {
-        case "active" => builder.where("student.state.beginOn<= :now and student.state.endOn>=:now and student.registed=true and student.state.inschool = true", date)
-        case "unactive" => builder.where("student.state.beginOn<= :now and student.state.endOn>=:now and student.registed=true and student.state.inschool = false", date)
-        case "available" => builder.where("student.state.beginOn<= :now and student.state.endOn>=:now and student.registed=true ", date)
-        case "unavailable" => builder.where("student.state.beginOn> :now or student.state.endOn<:now or student.registed=false", date)
+        case "active" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = true", date)
+        case "unactive" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = false", date)
+        case "available" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true ", date)
+        case "unavailable" => builder.where("student.beginOn> :now or student.endOn<:now or student.registed=false", date)
         case "" =>
       }
     })

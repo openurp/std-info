@@ -285,6 +285,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
             case AlterMeta.GraduateOn => state.std.graduateOn = LocalDate.parse(item.newvalue.get)
           }
         }
+        state.std.calcCurrentState()
         entityDao.saveOrUpdate(state, target, state.std)
         ""
   }
@@ -298,7 +299,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
       val newState = new StudentState
       newState.std = state.std
       newState.beginOn = beginOn
-      newState.endOn = endOn
+      newState.endOn = state.endOn //保留被阶段状态的结束时间
       newState.grade = state.grade
       newState.department = state.department
       newState.major = state.major
@@ -306,11 +307,13 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
       newState.squad = state.squad
       newState.status = state.status
       newState.campus = state.campus
+      newState.remark = Some(alterConfig.alterType.name)
       if (beginOn == state.beginOn) {
         state.beginOn = endOn.plusDays(1)
       } else {
         state.endOn = beginOn.minusDays(1)
       }
+      state.std.states += newState
       newState
     }
   }

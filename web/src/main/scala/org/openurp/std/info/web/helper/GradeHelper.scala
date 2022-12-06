@@ -26,9 +26,15 @@ object GradeHelper {
 
   def convert(grade1: Grade): Int = {
     val gradeStr = grade1.code
+    var year, month = 0;
     val format = new SimpleDateFormat("yyyyMM")
-    val year = Strings.substringBefore(gradeStr, "-").toInt
-    val month = Strings.substringAfter(gradeStr, "-").toInt
+    if (gradeStr.contains("-")) {
+      year = Strings.substringBefore(gradeStr, "-").toInt
+      month = Strings.substringAfter(gradeStr, "-").toInt
+    } else {
+      year = gradeStr.toInt
+      month = 9
+    }
     val date = format.format(new java.util.Date)
     val y = date.substring(0, 4).toInt
     val m = date.substring(4).toInt
