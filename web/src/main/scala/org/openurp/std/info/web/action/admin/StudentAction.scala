@@ -79,7 +79,9 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
-    put("levels", getCodes(classOf[EducationLevel])) // 培养层次
+    put("levels", project.levels) // 培养层次
+    put("stdTypes", project.stdTypes)
+    put("majors", findInProject(classOf[Major]))
     put("genders", getCodes(classOf[Gender])) // 性别
     put("states", getCodes(classOf[StudentStatus])) // 状态
     put("campuses", findInSchool(classOf[Campus]))

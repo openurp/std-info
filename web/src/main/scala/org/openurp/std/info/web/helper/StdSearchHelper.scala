@@ -46,6 +46,7 @@ class StdSearchHelper(entityDao: EntityDao, project: Project, departs: Iterable[
         case "unactive" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = false", date)
         case "available" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true ", date)
         case "unavailable" => builder.where("student.beginOn> :now or student.endOn<:now or student.registed=false", date)
+        case "active_unregisted" => builder.where("student.state.inschool=true and student.registed=false")
         case "" =>
       }
     })

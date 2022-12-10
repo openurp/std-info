@@ -1,5 +1,5 @@
 [#assign id="s"]
-[#assign statuses={'active':'在籍在校','unactive':'在籍不在校','available':'在籍','unavailable':'不在籍'}/]
+[#assign statuses={'active':'在籍在校','unactive':'在籍不在校','available':'在籍','unavailable':'不在籍','active_unregisted':'不在籍在校'}/]
 [#assign fields={'student.state.campus.name':'校区',
                  'student.person.code':'证件号码',
                  'examinee.code':'考生号',
@@ -12,6 +12,7 @@
   [@b.textfield name="student.state.grade.code" label="年级"/]
   [@b.select name="student.state.department.id" label="院系" items=departments empty="..."/]
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
+  [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
   [@b.textfield name="student.duration" label="学制" onKeyup="validateData(this);"/]
   [#if tutorSupported][@b.textfield name="student.tutor.name" label="导师"/][/#if]
   [@b.select name="status" label="状态" items=statuses empty="..." value="active"/]
