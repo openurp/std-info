@@ -249,6 +249,8 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
       val msg = applyStd(a, a.std)
       if Strings.isEmpty(msg) then successes += a else errors.put(a.std, msg)
     }
+    put("successes", successes)
+    put("errors", errors)
     forward("results")
   }
 
@@ -273,6 +275,10 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
       case Some(target) =>
         val alterConfig = entityDao.findBy(classOf[StdAlterConfig], "alterType", alteration.alterType).head
         val state = generateState(target, alteration.beginOn, alteration.endOn, alterConfig)
+        if (alterConfig.alterEndOn) {
+          std.endOn = alteration.beginOn
+          state.endOn = alteration.beginOn
+        }
         alteration.items foreach { item =>
           item.meta match {
             case AlterMeta.Grade => state.grade = entityDao.get(classOf[Grade], item.newvalue.get.toLong)
@@ -298,15 +304,13 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
   }
 
   private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: StdAlterConfig): StudentState = { // 向后切
-    if (beginOn == state.beginOn && endOn == state.endOn) {
-      if (alterConfig.alterEndOn) state.endOn = endOn
-      state.std.endOn = endOn
+    if (beginOn == state.beginOn) {
       state
     } else {
       val newState = new StudentState
       newState.std = state.std
       newState.beginOn = beginOn
-      newState.endOn = state.endOn //保留被阶段状态的结束时间
+      newState.endOn = state.endOn //保留被截断状态的结束时间
       newState.grade = state.grade
       newState.department = state.department
       newState.major = state.major
