@@ -1,5 +1,12 @@
 [#ftl]
 [@b.head/]
+[@b.toolbar title="学籍异动维护"]
+  bar.addItem("异动配置","openConfig()");
+  function openConfig(){
+     window.open("${b.url('alter-config')}");
+  }
+[/@]
+
 <div class="search-container">
   <div class="search-panel">
     [@b.form name="stdAlterIndexForm" action="!search" title="ui.searchForm" target="contentDiv" theme="search"]

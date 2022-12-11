@@ -127,14 +127,18 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     put("directions", entityDao.findBy(classOf[Direction], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
-    val examinee = entityDao.findBy(classOf[Examinee], "std", student).headOption.getOrElse(new Examinee)
-    put("examinee", examinee)
+    if (student.persisted) {
+      val examinee = entityDao.findBy(classOf[Examinee], "std", student).headOption.getOrElse(new Examinee)
+      put("examinee", examinee)
+    } else {
+      put("examinee", new Examinee)
+    }
 
     put("enrollModes", getCodes(classOf[EnrollMode]))
     put("educationModes", getCodes(classOf[EducationMode]))
     put("divisions", getCodes(classOf[Division]))
 
-    put("ems", Ems)
+    put("EMS", Ems)
     put("now", DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()).toInt)
     put("api", Ems.api)
     put("squadSupported", projectPropertyService.get(project, Features.StdInfoSquadSupported, false))

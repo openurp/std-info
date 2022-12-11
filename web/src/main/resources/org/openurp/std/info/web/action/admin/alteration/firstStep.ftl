@@ -84,15 +84,17 @@
           </tr>
           </table>
           <br/>
-          <table id="conditionTable" class="gridtable">
-            <tHead class="gridhead">
-              <th>学号</th>
-              <th>姓名</th>
-              <th>年级</th>
-              <th>院系</th>
-              <th>专业</th>
-              <th>操作</th>
-            </tHead>
+          <table id="conditionTable" class="gridtable" style="border: 0.5px solid #006CB2;">
+            <thead class="gridhead">
+              <tr>
+                <th style="width: 100px;">学号</th>
+                <th style="width: 100px;">姓名</th>
+                <th style="width: 70px;">年级</th>
+                <th style="width: 150px;">院系</th>
+                <th>专业</th>
+                <th style="width: 50px;">操作</th>
+              </tr>
+            </thead>
             <tbody id="conditionBody">
             </tbody>
           </table>

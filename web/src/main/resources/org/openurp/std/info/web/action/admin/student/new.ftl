@@ -29,7 +29,7 @@
     [@b.select id=s + "level" label="培养层次" name="student.level.id" items=project.levels empty="..." required="true" value="" /]
     [@b.select label="培养类型" name="student.eduType.id" items=eduTypes empty="..." required="true" value=""/]
     [@b.select id=s + "stdType" label="学生类别" name="student.stdType.id" items=project.stdTypes empty="..." required="true" value=""/]
-    [@b.select id=s + "major" label="专业" name="student.state.major.id" href="${ems.api}/base/edu/${project.id}/majors.json" empty="..." value=(state.major.id)! style="width: 200px"/]
+    [@b.select id=s + "major" label="专业" name="student.state.major.id" href="${EMS.api}/base/edu/${project.id}/majors.json" empty="..." value=(state.major.id)! style="width: 200px"/]
     [@b.select id=s + "direction" label="方向" name="student.state.direction.id" items=directions empty="..." value=(state.direction.id)! style="width: 200px"/]
     [#if squadSupported]
     [@b.select label="行政班级" name="student.state.squad.id" items=[] empty="..." value="" style="width: 200px" comment="（填了年级、培养层次、学生类别、专业所在院系、专业后，才可选；若仍空，则表示无班级可填）"/]
@@ -110,7 +110,7 @@
         params.append("squad.major.id", majorId);
         params.append("squad.direction.id", directionId);
         params.append("isEdit", "1");
-        fetch("${ems.api}/base/std/${project.id}/squads.json",{method:"POST",body:params})
+        fetch("${EMS.api}/base/std/${project.id}/squads.json",{method:"POST",body:params})
           .then(res => res.json())
           .then(obj =>{
             var datas = obj.datas;

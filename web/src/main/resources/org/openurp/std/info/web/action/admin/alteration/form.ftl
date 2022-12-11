@@ -22,23 +22,16 @@
           <font color='red'>*</font>生效日期：
         </td>
         <td width="40%">
-        [#if alterConfig.temporal]
-          [@b.datepicker  label="" id="beginOn" name="stdAlteration.beginOn" format="yyyy-MM-dd"  maxDate="#F{$dp.$D(\\'endOn\\')}"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
-        [#else]
           [@b.datepicker  label="" id="beginOn" name="stdAlteration.beginOn" format="yyyy-MM-dd"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
-        [/#if]
           ${minBeginOn?string('yyyy-MM-dd')}之后
         </td>
         <td style="text-align:right;"><font color='red'>*</font>年级：</td>
-        <td>[#if gradeConfig??][@b.select style="width：160px"  id="gradeId" name="status.grade.id" items=grades empty="..."/][#else]不做异动[/#if]</td>
+        <td>[#if gradeConfig??][@b.select style="width：160px"  id="gradeId" name="status.grade.id" items=grades empty="..."/][#else]不做变动[/#if]</td>
       </tr>
       <tr>
-        <td style="text-align:right;">截止日期：</td>
+        <td style="text-align:right;">异动后状态：</td>
         <td>
-          [#if alterConfig.temporal]
-          [@b.datepicker id="endOn" label="" name="stdAlteration.endOn" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'beginOn\\')}" maxDate='${(maxEndOn!.now)?string("yyyy-MM-dd")}' value="" readOnly="readOnly"/]
-          ${maxEndOn?string('yyyy-MM-dd')}之前
-          [/#if]
+          ${alterConfig.status.name}
         </td>
         <td width="10%" style="text-align:right;">
            <font color='red'>*</font>院系：
@@ -46,7 +39,7 @@
         <td width="40%">
           [#if departmentConfig??]
           [@b.select style="width：160px" title="院系" id="departmentId" name="status.department.id" items=departments empty="..."/]
-          [#else]不做异动[/#if]
+          [#else]不做变动[/#if]
         </td>
       </tr>
       <tr>
@@ -63,7 +56,7 @@
             [#if majorConfig??]
             [@b.select style="width：160px" id="majorId" name="status.major.id" items={} empty="..." /]
             [@b.select style="width：160px" id="directionId" name="status.direction.id" items={} empty="..." /]
-            [#else]不做异动
+            [#else]不做变动
             [/#if]
          </td>
       </tr>
@@ -74,7 +67,7 @@
         </td>
         <td style="text-align:right;">班级：</td>
         <td>
-          [#if squadConfig??][@b.select style="width：250px" id="squadId" name="status.squad.id" items=squades empty="请输入内容查询" theme="html"/][#else]不做异动[/#if]
+          [#if squadConfig??][@b.select style="width：250px" id="squadId" name="status.squad.id" items=squades empty="请输入内容查询" theme="html"/][#else]不做变动[/#if]
         </td>
       </tr>
       <tr>
@@ -83,8 +76,14 @@
           <span id="remarkSpan"><a href="#" onClick="jQuery('#stdAlterationRemark').show().height('90%').width('95%');jQuery('#remarkSpan').hide();">填写备注</a></span>
           <input id="stdAlterationRemark" title="备注" style="display:none" maxLength="200" style="width：95%;" name="stdAlteration.remark" title="备注"></textarea>
         </td>
-        <td style="text-align:right;">学籍截止日期 </td>
-        <td>[#if endOnConfig??]和异动日期一致[#else]不做变动[/#if]</td>
+        <td style="text-align:right;">预计毕业：</td>
+        <td>
+          [#if graduateOnConfig]
+            [@b.datepicker  label="日期" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
+          [#else]
+            不做变动
+          [/#if]
+        </td>
       </tr>
       <tr>
         <td colspan="4">[@b.submit value="提交异动结果" class="btn btn-primary" /]</td>
@@ -154,9 +153,6 @@
     [/#if]
     [#if gradeConfig??]
       bg.form.addInput(form,"gradeConfig","1");
-    [/#if]
-    [#if endOnConfig??]
-      bg.form.addInput(form,"endOnConfig","1");
     [/#if]
     bg.form.addInput(form,"studentIds","${studentIds}");
 

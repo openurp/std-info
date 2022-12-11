@@ -27,11 +27,11 @@ class StdAlterConfig extends LongId {
 
   var alterType: StdAlterType = _
 
-  var temporal: Boolean = _
-
   var status: StudentStatus = _
 
   var alterEndOn: Boolean = _
+
+  var alterGraduateOn: Boolean = _
 
   var inschool: Boolean = _
 

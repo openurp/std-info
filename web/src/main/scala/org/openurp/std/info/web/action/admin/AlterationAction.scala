@@ -94,13 +94,15 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
         else if ("major" == column) put("majorConfig", true)
         else if ("grade" == column) put("gradeConfig", true)
         else if ("squad" == column) put("squadConfig", true)
-        else if ("endOn" == column) put("endOnConfig", true)
       }
       put("config", true)
     }
-    if (alterConfig.alterEndOn) put("endOnConfig", true)
     put("minBeginOn", students.sortBy(_.beginOn).head.beginOn)
     put("maxEndOn", students.sortBy(_.endOn).head.endOn)
+    put("graduateOnConfig", alterConfig.alterGraduateOn)
+    if (alterConfig.alterGraduateOn) {
+      put("maxGraduateOn", students.sortBy(_.graduateOn).head.graduateOn)
+    }
     put("alterConfig", alterConfig)
     forward("form")
   }
@@ -166,9 +168,13 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
     val status = populateEntity(classOf[StudentState], "status")
     status.inschool = alterConfig.inschool
     status.status = alterConfig.status
+    val graduateOn = getDate("graduateOn")
     for (student <- students) {
       val alter = cloneTo(alteration, student)
       val targetState = student.state.get
+      graduateOn foreach { g =>
+        addItem(alter, AlterMeta.GraduateOn, student.graduateOn, g)
+      }
       diff(alter, targetState, status)
       entityDao.saveOrUpdate(alter)
       val msg = applyStd(alter, student)
@@ -212,6 +218,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
     obj match {
       case a: String => (a, a)
       case b: Boolean => (b.toString, b.toString)
+      case c: LocalDate => (c.toString, c.toString)
       case g: Grade =>
         val grade = entityDao.get(classOf[Grade], g.id)
         (grade.id.toString, grade.name)
@@ -307,6 +314,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
       newState.squad = state.squad
       newState.status = state.status
       newState.campus = state.campus
+      newState.inschool = state.inschool
       newState.remark = Some(alterConfig.alterType.name)
       if (beginOn == state.beginOn) {
         state.beginOn = endOn.plusDays(1)
