@@ -46,7 +46,7 @@
           [@b.startend label="学籍生效日期" name="student.beginOn,student.endOn" required="true" start=student.beginOn end=student.endOn style="width: 120px"/]
           [@b.startend label="入学-毕业日期" name="student.studyOn,student.graduateOn" required="true" start=student.studyOn end=student.graduateOn style="width: 120px" /]
           [@b.select label="学习形式" name="student.studyType.id" required="true" items=studyTypes empty="..." value=(student.studyType.id)! /]
-          [@b.select label="导师" name="student.tutor.id" href=EMS.api('/base/edu/${student.project.id}/teachers.json?q={term}&isTutor=1') empty="..." value=student.tutor!
+          [@b.select label="导师" name="student.tutor.id" href=EMS.api+'/base/edu/${student.project.id}/teachers.json?q={term}&isTutor=1' empty="..." value=student.tutor!
                      option="id,description" style="width: 400px"/]
           [@b.select label="标签" name="labelIds" items=stdLabels values=student.labels?values /]
           [@b.textfield label="备注" name="student.remark" value=(student.remark?html)! style="width: 400px;" check="maxLength(100)" comments="（限长100个字符）"/]

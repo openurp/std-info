@@ -10,6 +10,7 @@
   [@b.textfield name="student.code" label="学号"/]
   [@b.textfield name="student.name" label="姓名"/]
   [@b.textfield name="student.state.grade.code" label="年级"/]
+  [@b.select name="student.level.id" label="培养层次" items=levels empty="..."/]
   [@b.select name="student.state.department.id" label="院系" items=departments empty="..."/]
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
   [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
