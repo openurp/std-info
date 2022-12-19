@@ -105,24 +105,8 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
 
     put("project", project)
 
-    put("levels", project.levels)
-    put("stdTypes", project.stdTypes)
     put("stdLabels", project.stdLabels)
-    put("states", getCodes(classOf[StudentStatus])) // 状态
-    put("studyTypes", getCodes(classOf[StudyType])) // 学习方式
-    put("idTypes", getCodes(classOf[IdType]))
-    put("eduTypes", getCodes(classOf[EducationType]))
-
-    put("genders", getCodes(classOf[Gender]))
-    put("idTypes", getCodes(classOf[IdType]))
-    put("countries", getCodes(classOf[Country]))
-    put("nations", getCodes(classOf[Nation]))
-    put("politicalStatuses", getCodes(classOf[PoliticalStatus]))
-
-    put("grades", findInProject(classOf[Grade]))
     put("departments", project.departments)
-    put("statuses", getCodes(classOf[StudentStatus]))
-    put("campuses", findInSchool(classOf[Campus]))
     put("majors", entityDao.findBy(classOf[Major], "project", project))
     put("directions", entityDao.findBy(classOf[Direction], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
@@ -134,8 +118,6 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
       put("examinee", new Examinee)
     }
 
-    put("enrollModes", getCodes(classOf[EnrollMode]))
-    put("educationModes", getCodes(classOf[EducationMode]))
     put("divisions", getCodes(classOf[Division]))
 
     put("EMS", Ems)
