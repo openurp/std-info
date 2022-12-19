@@ -87,7 +87,7 @@
         [@b.fieldset]
           [@b.textfield label="考生号" name="examinee.code" value=(examinee.code)! maxlength="100"  /]
           [@b.textfield label="准考证号" name="examinee.examNo" value=(examinee.examNo)! maxlength="100" /]
-          [@b.select label="生源地" name="examinee.originDivision.id" items=divisions empty="..." value=examinee.originDivision!/]
+          [@base.code type="divisions" cache="false" label="生源地" name="examinee.originDivision.id" empty="..." value=examinee.originDivision!/]
           [@base.code type="enroll-modes" label="入学方式" name="examinee.enrollMode.id" empty="..." value=examinee.enrollMode!/]
           [@base.code type="education-modes" label="培养方式" name="examinee.educationMode.id" empty="..." value=examinee.educationMode!/]
           [@b.textfield label="委培单位" name="examinee.client"   value=examinee.client!  style="width: 400px"/]
