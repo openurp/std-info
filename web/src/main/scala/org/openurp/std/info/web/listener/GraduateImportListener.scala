@@ -43,6 +43,7 @@ class GraduateImportListener(entityDao: EntityDao, project: Project) extends Imp
 
   override def onItemFinish(tr: ImportResult): Unit = {
     val g = transfer.current.asInstanceOf[Graduate]
+    g.updatedAt = Instant.now
     entityDao.saveOrUpdate(g)
   }
 }

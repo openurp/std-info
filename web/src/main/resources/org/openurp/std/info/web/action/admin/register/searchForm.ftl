@@ -1,5 +1,5 @@
 [#ftl/]
-[@urp_base.semester name="register.semester.id" value=semester label="学年学期"/]
+[@base.semester name="register.semester.id" value=semester label="学年学期"/]
 [@b.textfield name="register.std.code" label="学号"/]
 [@b.textfield name="register.std.name" label="姓名"/]
 [@b.textfield name="register.std.state.grade" label="年级"/]

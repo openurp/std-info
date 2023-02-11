@@ -10,7 +10,7 @@
 <div class="search-container">
   <div class="search-panel">
     [@b.form name="stdAlterIndexForm" action="!search" title="ui.searchForm" target="contentDiv" theme="search"]
-       [@urp_base.semester label="学年学期"name="stdAlteration.semester.id" value=currentSemester empty="..."/]
+       [@base.semester label="学年学期"name="stdAlteration.semester.id" value=currentSemester empty="..."/]
        [@b.textfields names="stdAlteration.std.code;学号,stdAlteration.std.name;姓名,stdAlteration.std.state.grade.code;年级" maxlength="25"/]
        [@b.select label="异动类型" name="stdAlteration.alterType.id" items=modes empty="..." /]
        [@b.select label="异动原因" name="stdAlteration.reason.id" items=reasons empty="..." /]
