@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 class DesciplineHelper(season: GraduateSeason) {
 
-  var graduateOn: LocalDate = LocalDate.parse(season.graduateYear + "-07-01")
+  var graduateOn: LocalDate = LocalDate.parse(s"${season.graduateYear}-07-01")
 
   def getDisciplineCode(major: Major): String = {
     major.disciplineCode(graduateOn)

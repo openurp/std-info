@@ -296,6 +296,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
               state.inschool = item.newvalue.get.toBoolean
             case AlterMeta.Status => state.status = entityDao.get(classOf[StudentStatus], item.newvalue.get.toInt)
             case AlterMeta.GraduateOn => state.std.graduateOn = LocalDate.parse(item.newvalue.get)
+            case _ => throw new RuntimeException(s"cannot support ${item.meta}")
           }
         }
         state.std.calcCurrentState()
