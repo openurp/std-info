@@ -19,15 +19,14 @@ package org.openurp.base.std.service.impl
 
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Person
+import org.openurp.base.service.AbstractBaseService
 import org.openurp.base.std.model.{Graduate, Student, StudentState}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.std.model.StudentStatus
-import org.openurp.edu.grade.BaseServiceImpl
-import org.openurp.base.std.service.StudentService
 
 import java.time.LocalDate
 
-class StudentServiceImpl extends BaseServiceImpl, StudentService {
+class StudentServiceImpl extends AbstractBaseService, StudentService {
 
   override def graduate(std: Student, endOn: LocalDate, graduated: StudentStatus): Unit = {
     val inschool = entityDao.get(classOf[StudentStatus], 1)

@@ -37,7 +37,7 @@ class InfoAction extends StudentSupport {
 
   @mapping("certificate/{lang}")
   def certificate(): View = {
-    val std = getStudent()
+    val std = getStudent
     put("grade", GradeHelper.convert(std.state.get.grade))
     put("program", programProvider.getProgram(std))
     val lang = get("lang").get

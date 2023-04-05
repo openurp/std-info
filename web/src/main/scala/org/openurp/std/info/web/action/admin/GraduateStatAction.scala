@@ -47,7 +47,7 @@ class GraduateStatAction extends ActionSupport with EntityAction[Graduate] with 
   }
 
   def graduateStat(): View = {
-    val season = entityDao.get(classOf[GraduateSeason], intId("season"))
+    val season = entityDao.get(classOf[GraduateSeason], getLongId("season"))
     put("desciplineHelper", new DesciplineHelper(season))
 
     val builder = OqlBuilder.from(classOf[Graduate].getName, " graduate")
@@ -83,7 +83,7 @@ class GraduateStatAction extends ActionSupport with EntityAction[Graduate] with 
   }
 
   def degreeStat(): View = {
-    val season = entityDao.get(classOf[GraduateSeason], intId("season"))
+    val season = entityDao.get(classOf[GraduateSeason], getLongId("season"))
     put("desciplineHelper", new DesciplineHelper(season))
 
     val builder: OqlBuilder[Array[AnyRef]] = OqlBuilder.from(classOf[Graduate].getName + " graduate")

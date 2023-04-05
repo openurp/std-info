@@ -52,7 +52,10 @@
       <td class="title">学籍状态：</td>
       <td>${(student.state.status.name)?if_exists}</td>
       <td class="title">[#if student.tutor??]导师[#else]班主任[/#if]：</td>
-      <td>[#if student.tutor??]${(student.tutor.name)!}[#else]${(student.state.squad.instructor.name)!}[/#if]</td>
+      <td>
+      [#if student.tutor??]${(student.tutor.name)!}[#else]${(student.state.squad.instructor.name)!}[/#if]
+      [#if student.advisor??]&nbsp;&nbsp;学位论文导师：${student.advisor.name}[/#if]
+      </td>
     </tr>
     <tr>
       <td class="title">入学~毕业：</td>

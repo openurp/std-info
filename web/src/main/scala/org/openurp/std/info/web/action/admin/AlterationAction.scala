@@ -24,7 +24,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.model.Entity
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.model.{Campus, Department, Project}
 import org.openurp.base.std.model.{Grade, Squad, Student, StudentState}
@@ -39,7 +39,7 @@ import java.time.{Instant, LocalDate}
 /**
  * 学籍异动维护
  */
-class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
+class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAlteration], ProjectSupport {
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
@@ -72,7 +72,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
    * @return
    */
   def secondStep(): View = {
-    val students = entityDao.find(classOf[Student], longIds("student"))
+    val students = entityDao.find(classOf[Student], getLongIds("student"))
     if (students.isEmpty) return forward("没有选择需要异动的学生")
     val states = students.map(_.state)
 
@@ -86,7 +86,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
     put("departments", project.departments)
     put("squades", entityDao.findBy(classOf[Squad], "project", project))
 
-    val alterConfig = entityDao.get(classOf[StdAlterConfig], longId("alterConfig"))
+    val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
     val columnValues = Strings.split(alterConfig.attributes)
     if (columnValues.length > 0) {
       for (column <- columnValues) {
@@ -147,8 +147,8 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
   override def save(): View = {
     val project = getProject
 
-    val students = entityDao.find(classOf[Student], longIds("student"))
-    val alterConfig = entityDao.get(classOf[StdAlterConfig], longId("alterConfig"))
+    val students = entityDao.find(classOf[Student], getLongIds("student"))
+    val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
 
     val alteration = populateEntity(classOf[StdAlteration], "stdAlteration")
     if (null == alteration.endOn) alteration.endOn = alteration.beginOn
@@ -244,7 +244,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ProjectSupport {
   def enable(): View = {
     val successes = Collections.newBuffer[StdAlteration]
     val errors = Collections.newMap[Student, String]
-    val alterations = entityDao.find(classOf[StdAlteration], longIds("stdAlteration"))
+    val alterations = entityDao.find(classOf[StdAlteration], getLongIds("stdAlteration"))
     alterations foreach { a =>
       val msg = applyStd(a, a.std)
       if Strings.isEmpty(msg) then successes += a else errors.put(a.std, msg)

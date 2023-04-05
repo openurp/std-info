@@ -23,10 +23,10 @@ import org.beangle.data.dao.{Operation, OqlBuilder}
 import org.beangle.data.model.Entity
 import org.hibernate.Hibernate
 import org.openurp.base.model.{Person, User}
+import org.openurp.base.service.AbstractBaseService
 import org.openurp.base.std.model.{Graduate, Squad, Student, StudentState}
 import org.openurp.base.std.service.StudentService
 import org.openurp.base.std.service.event.CreateStudentEvent
-import org.openurp.edu.grade.BaseServiceImpl
 import org.openurp.std.alter.model.StdAlteration
 import org.openurp.std.info.app.model.StudentLog
 import org.openurp.std.info.model.{Contact, Home}
@@ -79,7 +79,7 @@ object StudentManager {
 
 }
 
-class StudentManager extends BaseServiceImpl {
+class StudentManager extends AbstractBaseService {
 
   var studentService: StudentService = _
   var studentInfoService: StudentInfoService = _

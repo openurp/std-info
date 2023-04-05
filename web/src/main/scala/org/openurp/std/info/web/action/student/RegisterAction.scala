@@ -69,7 +69,7 @@ class RegisterAction extends RestfulAction[Register] with ProjectSupport {
 
   @mapping(value = "new", view = "new,form")
   override def editNew(): View = {
-    val session = entityDao.get(classOf[RegisterSession], longId("session"))
+    val session = entityDao.get(classOf[RegisterSession], getLongId("session"))
     if (!session.canApply()) {
       redirect("index", "不在操作时间内")
     }
@@ -95,7 +95,7 @@ class RegisterAction extends RestfulAction[Register] with ProjectSupport {
   }
 
   override def saveAndRedirect(apply: Register): View = {
-    val scheme = entityDao.get(classOf[RegisterSession], longId("session"))
+    val scheme = entityDao.get(classOf[RegisterSession], getLongId("session"))
     val std = getStudent2()
     if (!scheme.canApply()) {
       redirect("index", "不在操作时间内")

@@ -45,7 +45,7 @@ class ContactAction extends SearchAction {
   }
 
   def save(): View = {
-    val std = entityDao.get(classOf[Student], longId("student"))
+    val std = entityDao.get(classOf[Student], getLongId("student"))
 
     val home = populateEntity(classOf[Home], "home")
     home.updatedAt = Instant.now()

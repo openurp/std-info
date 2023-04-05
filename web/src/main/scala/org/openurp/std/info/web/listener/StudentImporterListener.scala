@@ -193,18 +193,10 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     }
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]
-    if (Strings.isNotBlank(tutorCode)) {
-      val query = OqlBuilder.from(classOf[Teacher], "t")
-      query.where("t.staff.school = :school", currProject.school)
-      query.where("t.staff.code = :code or t.staff.name =:name", tutorCode, tutorCode)
-      val tutors = entityDao.search(query)
-      if (tutors.size == 1) {
-        student.tutor = tutors.headOption
-      } else {
-        tr.addFailure("找不到导师", tutorCode)
-      }
-      entityDao.saveOrUpdate(student)
-    }
+    findTeacher(tutorCode, tr) foreach (t => student.tutor = Some(t))
+    val advisorCode = data.get("advisor.code").orNull.asInstanceOf[String]
+    findTeacher(advisorCode, tr) foreach (t => student.advisor = Some(t))
+    entityDao.saveOrUpdate(student)
 
     if (null != contact) {
       contact.std = student
@@ -217,6 +209,21 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       examinee.updatedAt = Instant.now
       entityDao.saveOrUpdate(examinee)
     }
+  }
+
+  private def findTeacher(staffCodeName: String, tr: ImportResult): Option[Teacher] = {
+    if Strings.isNotBlank(staffCodeName) then
+      val query = OqlBuilder.from(classOf[Teacher], "t")
+      query.where("t.staff.school = :school", currProject.school)
+      query.where("t.staff.code = :code or t.staff.name =:name", staffCodeName, staffCodeName)
+      val tutors = entityDao.search(query)
+      if (tutors.size == 1) {
+        tutors.headOption
+      } else {
+        tr.addFailure("找不到导师", staffCodeName)
+        None
+      }
+    else None
   }
 
   private def putStateInStudent(student: Student, state: StudentState): Unit = {

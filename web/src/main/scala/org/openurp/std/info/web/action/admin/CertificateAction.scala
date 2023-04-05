@@ -19,6 +19,7 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.data.dao.EntityDao
 import org.beangle.web.action.annotation.mapping
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
@@ -28,7 +29,7 @@ import org.openurp.std.info.web.helper.GradeHelper
 /**
  * 打印在读证明
  */
-class CertificateAction extends EntityAction[Student] {
+class CertificateAction extends ActionSupport, EntityAction[Student] {
 
   var entityDao: EntityDao = _
 
@@ -36,7 +37,7 @@ class CertificateAction extends EntityAction[Student] {
 
   @mapping("{lang}")
   def index(): View = {
-    val std = entityDao.get(classOf[Student], longId("student"))
+    val std = entityDao.get(classOf[Student], getLongId("student"))
     put("student", std)
     put("grade", GradeHelper.convert(std.state.get.grade))
     put("program", programProvider.getProgram(std))

@@ -17,13 +17,13 @@
 
 package org.openurp.std.info.web.action.admin
 
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Project
 import org.openurp.code.std.model.UnregisteredReason
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.register.model.Register
 
-class RegisterAction extends RestfulAction[Register] with ProjectSupport {
+class RegisterAction extends RestfulAction[Register], ExportSupport[Register], ProjectSupport {
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -31,7 +31,7 @@ class RegisterAction extends RestfulAction[Register] with ProjectSupport {
     put("project", project)
     put("semester", getSemester)
     put("departs", project.departments)
-    put("unregisteredReasons",getCodes(classOf[UnregisteredReason]))
+    put("unregisteredReasons", getCodes(classOf[UnregisteredReason]))
   }
 
 }

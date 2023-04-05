@@ -6,6 +6,7 @@
                  'student.person.phoneticName':'英文名',
                  'contact.mobile':'移动电话'
                  }/]
+[#if advisorSupported!false][#assign fields=fields+{'student.advisor.name':'学位论文导师'}/] [/#if]
 [@b.form name="studentSearchForm" id="studentSearchForm" action="!search" title="ui.searchForm" target="studentList" theme="search"]
   [@b.textfield name="student.code" label="学号"/]
   [@b.textfield name="student.name" label="姓名"/]
@@ -20,7 +21,7 @@
   [@b.select name="student.state.status.id" label="学籍状态" items=states?sort_by("name") empty="..."/]
   [@b.textfield name="student.state.squad.name" label="班级"/]
   <div class="search-item">
-    <select onchange="document.getElementById('custom_field').name=this.value" style="width:50px">
+    <select onchange="document.getElementById('custom_field').name=this.value" style="width:60px">
       <option value=""></option>
       [#list fields as k,v]
       <option value="${k}">${v}</option>

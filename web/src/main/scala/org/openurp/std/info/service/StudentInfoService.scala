@@ -18,10 +18,10 @@
 package org.openurp.std.info.service
 
 import org.beangle.data.dao.OqlBuilder
+import org.openurp.base.service.AbstractBaseService
 import org.openurp.base.std.model.Student
-import org.openurp.edu.grade.BaseServiceImpl
 
-class StudentInfoService extends BaseServiceImpl {
+class StudentInfoService extends AbstractBaseService {
 
   def getStudentInfo[T](stdClass: Class[T], std: Student): Seq[T] = {
     val builder = OqlBuilder.from(stdClass, "stdInfo").where("stdInfo.std=:std", std)

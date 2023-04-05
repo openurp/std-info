@@ -39,12 +39,12 @@ class UnpaidTuitionAction extends RestfulAction[UnpaidTuition] with ProjectSuppo
   }
 
   def reset(): View = {
-    put("semester", entityDao.get(classOf[Semester], intId("unpaidTuition.semester")))
+    put("semester", entityDao.get(classOf[Semester], getIntId("unpaidTuition.semester")))
     forward()
   }
 
   def batchReset(): View = {
-    val semester = entityDao.get(classOf[Semester], intId("unpaidTuition.semester"));
+    val semester = entityDao.get(classOf[Semester], getIntId("unpaidTuition.semester"));
     var code = get("std_codes").orNull
     code = Strings.replace(code, "，", ",")
     val codes = Strings.split(code)

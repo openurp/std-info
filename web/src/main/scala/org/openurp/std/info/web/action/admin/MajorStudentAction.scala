@@ -23,7 +23,7 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.model.Project
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
@@ -36,7 +36,7 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 /**
  * 辅修学生的主修信息维护
  */
-class MajorStudentAction extends RestfulAction[MajorStudent] with ProjectSupport {
+class MajorStudentAction extends RestfulAction[MajorStudent], ExportSupport[MajorStudent], ImportSupport[MajorStudent], ProjectSupport {
 
   override def indexSetting(): Unit = {
     val builder = OqlBuilder.from(classOf[MajorStudent].getName, "m")

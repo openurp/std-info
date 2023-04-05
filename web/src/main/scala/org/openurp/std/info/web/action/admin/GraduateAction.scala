@@ -23,7 +23,7 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.{mapping, param, response}
 import org.beangle.web.action.view.{Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.model.Project
 import org.openurp.base.std.code.StdType
@@ -37,7 +37,7 @@ import org.openurp.std.info.web.listener.GraduateImportListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
-class GraduateAction extends RestfulAction[Graduate] with ProjectSupport {
+class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], ImportSupport[Graduate], ProjectSupport {
 
   var studentService: StudentService = _
 
@@ -103,8 +103,8 @@ class GraduateAction extends RestfulAction[Graduate] with ProjectSupport {
    * @return
    */
   def batchUpdateStdState(): View = {
-    val gradeId = intId("graduate.season")
-    val graduates = entityDao.findBy(classOf[Graduate], "grade.id", gradeId)
+    val gradeId = getIntId("graduate.season")
+    val graduates = entityDao.findBy(classOf[Graduate], "season.id", gradeId)
     val statuses = entityDao.getAll(classOf[StudentStatus])
     val results = entityDao.getAll(classOf[EducationResult])
     val resultStatus = Collections.newMap[EducationResult, StudentStatus]

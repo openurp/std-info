@@ -32,7 +32,7 @@ import org.beangle.ems.app.Ems
 import org.beangle.ems.app.datasource.AppDataSourceFactory
 import org.beangle.web.action.annotation.{ignore, mapping, response}
 import org.beangle.web.action.view.{Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.openurp.base.Features
 import org.openurp.base.edu.code.EducationType
@@ -62,7 +62,7 @@ import scala.util.control.Breaks.{break, breakable}
 /**
  * 学籍维护
  */
-class StudentAction extends RestfulAction[Student] with ProjectSupport with Initializing {
+class StudentAction extends RestfulAction[Student], ExportSupport[Student], ImportSupport[Student], ProjectSupport, Initializing {
 
   var userRepo: UserRepo = _
 
@@ -77,6 +77,8 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     given project: Project = getProject
 
     put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
+    put("advisorSupported", getProjectProperty(Features.StdInfoAdvisorSupported, false))
+
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
     put("levels", project.levels) // 培养层次
@@ -124,6 +126,7 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     put("now", DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()).toInt)
     put("api", Ems.api)
     put("squadSupported", projectPropertyService.get(project, Features.StdInfoSquadSupported, false))
+    put("advisorSupported", getProjectProperty(Features.StdInfoAdvisorSupported, false))
   }
 
   /**
@@ -133,8 +136,10 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
    */
   def displayExpAttrs(): View = {
     val project = getProject
-    val squadSupported = projectPropertyService.get(project, Features.StdInfoSquadSupported, true)
-    val tutorSupported = projectPropertyService.get(project, Features.StdInfoTutorSupported, false)
+
+    val squadSupported = projectPropertyService.get(project,Features.StdInfoSquadSupported, true)
+    val tutorSupported = projectPropertyService.get(project,Features.StdInfoTutorSupported, false)
+    val advisorSupported = projectPropertyService.get(project,Features.StdInfoAdvisorSupported, true)
 
     val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
     std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
@@ -143,10 +148,9 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
     std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "学籍生效日期", "endOn" -> "学籍失效日期")
     std.add("studyOn" -> "入校日期", "graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
-    if squadSupported then
-      std.add("state.squad.name", "行政班级")
-    if tutorSupported then
-      std.add("tutor.name", "导师姓名")
+    if squadSupported then      std.add("state.squad.name", "行政班级")
+    if tutorSupported then      std.add("tutor.name", "导师姓名")
+    if advisorSupported then std.add("advisor.name","学位论文导师姓名")
 
     val p = EntityMeta(classOf[Student].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "nation.name" -> "民族", "politicalStatus.name" -> "政治面貌")
@@ -252,7 +256,7 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
    * @return
    */
   def batchUpdateEnName(): View = {
-    val stds = entityDao.find(classOf[Student], longIds("student"))
+    val stds = entityDao.find(classOf[Student], getLongIds("student"))
     val forceUpdate = getBoolean("forceUpdate", false)
     val people = Collections.newBuffer[Person]
     stds foreach { std =>
@@ -274,8 +278,10 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
   def downloadTemplate(): Any = {
     given project: Project = getProject
 
-    val squadSupported = projectPropertyService.get(project, Features.StdInfoSquadSupported, true)
-    val tutorSupported = projectPropertyService.get(project, Features.StdInfoTutorSupported, true)
+    val squadSupported = getProjectProperty(Features.StdInfoSquadSupported, true)
+    val tutorSupported = getProjectProperty(Features.StdInfoTutorSupported, false)
+    val advisorSupported = getProjectProperty(Features.StdInfoAdvisorSupported, false)
+    //features.std.info.tutorSupported
 
     val genders = getCodes(classOf[Gender]).sortBy(_.code).map(x => x.code + " " + x.name)
     val nations = getCodes(classOf[Nation]).sortBy(_.code).map(x => x.code + " " + x.name)
@@ -335,6 +341,7 @@ class StudentAction extends RestfulAction[Student] with ProjectSupport with Init
     sheet.add("委培单位", "examinee.client")
 
     if (tutorSupported) sheet.add("导师工号或姓名", "tutor.code")
+    if (advisorSupported) sheet.add("学位论文导师工号或姓名", "advisor.code")
 
     val os = new ByteArrayOutputStream()
     schema.generate(os)

@@ -21,7 +21,6 @@ import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.model.Person
 import org.openurp.base.std.model.{Graduate, Student, StudentState}
 import org.openurp.code.std.model.StudentStatus
-import org.openurp.edu.grade.BaseServiceImpl
 
 import java.time.LocalDate
 import scala.util.control.Breaks.{break, breakable}
