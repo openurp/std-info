@@ -45,7 +45,10 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     given project: Project = getProject
 
     put("project", project)
-    put("campuses", findInSchool(classOf[Campus]))
+    put("levels", project.levels) // 培养层次
+    put("departments", getDeparts)
+    put("majors", findInProject(classOf[Major]))
+
     put("modes", getCodes(classOf[StdAlterType]))
     put("reasons", getCodes(classOf[StdAlterReason]))
     put("currentSemester", getSemester)

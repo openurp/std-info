@@ -103,7 +103,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
    * @return
    */
   def batchUpdateStdState(): View = {
-    val gradeId = getIntId("graduate.season")
+    val gradeId = getLongId("graduate.season")
     val graduates = entityDao.findBy(classOf[Graduate], "season.id", gradeId)
     val statuses = entityDao.getAll(classOf[StudentStatus])
     val results = entityDao.getAll(classOf[EducationResult])
