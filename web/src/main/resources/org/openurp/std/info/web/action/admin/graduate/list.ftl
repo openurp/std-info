@@ -2,8 +2,8 @@
 [@b.head/]
 [@b.grid items=graduates var="graduate"]
   [@b.gridbar]
-    var m1 = bar.addMenu("${b.text('action.export')}", "exportData()");
-    m1.addItem("导入..",action.method('importForm'));
+    var m1 = bar.addItem("${b.text('action.export')}", "exportData()");
+    bar.addItem("导入..",action.method('importForm'));
     [#--
     var m2 = bar.addMenu("证书下载");
     m2.addItem("学位证书下载", "degreeDownload()");

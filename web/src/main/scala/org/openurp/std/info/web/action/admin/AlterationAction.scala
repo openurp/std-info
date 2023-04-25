@@ -273,15 +273,27 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
   }
 
   private def applyStd(alteration: StdAlteration, std: Student): String = {
-    std.states.find(x => !alteration.beginOn.isBefore(x.beginOn) && !alteration.endOn.isAfter(x.endOn)) match
+    var target = std.states.find(x => !alteration.beginOn.isBefore(x.beginOn) && !alteration.endOn.isAfter(x.endOn))
+    val alterConfig = entityDao.findBy(classOf[StdAlterConfig], "alterType", alteration.alterType).head
+    if (target.isEmpty) {
+      if (alteration.beginOn == alteration.endOn && alterConfig.alterEndOn) {
+        target = std.states.sortBy(_.endOn).lastOption
+      }
+    }
+
+    target match
       case None => "无法进行异动，找不到对应的学籍状态"
-      case Some(target) =>
-        val alterConfig = entityDao.findBy(classOf[StdAlterConfig], "alterType", alteration.alterType).head
-        val state = generateState(target, alteration.beginOn, alteration.endOn, alterConfig)
-        if (alterConfig.alterEndOn) {
-          std.endOn = alteration.beginOn
-          state.endOn = alteration.beginOn
-        }
+      case Some(t) =>
+        val state =
+          if (alterConfig.alterEndOn) {
+            val endOn = if alteration.endOn.isAfter(std.endOn) then std.endOn else alteration.endOn
+            std.endOn = endOn
+            t.endOn = endOn
+            generateState(t, endOn, endOn, alterConfig)
+          } else {
+            generateState(t, alteration.beginOn, alteration.endOn, alterConfig)
+          }
+
         alteration.items foreach { item =>
           item.meta match {
             case AlterMeta.Grade => state.grade = entityDao.get(classOf[Grade], item.newvalue.get.toLong)
