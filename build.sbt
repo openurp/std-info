@@ -24,7 +24,7 @@ ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
 val apiVer = "0.31.1"
-val starterVer = "0.2.13"
+val starterVer = "0.2.14-SNAPSHOT"
 val baseVer = "0.3.6"
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer

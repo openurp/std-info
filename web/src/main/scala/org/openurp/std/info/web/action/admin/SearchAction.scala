@@ -20,7 +20,7 @@ package org.openurp.std.info.web.action.admin
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{ignore, mapping}
@@ -76,6 +76,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport 
 
   def search(): View = {
     given project: Project = getProject
+
     put("squadSupported", getProjectProperty(Features.StdInfoSquadSupported, true))
     put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
     val builder = new StdSearchHelper(entityDao, getProject, getDeparts)

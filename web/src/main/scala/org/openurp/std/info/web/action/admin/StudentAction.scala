@@ -25,7 +25,7 @@ import org.beangle.commons.net.http.HttpUtils
 import org.beangle.data.dao.{Condition, OqlBuilder}
 import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.model.Entity
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.data.transfer.importer.{DefaultEntityImporter, ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
@@ -137,9 +137,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def displayExpAttrs(): View = {
     val project = getProject
 
-    val squadSupported = projectPropertyService.get(project,Features.StdInfoSquadSupported, true)
-    val tutorSupported = projectPropertyService.get(project,Features.StdInfoTutorSupported, false)
-    val advisorSupported = projectPropertyService.get(project,Features.StdInfoAdvisorSupported, true)
+    val squadSupported = projectPropertyService.get(project, Features.StdInfoSquadSupported, true)
+    val tutorSupported = projectPropertyService.get(project, Features.StdInfoTutorSupported, false)
+    val advisorSupported = projectPropertyService.get(project, Features.StdInfoAdvisorSupported, true)
 
     val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
     std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
@@ -148,9 +148,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
     std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "学籍生效日期", "endOn" -> "学籍失效日期")
     std.add("studyOn" -> "入校日期", "graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
-    if squadSupported then      std.add("state.squad.name", "行政班级")
-    if tutorSupported then      std.add("tutor.name", "导师姓名")
-    if advisorSupported then std.add("advisor.name","学位论文导师姓名")
+    if squadSupported then std.add("state.squad.name", "行政班级")
+    if tutorSupported then std.add("tutor.name", "导师姓名")
+    if advisorSupported then std.add("advisor.name", "学位论文导师姓名")
 
     val p = EntityMeta(classOf[Student].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "nation.name" -> "民族", "politicalStatus.name" -> "政治面貌")
@@ -175,9 +175,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   }
 
   @ignore
-  override def configExport(setting: ExportSetting): Unit = {
-    setting.context.extractor = new StudentPropertyExtractor(entityDao)
-    super.configExport(setting)
+  override def configExport(context: ExportContext): Unit = {
+    context.extractor = new StudentPropertyExtractor(entityDao)
+    super.configExport(context)
   }
 
   @mapping(value = "{id}")
