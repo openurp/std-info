@@ -24,8 +24,10 @@
         if (!confirm("确认导出查询出来的所有结果?")) return;
       }
       var form = action.getForm();
-      bg.form.addInput(form, "keys", "code,std.code,std.name,std.state.department.name,std.state.major.name,alterType.name,reason.name,semester.code,beginOn,std.beginOn,updatedAt,remark", "hidden");
-      bg.form.addInput(form, "titles", "流水号,学号,姓名,院系,专业,异动类型,异动原因,学年学期,生效日期,学籍生效日期,记录时间,是否生效,操作备注", "hidden");
+      bg.form.addInput(form, "titles", "code:流水号,std.code:学号,std.name:姓名,std.state.department.name:院系,"+
+                                       "std.state.major.name:专业,alterType.name:异动类型,reason.name:异动原因,"+
+                                       "semester.code:学年学期,beginOn:生效日期,std.beginOn:学籍生效日期,"+
+                                       "updatedAt:记录时间,remark:操作备注", "hidden");
       bg.form.addInput(form, "fileName", "学籍异动信息");
       bg.form.addInput(form, "stdAlterationIds", stdAlterationIds);
       if(action.page.paramstr){

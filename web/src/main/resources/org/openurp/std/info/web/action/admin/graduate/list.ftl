@@ -2,15 +2,16 @@
 [@b.head/]
 [@b.grid items=graduates var="graduate"]
   [@b.gridbar]
-    var m1 = bar.addItem("${b.text('action.export')}", "exportData()");
+    var m1 = bar.addMenu("${b.text('action.export')}", "exportData()");
+    m1.addItem("导出学位网格式","exportDegree()");
     bar.addItem("导入..",action.method('importForm'));
     [#--
     var m2 = bar.addMenu("证书下载");
     m2.addItem("学位证书下载", "degreeDownload()");
     [#if project.minor]
-      m2.addItem("专业证书下载", "certificationDownload()");
+    m2.addItem("专业证书下载", "certificationDownload()");
     [#else ]
-      m2.addItem("毕业证书下载", "certificationDownload()");
+    m2.addItem("毕业证书下载", "certificationDownload()");
     [/#if]
     --]
     [#if (Parameters['graduate.season.id']!'')?length>0]
@@ -42,12 +43,43 @@
   [/@]
 [/@]
 <script>
-
   var form = document.searchForm;
   function exportData(){
-    bg.form.addInput(form, "keys", "graduateOn,std.state.major.name,std.level.name,std.name,std.person.gender.name,std.person.code,std.code,std.person.nation.name,diplomaNo,certificateNo,degreeAwardOn,result.name,degree.name");
-    bg.form.addInput(form, "titles", "毕业日期,专业,学历,姓名,性别,身份证,学号,民族,学位证书号,毕业证书号,学位授予日期,毕结业情况,学位");
+    bg.form.addInput(form, "titles", "graduateOn:毕业日期,std.state.major.name:专业,std.level.name:学历,std.name:姓名,"+
+                     "std.gender.name:性别,std.person.code:身份证,std.code:学号,"+
+                     "std.person.nation.name:民族,diplomaNo:学位证书号,certificateNo:毕业证书号,"+
+                     "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位");
+    bg.form.addInput(form, "convertToString", "0");
     bg.form.addInput(form, "fileName", "毕业信息");
+    bg.form.submit(form, "${b.url('!exportData')}","_self");
+  }
+
+  function exportDegree(){
+    bg.form.addInput(form, "titles",
+                     "std.name:姓名(XM),std.enName:姓名拼音(XMPY),std.gender.code:性别码(XBM),std.gender.name:性别(XB),"+
+                     "std.person.country.code:国家或地区码(GBM),std.person.nation.code:民族码(MZM),"+
+                     "std.person.nation.name:民族(MZ),std.person.politicalStatus.code:政治面貌码(ZZMMM),"+
+                     "std.person.politicalStatus.name:政治面貌(ZZMM),std.person.birthday:出生日期(CSRQ),"+
+                     "std.person.idType.code:证件类型码(ZJLXM),std.person.idType.name:证件类型(ZJLX),"+
+                     "std.person.code:证件号码(ZJHM),std.project.school.code:学位授予单位码(XWSYDWM),"+
+                     "std.project.school.name:学位授予单位(XWSYDW),blank.1(校长):学位授予单位校长（院长、所长）姓名(XZXM),"+
+                     "blank.2(主席):学位评定委员会主席姓名(ZXXM),std.project.school.code:培养单位码(PYDWM),"+
+                     "std.project.school.name:培养单位(PYDW),degree.code:学位类别码(XWLBM),degree.name:学位类别(XWLB),"+
+                     [#if project.category.name?contains("成人")]
+                     "std.state.major.code:学士专业码(ZYDM),std.state.major.name:学士专业(ZYMC),"+
+                     [#else]
+                     "std.state.major.code:专业码(ZYDM),std.state.major.name:专业(ZYMC),"+
+                     [/#if]
+                     "std.state.major.name:证书专业名称(ZSZYMC),"+
+                     "examinee.code:考生号(KSH),std.studyOn:入学年月(RXNY),std.code:学号(XH),"+
+                     "std.duration:学制(XZ),std.studyType.code:学习形式码(XXXSM),std.studyType.name:学习形式(XXXS),"+
+                     [#if project.category.name?contains("成人")]"foreignLangPassedOn:通过英语水平考试年月(WYKSNY),"+[/#if]
+                     "graduateOn:毕业年月(BYNY),"+
+                     "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),blank.3(文号):决议编号（文号）(JYBH),"+
+                     "std.person.code:照片文件名称(ZP),blank.4:备注(BZ),blank.5:QQ号码(QQHM),blank.6:微信账号(WXZH),"+
+                     "blank.7:电子邮箱(DZYX),blank.8:院系代码(YXDM)");
+    bg.form.addInput(form, "fileName", "上传学位网");
+    bg.form.addInput(form, "convertToString", "1");
     bg.form.submit(form, "${b.url('!exportData')}","_self");
   }
 

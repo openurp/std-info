@@ -21,6 +21,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.EntityDao
+import org.beangle.doc.docx.DocHelper
 import org.openurp.base.std.model.Graduate
 import org.openurp.std.info.model.MajorStudent
 
@@ -28,7 +29,7 @@ import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.time.LocalDate
 
-object DocHelper {
+object StdDocHelper {
 
   def toDegreeDoc(entityDao: EntityDao, graduate: Graduate): Array[Byte] = {
     val std = graduate.std
@@ -125,48 +126,4 @@ object DocHelper {
     DocHelper.toDoc(url, data)
   }
 
-  def toDoc(url: URL, data: collection.Map[String, String]): Array[Byte] = {
-    val templateIs = url.openStream()
-    val doc = new XWPFDocument(templateIs)
-    import scala.jdk.javaapi.CollectionConverters.*
-
-    for (p <- asScala(doc.getParagraphs)) {
-      val runs = p.getRuns
-      if (runs != null) {
-        for (r <- asScala(runs)) {
-          var text = r.getText(0)
-          if (text != null) {
-            data foreach { case (k, v) =>
-              if (text.contains("${" + k + "}")) {
-                text = text.replace("${" + k + "}", v)
-              }
-            }
-            r.setText(text, 0)
-          }
-        }
-      }
-    }
-
-    for (tbl <- asScala(doc.getTables)) {
-      for (row <- asScala(tbl.getRows)) {
-        for (cell <- asScala(row.getTableCells)) {
-          for (p <- asScala(cell.getParagraphs)) {
-            for (r <- asScala(p.getRuns)) {
-              var text = r.getText(0)
-              if (text != null) {
-                data.find { case (k, v) => text.contains("${" + k + "}") } foreach { e =>
-                  text = text.replace("${" + e._1 + "}", e._2)
-                  r.setText(text, 0)
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    val bos = new ByteArrayOutputStream()
-    doc.write(bos)
-    templateIs.close()
-    bos.toByteArray
-  }
 }

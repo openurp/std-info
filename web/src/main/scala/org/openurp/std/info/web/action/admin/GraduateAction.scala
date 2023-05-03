@@ -18,7 +18,9 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.text.{Formatters, TemporalFormatter}
 import org.beangle.data.excel.schema.ExcelSchema
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.{mapping, param, response}
@@ -32,10 +34,11 @@ import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
 import org.openurp.code.std.model.StudentStatus
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.web.helper.DocHelper
+import org.openurp.std.info.web.helper.{StdDocHelper, GraduatePropertyExtractor}
 import org.openurp.std.info.web.listener.GraduateImportListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.time.LocalDate
 
 class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], ImportSupport[Graduate], ProjectSupport {
 
@@ -68,7 +71,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   @mapping("degreeDownload/{id}")
   def degreeDownload(@param("id") id: String): View = {
     val graduate = entityDao.get(classOf[Graduate], id.toLong)
-    val bytes = DocHelper.toDegreeDoc(entityDao, graduate)
+    val bytes = StdDocHelper.toDegreeDoc(entityDao, graduate)
     val filename = new String(("学位证书-" + graduate.std.name).getBytes, "ISO8859-1")
     response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
     response.setHeader("Content-Length", bytes.length.toString)
@@ -82,7 +85,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   @mapping("certificationDownload/{id}")
   def certificationDownload(@param("id") id: String): View = {
     val graduate = entityDao.get(classOf[Graduate], id.toLong)
-    val bytes = DocHelper.toCertificationDoc(entityDao, graduate)
+    val bytes = StdDocHelper.toCertificationDoc(entityDao, graduate)
     val filename = if (graduate.std.project.minor) {
       new String(("专业证书-" + graduate.std.name).getBytes, "ISO8859-1")
     } else {
@@ -155,4 +158,16 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     setting.listeners = List(fl, new GraduateImportListener(entityDao, getProject))
   }
 
+  override protected def configExport(context: ExportContext): Unit = {
+    if (context.fileName.startsWith("上传学位网")) {
+      context.registerFormatter(classOf[LocalDate], TemporalFormatter("yyyyMMdd"))
+      context.attrs.indices foreach { i =>
+        if (context.titles(i).contains("年月")) {
+          context.registerFormatter(context.attrs(i), TemporalFormatter("yyyyMM"))
+        }
+      }
+    }
+    context.extractor = new GraduatePropertyExtractor(entityDao)
+    super.configExport(context)
+  }
 }
