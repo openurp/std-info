@@ -22,14 +22,10 @@ import org.beangle.data.orm.MappingModule
 class DefaultMapping extends MappingModule {
 
   def binding(): Unit = {
-
     bind[StudentLog].declare { e =>
       e.operation is length(2000)
     }
-
     bind[StdAlterConfig]
-
     bind[RegisterSession]
-    bind[UnpaidTuition]
   }
 }

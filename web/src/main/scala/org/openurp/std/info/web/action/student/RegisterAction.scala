@@ -26,7 +26,8 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{Semester, User}
 import org.openurp.base.std.model.Student
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.app.model.{RegisterSession, UnpaidTuition}
+import org.openurp.std.fee.model.Debt
+import org.openurp.std.info.app.model.RegisterSession
 import org.openurp.std.register.model.Register
 
 import java.time.Instant
@@ -48,16 +49,14 @@ class RegisterAction extends RestfulAction[Register] with ProjectSupport {
 
     val sessions = entityDao.search(schemeQuery)
     put("sessions", sessions)
-    if (sessions.nonEmpty) {
-      val session = sessions.head
-      put("unpaidTutions", getUnpaidTution(std, session.semester))
-    }
+    if sessions.nonEmpty then put("debts", getDebts(std))
+
     forward()
   }
 
-  private def getUnpaidTution(std: Student, semester: Semester): Iterable[UnpaidTuition] = {
-    val tuitionQuery = OqlBuilder.from(classOf[UnpaidTuition], "ut")
-    tuitionQuery.where("ut.std=:std and ut.semester=:semester", std, semester)
+  private def getDebts(std: Student): Iterable[Debt] = {
+    val tuitionQuery = OqlBuilder.from(classOf[Debt], "ut")
+    tuitionQuery.where("ut.std=:std", std)
     entityDao.search(tuitionQuery)
   }
 
@@ -100,7 +99,7 @@ class RegisterAction extends RestfulAction[Register] with ProjectSupport {
     if (!scheme.canApply()) {
       redirect("index", "不在操作时间内")
     }
-    if (getUnpaidTution(std, scheme.semester).nonEmpty) {
+    if (getDebts(std).nonEmpty) {
       redirect("index", "没有完成缴费")
     }
     apply.std = std

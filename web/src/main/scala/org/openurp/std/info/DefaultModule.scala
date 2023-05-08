@@ -36,7 +36,6 @@ class DefaultModule extends BindModule {
     bind(classOf[admin.AlterConfigAction], classOf[admin.AlterationAction])
 
     bind(classOf[admin.RegisterAction], classOf[admin.RegisterSessionAction])
-    bind(classOf[admin.UnpaidTuitionAction])
 
     //, classOf[StudentInfoAction], classOf[StudentReportAction])
     bind(classOf[StudentManager], classOf[StudentInfoService])
