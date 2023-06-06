@@ -41,6 +41,9 @@ class ContactAction extends SearchAction {
     val stds = attribute("students", classOf[Iterable[Student]])
     val contacts = entityDao.findBy(classOf[Contact], "std", stds)
     put("contactMap", contacts.map(x => (x.std, x)).toMap)
+
+    val homes = entityDao.findBy(classOf[Home], "std", stds)
+    put("homeMap", homes.map(x => (x.std, x)).toMap)
     forward()
   }
 

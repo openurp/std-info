@@ -152,8 +152,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     if tutorSupported then std.add("tutor.name", "导师姓名")
     if advisorSupported then std.add("advisor.name", "学位论文导师姓名")
 
-    val p = EntityMeta(classOf[Student].getName, "基本信息", Collections.newBuffer[PropertyMeta])
-    p.add("gender.name" -> "性别", "nation.name" -> "民族", "politicalStatus.name" -> "政治面貌")
+    val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
+    p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "politicalStatus.name" -> "政治面貌")
     p.add("idType.name" -> "证件类型", "code" -> "证件号码")
 
     val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
@@ -193,23 +193,31 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
   def saveAddInfo(): View = {
     val student = populateEntity(classOf[Student], "student")
-    val person = populateEntity(classOf[Person], "student.person")
+    var person = populateEntity(classOf[Person], "person")
+    val state = populateEntity(classOf[StudentState], "state")
     person.updatedAt = Instant.now()
 
     if (person.code != null) {
-      student.person = entityDao.findBy(classOf[Person], "code", person.code).headOption.getOrElse(person)
+      person = entityDao.findBy(classOf[Person], "code", person.code).headOption.getOrElse(person)
     }
     val project = getProject
     person.name.formatedName = student.name
-    val state = student.state.get
+    student.registed = true
+    student.project = project
+    student.gender = person.gender
+    student.person = person
+
+    state.std = student
+    student.state = Some(state)
     state.beginOn = student.beginOn
     state.endOn = student.endOn
+    state.inschool = true
     student.states += state
     state.std = student
     student.updatedAt = Instant.now()
     entityDao.saveOrUpdate(student.person, student)
     userRepo.createUser(student)
-    redirect("add", "&isOk=" + true, "info.save.success")
+    redirect("search", "&isOk=" + true, "info.save.success")
   }
 
   /**
@@ -235,6 +243,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.calcCurrentState()
     student.updatedAt = Instant.now()
     val person = student.person
+    populate(person,"person")
     person.updatedAt = Instant.now()
     student.gender = person.gender
     person.name.formatedName = student.name
@@ -427,7 +436,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def loadPersonAjax(): View = {
     val builder = OqlBuilder.from(classOf[Person], "person")
     get("code").foreach { code => builder.where("person.code = :code", code) }
-    put("person", entityDao.unique(builder))
+    put("person", entityDao.first(builder))
     forward()
   }
 }

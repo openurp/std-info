@@ -1,4 +1,5 @@
 [#ftl]
+[#if person??]
 {
   "person": {
     "id": "${(person.id)!}",
@@ -13,3 +14,6 @@
     "homeTown": "${(person.homeTown?js_string)!}"
   }
 }
+[#else]
+{}
+[/#if]

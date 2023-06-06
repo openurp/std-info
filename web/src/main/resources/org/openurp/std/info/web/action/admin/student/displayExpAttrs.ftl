@@ -169,31 +169,20 @@
         fileNameObj.val("学生学籍信息导出");
         formObj.append(fileNameObj);
 
-        var keys = "", titles = "";
+        var titles = "";
 
         $("div#selectShowDiv").find("label[value]").each(function() {
-          if (keys!="") {
-            keys += ",";
+          if (titles!="") {
             titles += ",";
           }
-          keys += $(this).attr("value");
-          titles += $(this).html();
+          titles += $(this).attr("value")+":"+$(this).html();
         });
-
-        //alert(keys + "\n" + titles);
-        //return false;
-
-        var keyObj = $("<input>");
-        keyObj.attr("type", "hidden");
-        keyObj.attr("name", "keys");
-        keyObj.val(keys);
 
         var titleObj = $("<input>");
         titleObj.attr("type", "hidden");
         titleObj.attr("name", "titles");
         titleObj.val(titles);
 
-        formObj.append(keyObj);
         formObj.append(titleObj);
 
         formObj.append($("#divHidden"));

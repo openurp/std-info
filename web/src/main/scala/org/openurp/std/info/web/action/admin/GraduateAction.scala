@@ -143,7 +143,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     sheet.add("毕业日期", "graduate.graduateOn").date().required()
     sheet.add("毕结业证书号", "graduate.certificateNo").length(30).required()
     sheet.add("学位", "graduate.degree.code").ref(degrees)
-    sheet.add("学位授予日期", "graduate.degreeAwardOn").length(30)
+    sheet.add("学位授予日期", "graduate.degreeAwardOn").date()
     sheet.add("学位证书号", "graduate.diplomaNo").length(30)
     sheet.add("毕业批次", "graduate.batchNo").integer().required()
     sheet.add("外语通过年月", "graduate.foreignLangPassedOn").date()

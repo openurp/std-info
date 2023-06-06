@@ -6,10 +6,10 @@
 [@b.messages slash = "7"/]
 [@b.form name="studentForm" action="!save" theme="list"]
   <input type="hidden" name="student.id" value="${(student.id)!}"/>
-  <input type="hidden" name="student.person.id" value="${(student.person.id)!}"/>
+  <input type="hidden" name="person.id" value="${(student.person.id)!}"/>
   <input type="hidden" name="examinee.id" value="${(examinee.id)!}"/>
  <div class="container-fluid"  style="background-color: #f4f6f9;">
-
+   [#assign person =student.person/]
    <div class="row">
     <div class="card card-primary card-outline col-5" style="margin-bottom: 0rem;background-color: #f4f6f9;">
       <div class="card-header">
@@ -19,16 +19,16 @@
         [@b.fieldset]
           [@b.field label="学号"]<span style="height: 25px;display: inline-block;">${student.code}</span>[/@]
           [@b.textfield label="姓名" name="student.name" required="true" value=(student.name)! maxlength="100" /]
-          [@b.textfield label="英文名" id="phoneticName" name="student.person.phoneticName" value=(student.person.phoneticName)! maxlength="100" style="width: 120px"/]
-          [@b.textfield label="曾用名" name="student.person.formerName" value=(student.person.formerName)! maxlength="100" /]
-          [@base.code type="genders" label="性别" name="student.person.gender.id" empty="..." required="true" value=(student.person.gender)! /]
-          [@b.datepicker label="出生年月" name="student.person.birthday" format="yyyy-MM-dd" readonly="readonly" value=(student.person.birthday)! /]
-          [@base.code type="id-types" label="证件类型" name="student.person.idType.id" empty="..." value=(student.person.idType)! /]
-          [@b.textfield label="证件号码" name="student.person.code" required="true" value=(student.person.code)! maxlength="32" /]
-          [@base.code type="countries" label="国家地区" name="student.person.country.id" empty="..." value=(student.person.country)! /]
-          [@base.code type="nations" label="民族" name="student.person.nation.id" empty="..." value=(student.person.nation)! /]
-          [@base.code type="political-statuses" label="政治面貌" name="student.person.politicalStatus.id" empty="..." value=(student.person.politicalStatus)! /]
-          [@b.textfield label="籍贯" name="student.person.homeTown" value=(student.person.homeTown)! maxlength="100" /]
+          [@b.textfield label="英文名" id="phoneticName" name="person.phoneticName" value=(person.phoneticName)! maxlength="100" style="width: 120px"/]
+          [@b.textfield label="曾用名" name="person.formerName" value=(person.formerName)! maxlength="100" /]
+          [@base.code type="genders" label="性别" name="person.gender.id" empty="..." required="true" value=(person.gender)! /]
+          [@b.datepicker label="出生年月" name="person.birthday" format="yyyy-MM-dd" readonly="readonly" value=(person.birthday)! /]
+          [@base.code type="id-types" label="证件类型" name="person.idType.id" empty="..." value=(person.idType)! /]
+          [@b.textfield label="证件号码" name="person.code" required="true" value=(person.code)! maxlength="32" /]
+          [@base.code type="countries" label="国家地区" name="person.country.id" empty="..." value=(person.country)! /]
+          [@base.code type="nations" label="民族" name="person.nation.id" empty="..." value=(person.nation)! /]
+          [@base.code type="political-statuses" label="政治面貌" name="person.politicalStatus.id" empty="..." value=(person.politicalStatus)! /]
+          [@b.textfield label="籍贯" name="person.homeTown" value=(person.homeTown)! maxlength="100" /]
         [/@]
       </div>
     </div>
@@ -43,7 +43,7 @@
           [@base.code type="std-types" label="学生类别" name="student.stdType.id" empty="..." required="true" value=student.stdType!/]
           [@b.textfield label="学制" name="student.duration" required="true" value=student.duration  check="greaterThan(0).match('number')" maxlength="5"/]
           [@b.radios label="是否有学籍" name="student.registed" required="true" value=student.registed?string(1, 0)/]
-          [@b.startend label="学籍生效日期" name="student.beginOn,student.endOn" required="true" start=student.beginOn end=student.endOn style="width: 120px"/]
+          [@b.startend label="最长学习年限" name="student.beginOn,student.endOn" required="true" start=student.beginOn end=student.endOn style="width: 120px"/]
           [@b.startend label="入学-毕业日期" name="student.studyOn,student.graduateOn" required="true" start=student.studyOn end=student.graduateOn style="width: 120px" /]
           [@base.code type="study-types" label="学习形式" name="student.studyType.id" required="true" empty="..." value=(student.studyType.id)! /]
           [@b.select label="导师" name="student.tutor.id" href=EMS.api+'/base/edu/${student.project.id}/teachers.json?q={term}&isTutor=1' empty="..." value=student.tutor!

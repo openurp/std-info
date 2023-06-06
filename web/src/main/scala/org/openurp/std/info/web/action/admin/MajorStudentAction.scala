@@ -89,7 +89,7 @@ class MajorStudentAction extends RestfulAction[MajorStudent], ExportSupport[Majo
 
   override protected def saveAndRedirect(entity: MajorStudent): View = {
     if (!entity.persisted) {
-      val stds = entityDao.findBy(classOf[Student], "user.code", get("userCode"))
+      val stds = entityDao.findBy(classOf[Student], "code", get("userCode"))
       if (stds.isEmpty) return redirect("editNew", "学号不存在")
       val std = stds.head
       val mss = entityDao.findBy(classOf[MajorStudent], "std", stds)
