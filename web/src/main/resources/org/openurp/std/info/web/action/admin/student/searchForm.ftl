@@ -4,7 +4,9 @@
                  'student.person.code':'证件号码',
                  'examinee.code':'考生号',
                  'student.person.phoneticName':'英文名',
-                 'contact.mobile':'移动电话'
+                 'contact.mobile':'移动电话',
+                 'student.person.nation.name':'民族',
+                 'student.person.country.name':'国家地区'
                  }/]
 [#if advisorSupported!false][#assign fields=fields+{'student.advisor.name':'学位论文导师'}/] [/#if]
 [@b.form name="studentSearchForm" id="studentSearchForm" action="!search" title="ui.searchForm" target="studentList" theme="search"]

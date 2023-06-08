@@ -153,8 +153,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     if advisorSupported then std.add("advisor.name", "学位论文导师姓名")
 
     val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
-    p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "politicalStatus.name" -> "政治面貌")
-    p.add("idType.name" -> "证件类型", "code" -> "证件号码")
+    p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
+    p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌")
 
     val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
     contact.add("mobile", "手机")
@@ -243,7 +243,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.calcCurrentState()
     student.updatedAt = Instant.now()
     val person = student.person
-    populate(person,"person")
+    populate(person, "person")
     person.updatedAt = Instant.now()
     student.gender = person.gender
     person.name.formatedName = student.name
@@ -294,6 +294,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
     val genders = getCodes(classOf[Gender]).sortBy(_.code).map(x => x.code + " " + x.name)
     val nations = getCodes(classOf[Nation]).sortBy(_.code).map(x => x.code + " " + x.name)
+    val countries = getCodes(classOf[Country]).sortBy(_.code).map(x => x.code + " " + x.name)
     val divisions = getCodes(classOf[Division]).sortBy(_.code).map(x => x.code + " " + x.name)
     val politicalStatuses = getCodes(classOf[PoliticalStatus]).sortBy(_.code).map(x => x.code + " " + x.name)
     val idTypes = getCodes(classOf[IdType]).sortBy(_.code).map(x => x.code + " " + x.name)
@@ -318,6 +319,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     sheet.add("性别", "person.gender.code").ref(genders).required()
     sheet.add("出生年月", "person.birthday").required().remark("格式：YYYYMMDD")
     sheet.add("民族", "person.nation.code").ref(nations)
+    sheet.add("国家地区", "person.country.code").ref(countries)
     sheet.add("政治面貌", "person.politicalStatus.code").ref(politicalStatuses)
     sheet.add("证件号码", "person.code").required().remark("18位")
     sheet.add("证件类型", "person.idType.code").ref(idTypes).required()
