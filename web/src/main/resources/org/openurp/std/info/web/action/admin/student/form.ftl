@@ -49,7 +49,7 @@
           [@b.select label="导师" name="student.tutor.id" href=EMS.api+'/base/edu/${student.project.id}/teachers.json?q={term}&isTutor=1' empty="..." value=student.tutor!
                      option="id,description" style="width: 400px"/]
           [#if advisorSupported]
-          [@b.select label="学位论文导师" name="student.advisor.id" href=EMS.api+'/base/edu/${student.project.id}/teachers.json?q={term}&isTutor=1' empty="..." value=student.advisor!
+          [@b.select label="学位论文导师" name="student.advisor.id" href=EMS.api+'/base/edu/${student.project.id}/teachers.json?q={term}' empty="..." value=student.advisor!
                      option="id,description" style="width: 400px"/]
           [/#if]
           [@b.select label="标签" name="labelIds" items=stdLabels values=student.labels?values /]
