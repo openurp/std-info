@@ -5,7 +5,7 @@
   <table class="infoTable">
     <tr>
       <td class="title" width="100px">电子邮箱：</td>
-      <td>${(contact.mail?html)!}</td>
+      <td>${(contact.email?html)!}</td>
       <td class="title" width="100px">电话：</td>
       <td>${(contact.phone?html)!}</td>
       <td class="title" width="100px">移动电话：</td>
