@@ -18,33 +18,38 @@
 package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Collections
-import org.beangle.data.dao.EntityDao
-import org.openurp.base.model.Project
+import org.beangle.commons.lang.Strings
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.openurp.base.model.{Department, Project}
+import org.openurp.base.std.model.Student
+import org.openurp.code.person.model.Gender
+
+import java.time.LocalDate
+import scala.collection.mutable
 
 /**
  * “在籍男女生人数统计”专用辅助类
  *
  */
-
 class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //
-//  private var departMap: Map[Integer, Node] = Collections.newMap[Integer, Node]
-//  private var gradeMap: Map[String, Node] = null
-//  private var genderMap: Map[Integer, Gender] = null
-//  private var genderIndexMap: Map[String, Integer] = null
+//  private var departMap: mutable.Map[Integer, Node] = Collections.newMap[Integer, Node]
+//  private var gradeMap: mutable.Map[String, Node] = null
+//  private var genderMap: mutable.Map[Integer, Gender] = null
+//  private var genderIndexMap: mutable.Map[String, Integer] = null
 //  private var departHeadNodes: Array[Node] = null
 //  private var gradeHeadNodes: Array[Node] = null
 //
 //  def report: Array[Node] = {
 //    val query: OqlBuilder[_] = OqlBuilder.from(classOf[Student], "student")
 //    query.where("student.project = :project", project)
-//    query.where("student.state.department in (:departments)", project.getDepartments)
+//    query.where("student.state.department in (:departments)", project.departments)
 //    //    if (CollectUtils.isNotEmpty(project.getStdTypes())) {
 //    //      query.where("student.stdType in (:stdTypes)", project.getStdTypes());
 //    //    }
 //    //    if (CollectUtils.isNotEmpty(project.getLevels())) {
 //    //      query.where("student.level in (:levels)", project.getLevels());
-//    query.where("student.state.beginOn<= :now and student.state.endOn>=:now and student.registed=true", new Date)
+//    query.where("student.state.beginOn<= :now and student.state.endOn>=:now and student.registed=true", LocalDate.now)
 //    query.groupBy("student.state.grade, student.state.department.id, student.person.gender.id")
 //    query.select("student.state.grade, student.state.department.id, student.person.gender.id, count(*)")
 //    val searchResults: List[Array[AnyRef]] = entityDao.search(query).asInstanceOf[List[Array[AnyRef]]]
@@ -52,13 +57,13 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //    // 1. 横向，院系；纵向，年级；交点，每个性别的人数
 //    // 2. 先横次纵后交点
 //    for (i <- 0 until searchResults.size) {
-//      val dataItems: Array[AnyRef] = searchResults.get(i).asInstanceOf[Array[AnyRef]]
+//      val dataItems: Array[AnyRef] = searchResults(i).asInstanceOf[Array[AnyRef]]
 //      val grade: String = dataItems(0).asInstanceOf[String]
 //      val departId: Integer = dataItems(1).asInstanceOf[Integer]
 //      val genderId: Integer = dataItems(2).asInstanceOf[Integer]
 //      // 首先建立“院系”行
-//      if (!(departMap.containsKey(departId))) {
-//        val departNode: Node = new Node(entityDao.get(classOf[Department], departId))
+//      if (!(departMap.contains(departId))) {
+//        val departNode = new Node(entityDao.get(classOf[Department], departId))
 //        // 对刚新建立“院系”，进行初始化前面已经出现的“年级”列
 //        if (null != departHeadNodes) {
 //          initDepartRow(departHeadNodes(departHeadNodes.length - 1).next, departNode)
@@ -66,7 +71,7 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //        departHeadNodes = ArrayUtils.add(departHeadNodes, departNode)
 //        departMap.put(departId, departNode)
 //      }
-//      val departNode: Node = departMap.get(departId)
+//      val departNode = departMap(departId)
 //      // 若有新的“年级”出现，则按顺序插入
 //      insertGradeNodeWhenNew(grade)
 //      // 缓存并提出性别
@@ -74,7 +79,7 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //      // 找到对应的性别节点，并赋上值
 //      val dataNode: Node = NodeHelper.findInNext(departNode, grade)
 //      val genderIndexKey: String = departId + "_" + genderId
-//      if (!(genderIndexMap.containsKey(genderIndexKey))) {
+//      if (!(genderIndexMap.contains(genderIndexKey))) {
 //        var foundIndex: Int = 0
 //        if (dataNode.nodeArraySize > 0) {
 //          while ( {
@@ -84,7 +89,7 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //            if (gender.getCode.compareTo(hisGender.getCode) < 0) {
 //              for (k <- foundIndex until dataNode.nodeArraySize) {
 //                hisGender = dataNode.nodeArrayIndexOf(k).`val`.asInstanceOf[Gender]
-//                genderIndexMap.put(departId + "_" + hisGender.getId, k + 1)
+//                genderIndexMap.put(departId + "_" + hisGender.id, k + 1)
 //              }
 //              break //todo: break is not supported
 //
@@ -96,7 +101,7 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //        genderIndexMap.put(genderIndexKey, foundIndex)
 //        insertGenderNodeToArray(departNode.next, foundIndex, gender)
 //      }
-//      dataNode.nodeArrayIndexOf(genderIndexMap.get(genderIndexKey)).next(new Node(dataItems(3))) // 赋值
+//      dataNode.nodeArrayIndexOf(genderIndexMap(genderIndexKey)).next(new Node(dataItems(3))) // 赋值
 //
 //    }
 //    return departHeadNodes
@@ -109,9 +114,9 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //   * @return
 //   */
 //  private def insertGradeNodeWhenNew(grade: String): Unit = { // 新增年级列的处理
-//    if (!(gradeMap.containsKey(grade))) {
-//      val gradeHeadNode: Node = new Node(grade)
-//      val gradeNode: Node = new Node(grade)
+//    if (!(gradeMap.contains(grade))) {
+//      val gradeHeadNode = new Node(grade)
+//      val gradeNode = new Node(grade)
 //      // 向前或向后插入一列年级
 //      val n: Int = if (null == gradeHeadNodes) {
 //        0
@@ -134,7 +139,6 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //          val gradeValue: Int = loadGradeValue(gradeHeadNodes(i).`val`.toString)
 //          if (targetGradeValue < gradeValue) {
 //            break //todo: break is not supported
-//
 //          }
 //
 //          i += 1
@@ -154,12 +158,12 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //  }
 //
 //  private def loadGradeValue(grade: String): Int = {
-//    val gradeSections: Array[String] = StringUtils.split(grade, "-")
+//    val gradeSections: Array[String] = Strings.split(grade, "-")
 //    gradeSections.length match {
 //      case 1 =>
-//        return StringUtils.leftPad(gradeSections(0), 4, "0").toInt * 100
+//        Strings.leftPad(gradeSections(0), 4, '0').toInt * 100
 //      case _ =>
-//        return StringUtils.leftPad(gradeSections(0), 4, "0") + StringUtils.leftPad(gradeSections(1), 2, "0").toInt
+//        (Strings.leftPad(gradeSections(0), 4, '0') + Strings.leftPad(gradeSections(1), 2, '0')).toInt
 //    }
 //  }
 //
@@ -187,10 +191,10 @@ class StudentInschoolStatHelper(entityDao: EntityDao, project: Project) {
 //   * @return
 //   */
 //  private def initGender(genderId: Integer): Gender = {
-//    if (!(genderMap.containsKey(genderId))) {
+//    if (!(genderMap.contains(genderId))) {
 //      genderMap.put(genderId, entityDao.get(classOf[Gender], genderId))
 //    }
-//    return genderMap.get(genderId)
+//    return genderMap(genderId)
 //  }
 //
 //  /**

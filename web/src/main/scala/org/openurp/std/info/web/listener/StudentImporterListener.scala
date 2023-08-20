@@ -227,12 +227,12 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
   }
 
   private def putStateInStudent(student: Student, state: StudentState): Unit = {
-    state.squad.foreach(squad => {
+    state.squad.foreach(squad =>
       if state.department == null then state.department = squad.department
       if state.major == null then state.major = squad.major.orNull
       if state.direction.isEmpty then state.direction = squad.direction
-      if null == state.campus then state.campus = squad.campus
-    })
+      if null == state.campus then state.campus = squad.campus.orNull
+    )
     if (!state.persisted) state.inschool = true
     state.std = student
     student.states += state

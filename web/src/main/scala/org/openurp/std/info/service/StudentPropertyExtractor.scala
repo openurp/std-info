@@ -49,7 +49,7 @@ class StudentPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtr
       } else if ("labels_std" == property) {
         val labelValue = new StringBuilder
         student.labels.keySet.foreach(labelType => {
-          if (labelValue.length > 0) {
+          if (labelValue.nonEmpty) {
             labelValue.append(";")
           }
           student.labels.get(labelType).foreach(label => {

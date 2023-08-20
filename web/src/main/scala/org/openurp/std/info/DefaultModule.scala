@@ -18,11 +18,10 @@
 package org.openurp.std.info
 
 import org.beangle.cdi.bind.BindModule
-import org.beangle.ems.app.datasource.AppDataSourceFactory
 import org.openurp.base.std.service.impl.StudentServiceImpl
 import org.openurp.edu.program.domain.DefaultProgramProvider
 import org.openurp.std.info.service.{StudentInfoService, StudentManager}
-import org.openurp.std.info.web.action.{admin, student}
+import org.openurp.std.info.web.action.{admin, mentor, student}
 
 class DefaultModule extends BindModule {
 
@@ -32,13 +31,13 @@ class DefaultModule extends BindModule {
     bind(classOf[admin.MajorStudentAction])
     bind(classOf[admin.SearchAction], classOf[admin.StudentAction], classOf[admin.ContactAction])
     bind(classOf[admin.CertificateAction])
-
+    bind(classOf[admin.StatAction])
     bind(classOf[admin.AlterConfigAction], classOf[admin.AlterationAction])
-
     bind(classOf[admin.RegisterAction], classOf[admin.RegisterSessionAction])
 
-    //, classOf[StudentInfoAction], classOf[StudentReportAction])
     bind(classOf[StudentManager], classOf[StudentInfoService])
+
+    bind(classOf[mentor.StudentAction])
 
     bind(classOf[student.InfoAction])
     bind(classOf[student.RegisterAction])

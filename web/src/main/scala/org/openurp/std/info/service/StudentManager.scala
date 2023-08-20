@@ -19,23 +19,13 @@ package org.openurp.std.info.service
 
 import org.beangle.commons.bean.Properties
 import org.beangle.commons.collection.Collections
-import org.beangle.data.dao.{Operation, OqlBuilder}
-import org.beangle.data.model.Entity
-import org.hibernate.Hibernate
-import org.openurp.base.model.{Person, User}
+import org.beangle.data.dao.OqlBuilder
+import org.openurp.base.model.Person
 import org.openurp.base.service.AbstractBaseService
 import org.openurp.base.std.model.{Graduate, Squad, Student, StudentState}
 import org.openurp.base.std.service.StudentService
-import org.openurp.base.std.service.event.CreateStudentEvent
-import org.openurp.std.alter.model.StdAlteration
-import org.openurp.std.info.app.model.StudentLog
 import org.openurp.std.info.model.{Contact, Home}
 
-import java.beans.PropertyDescriptor
-import java.io.Serializable
-import java.lang.reflect.InvocationTargetException
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util
 import scala.collection.mutable
@@ -93,29 +83,29 @@ class StudentManager extends AbstractBaseService {
   //  }
 
   // 删除未生效学籍信息并记录
-  def checkAndRemoveLogForStudentAlteration(stdAlterations: Iterable[StdAlteration], ip: String, user: User): Unit = {
-    //    val time = new Timestamp(System.currentTimeMillis)
-    val saveDatas = Collections.newBuffer[Entity[_]]
-    stdAlterations.foreach(stdAlteration => {
-      val log = new StudentLog
-      log.`type` = StudentLog.STD_ALL_LOG
-      log.operation = "已删除预定于" + stdAlteration.beginOn + "对学号为" + stdAlteration.std.code + "的未生效学籍异动[" + stdAlteration.alterType.name + "]"
-      log.user = user
-      log.time = LocalDate.now()
-      log.student = stdAlteration.std
-      log.ip = ip
-      val log2 = new StudentLog
-      log2.`type` = StudentLog.STD_PERSONAL_LOG
-      log2.operation = "已删除预定于" + stdAlteration.beginOn + "对学号为" + stdAlteration.std.code + "的未生效学籍异动[" + stdAlteration.alterType.name + "]"
-      log2.user = user
-      log2.time = LocalDate.now()
-      log2.student = stdAlteration.std
-      log2.ip = ip
-      saveDatas.+=(log)
-      saveDatas.+=(log2)
-    })
-    entityDao.execute(Operation.saveOrUpdate(saveDatas).remove(stdAlterations))
-  }
+  //  def checkAndRemoveLogForStudentAlteration(stdAlterations: Iterable[StdAlteration], ip: String, user: User): Unit = {
+  //    //    val time = new Timestamp(System.currentTimeMillis)
+  //    val saveDatas = Collections.newBuffer[Entity[_]]
+  //    stdAlterations.foreach(stdAlteration => {
+  //      val log = new StudentLog
+  //      log.`type` = StudentLog.STD_ALL_LOG
+  //      log.operation = "已删除预定于" + stdAlteration.beginOn + "对学号为" + stdAlteration.std.code + "的未生效学籍异动[" + stdAlteration.alterType.name + "]"
+  //      log.user = user
+  //      log.time = LocalDate.now()
+  //      log.student = stdAlteration.std
+  //      log.ip = ip
+  //      val log2 = new StudentLog
+  //      log2.`type` = StudentLog.STD_PERSONAL_LOG
+  //      log2.operation = "已删除预定于" + stdAlteration.beginOn + "对学号为" + stdAlteration.std.code + "的未生效学籍异动[" + stdAlteration.alterType.name + "]"
+  //      log2.user = user
+  //      log2.time = LocalDate.now()
+  //      log2.student = stdAlteration.std
+  //      log2.ip = ip
+  //      saveDatas.+=(log)
+  //      saveDatas.+=(log2)
+  //    })
+  //    entityDao.execute(Operation.saveOrUpdate(saveDatas).remove(stdAlterations))
+  //  }
 
   //  def checkAndRollbackLogForStudent(parameterObject: SaveLogForStudentParameter): Unit = {
   //    checkAndRollbackLogForStudent(parameterObject, null, null)
@@ -337,17 +327,17 @@ class StudentManager extends AbstractBaseService {
    * @param parameterObject
    * TODO
    */
-  def addGeneralLog(parameterObject: StudentLogParameter): StudentLog = {
-    val time: Timestamp = new Timestamp(System.currentTimeMillis)
-    val log: StudentLog = new StudentLog
-    log.`type` = parameterObject.`type`
-    log.operation = parameterObject.operation
-    log.user = parameterObject.loginUser
-    log.time = LocalDate.now()
-    log.student = parameterObject.s
-    log.ip = parameterObject.ip
-    log
-  }
+  //  def addGeneralLog(parameterObject: StudentLogParameter): StudentLog = {
+  //    val time: Timestamp = new Timestamp(System.currentTimeMillis)
+  //    val log: StudentLog = new StudentLog
+  //    log.`type` = parameterObject.`type`
+  //    log.operation = parameterObject.operation
+  //    log.user = parameterObject.loginUser
+  //    log.time = LocalDate.now()
+  //    log.student = parameterObject.s
+  //    log.ip = parameterObject.ip
+  //    log
+  //  }
 
   def convertProName(properties: String): String = {
     val it = StudentManager.propertyMap.entrySet.iterator
@@ -401,7 +391,6 @@ class StudentManager extends AbstractBaseService {
       entities.+=(journal)
     }
     entityDao.saveOrUpdate(entities)
-    publish(new CreateStudentEvent(student))
   }
 
   def getStudentDatasById(stdId: Long): mutable.Map[String, Any] = {

@@ -23,7 +23,7 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.app.model.RegisterSession
+import org.openurp.std.register.config.RegisterSession
 
 class RegisterSessionAction extends RestfulAction[RegisterSession] with ProjectSupport {
 
@@ -31,9 +31,8 @@ class RegisterSessionAction extends RestfulAction[RegisterSession] with ProjectS
     given project: Project = getProject
 
     val semester = getSemester
-    val query = OqlBuilder.from(classOf[RegisterSession],"rs")
-    query.where("rs.project=:project",project)
-//    val sessions = entityDao.findBy(classOf[RegisterSession], "semester", List(semester))
+    val query = OqlBuilder.from(classOf[RegisterSession], "rs")
+    query.where("rs.project=:project", project)
     put("sessions", entityDao.search(query))
     put("project", project)
     put("semester", semester)
@@ -53,7 +52,7 @@ class RegisterSessionAction extends RestfulAction[RegisterSession] with ProjectS
   override def editSetting(scheme: RegisterSession): Unit = {
     given project: Project = getProject
 
-    put("project",project)
+    put("project", project)
     if (null == scheme.semester) {
       scheme.semester = getSemester
     }

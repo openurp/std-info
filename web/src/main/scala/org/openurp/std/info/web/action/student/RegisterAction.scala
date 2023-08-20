@@ -27,7 +27,7 @@ import org.openurp.base.model.{Semester, User}
 import org.openurp.base.std.model.Student
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.fee.model.Debt
-import org.openurp.std.info.app.model.RegisterSession
+import org.openurp.std.register.config.RegisterSession
 import org.openurp.std.register.model.Register
 
 import java.time.Instant

@@ -17,8 +17,6 @@
 
 package org.openurp.std.info.web.helper
 
-import org.beangle.data.model.IntId
-
 import scala.collection.mutable
 
 /**

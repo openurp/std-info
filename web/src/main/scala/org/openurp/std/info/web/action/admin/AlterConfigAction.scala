@@ -17,14 +17,12 @@
 
 package org.openurp.std.info.web.action.admin
 
-import org.beangle.commons.lang.Strings
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
-import org.openurp.base.std.model.Student
 import org.openurp.code.std.model.{StdAlterType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.app.model.StdAlterConfig
+import org.openurp.std.alter.config.StdAlterConfig
 
 class AlterConfigAction extends RestfulAction[StdAlterConfig] with ProjectSupport {
 

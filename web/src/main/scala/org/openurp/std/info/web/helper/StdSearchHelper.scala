@@ -40,16 +40,14 @@ class StdSearchHelper(entityDao: EntityDao, project: Project, departs: Iterable[
     builder.where("student.project=:project", project)
     builder.where("student.state.department in (:departments)", departs)
     val date = LocalDate.now()
-    Params.get("status").foreach(status => {
-      status match {
-        case "active" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = true", date)
-        case "unactive" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = false", date)
-        case "available" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true ", date)
-        case "unavailable" => builder.where("student.beginOn> :now or student.endOn<:now or student.registed=false", date)
-        case "active_unregisted" => builder.where("student.state.inschool=true and student.registed=false")
-        case "" =>
-      }
-    })
+    Params.get("status").foreach {
+      case "active" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = true", date)
+      case "unactive" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = false", date)
+      case "available" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true ", date)
+      case "unavailable" => builder.where("student.beginOn> :now or student.endOn<:now or student.registed=false", date)
+      case "active_unregisted" => builder.where("student.state.inschool=true and student.registed=false")
+      case "" =>
+    }
     addSubQuery(builder, classOf[Graduate], classOf[Contact], classOf[Home], classOf[Examinee])
     Params.getInt("squad.id").foreach(squadId => {
       builder.where("student.state.squad.id = :squadId", squadId)

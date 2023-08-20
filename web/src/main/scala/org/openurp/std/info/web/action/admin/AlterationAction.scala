@@ -17,22 +17,20 @@
 
 package org.openurp.std.info.web.action.admin
 
-import org.beangle.commons.bean.Properties
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.{Objects, Strings}
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.model.Entity
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
-import org.openurp.base.model.{Campus, Department, Project}
+import org.openurp.base.model.{Department, Project}
 import org.openurp.base.std.model.{Grade, Squad, Student, StudentState}
 import org.openurp.code.edu.model.{EducationLevel, EducationMode}
 import org.openurp.code.std.model.{StdAlterReason, StdAlterType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.std.alter.config.StdAlterConfig
 import org.openurp.std.alter.model.{AlterMeta, StdAlteration, StdAlterationItem}
-import org.openurp.std.info.app.model.StdAlterConfig
 
 import java.time.{Instant, LocalDate}
 
@@ -100,11 +98,11 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       }
       put("config", true)
     }
-    put("minBeginOn", students.sortBy(_.beginOn).head.beginOn)
-    put("maxEndOn", students.sortBy(_.endOn).head.endOn)
+    put("minBeginOn", students.minBy(_.beginOn).beginOn)
+    put("maxEndOn", students.minBy(_.endOn).endOn)
     put("graduateOnConfig", alterConfig.alterGraduateOn)
     if (alterConfig.alterGraduateOn) {
-      put("maxGraduateOn", students.sortBy(_.graduateOn).head.graduateOn)
+      put("maxGraduateOn", students.minBy(_.graduateOn).graduateOn)
     }
     put("alterConfig", alterConfig)
     forward("form")

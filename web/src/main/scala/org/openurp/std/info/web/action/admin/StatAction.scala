@@ -15,17 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.info.app.model
+package org.openurp.std.info.web.action.admin
 
-import org.beangle.data.orm.MappingModule
+import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.base.std.model.Student
+import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.std.info.web.helper.StudentInschoolStatHelper
 
-class DefaultMapping extends MappingModule {
+class StatAction extends RestfulAction[Student] with ProjectSupport {
 
-  def binding(): Unit = {
-    bind[StudentLog].declare { e =>
-      e.operation is length(2000)
-    }
-    bind[StdAlterConfig]
-    bind[RegisterSession]
+  def inschoolStatReport: View = {
+    val project = getProject
+    //put("results", new StudentInschoolStatHelper(entityDao, project).report)
+    put("project", project)
+    forward()
   }
 }
