@@ -26,6 +26,8 @@ import org.openurp.base.std.model.Student
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.std.info.web.helper.GradeHelper
 
+import java.time.LocalDate
+
 /**
  * 打印在读证明
  */
@@ -38,12 +40,18 @@ class CertificateAction extends ActionSupport, EntityAction[Student] {
   @mapping("{lang}")
   def index(): View = {
     val std = entityDao.get(classOf[Student], getLongId("student"))
-    put("student", std)
-    put("grade", GradeHelper.convert(std.state.get.grade))
-    put("program", programProvider.getProgram(std))
-    val lang = get("lang").get
-    put("lang", lang)
-    forward(if (std.registed) lang else "no")
+    val outdate = !std.within(LocalDate.now)
+    put("std", std)
+    if (outdate) {
+      forward("outdate")
+    } else {
+      put("student", std)
+      put("grade", GradeHelper.convert(std.state.get.grade))
+      put("program", programProvider.getProgram(std))
+      val lang = get("lang").get
+      put("lang", lang)
+      forward(if (std.registed) lang else "no")
+    }
   }
 
 }

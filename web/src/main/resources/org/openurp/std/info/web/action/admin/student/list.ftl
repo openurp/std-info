@@ -32,6 +32,7 @@
         var m1 = bar.addMenu("高级...");
         m1.addItem("补足姓名拼音",action.multi("batchUpdateEnName"));
         m1.addItem("更新姓名拼音",action.multi("batchUpdateEnName","确定覆盖更新？","&forceUpdate=1"));
+        m1.addItem("删除学籍",action.remove());
       [/@]
       [@b.row]
         [@b.boxcol/]

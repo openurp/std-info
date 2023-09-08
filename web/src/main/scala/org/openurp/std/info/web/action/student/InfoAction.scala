@@ -18,18 +18,17 @@
 package org.openurp.std.info.web.action.student
 
 import org.beangle.commons.codec.digest.Digests
-import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
-import org.beangle.security.Securities
 import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.support.{ActionSupport, ServletSupport}
 import org.beangle.web.action.view.View
-import org.openurp.base.model.Project
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 import org.openurp.std.info.web.helper.GradeHelper
+
+import java.time.LocalDate
 
 class InfoAction extends StudentSupport {
 
@@ -38,12 +37,20 @@ class InfoAction extends StudentSupport {
   @mapping("certificate/{lang}")
   def certificate(): View = {
     val std = getStudent
-    put("grade", GradeHelper.convert(std.state.get.grade))
-    put("program", programProvider.getProgram(std))
-    val lang = get("lang").get
-    put("lang", lang)
-    put("has_signature", true)
-    forward()
+    val outdate = !std.within(LocalDate.now)
+    put("std", std)
+    if (outdate) {
+      forward("outdate")
+    } else if (!std.registed) {
+      forward("no")
+    } else {
+      put("grade", GradeHelper.convert(std.state.get.grade))
+      put("program", programProvider.getProgram(std))
+      val lang = get("lang").get
+      put("lang", lang)
+      put("has_signature", true)
+      forward()
+    }
   }
 
   override def projectIndex(student: Student): View = {
