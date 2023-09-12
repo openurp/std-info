@@ -18,40 +18,31 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.codec.digest.Digests
-import org.beangle.commons.collection.{Collections, Order}
-import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
+import org.beangle.data.dao.EntityDao
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
-import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{ignore, mapping}
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.{EntityAction, RestfulAction}
+import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.Features
-import org.openurp.base.edu.code.EducationType
-import org.openurp.base.edu.model.*
-import org.openurp.base.model.{Campus, Person, Project, User}
-import org.openurp.base.std.code.{StdLabel, StdType}
-import org.openurp.base.std.model.{Graduate, Squad, Student, StudentState}
+import org.openurp.base.model.{Campus, Project}
+import org.openurp.base.std.code.StdLabel
+import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.*
-import org.openurp.code.geo.model.{Country, Division, RailwayStation}
 import org.openurp.code.person.model.*
-import org.openurp.code.std.model.{FeeOrigin, StudentStatus}
+import org.openurp.code.std.model.StudentStatus
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.service.{StudentManager, StudentPropertyExtractor}
-import org.openurp.std.info.web.helper.{EntityMeta, PropertyMeta, StdSearchHelper}
-
-import java.time.{Instant, LocalDate}
-import scala.collection.mutable
-import scala.util.control.Breaks.{break, breakable}
+import org.openurp.std.info.service.StudentPropertyExtractor
+import org.openurp.std.info.web.helper.StdSearchHelper
 
 /**
  * 学籍查询
  */
 
-class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport {
+class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport, ExportSupport[Student] {
 
   protected var studentService: StudentService = _
 
@@ -97,4 +88,9 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport 
     forward()
   }
 
+  @ignore
+  override def configExport(context: ExportContext): Unit = {
+    context.extractor = new StudentPropertyExtractor(entityDao)
+    super.configExport(context)
+  }
 }
