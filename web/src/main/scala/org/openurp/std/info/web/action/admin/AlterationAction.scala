@@ -84,6 +84,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("modes", getCodes(classOf[StdAlterType]))
     put("reasons", getCodes(classOf[StdAlterReason]))
     put("statuses", getCodes(classOf[StudentStatus]))
+    put("grades", entityDao.findBy(classOf[Grade], "project", project))
     put("departments", project.departments)
     put("squades", entityDao.findBy(classOf[Squad], "project", project))
 
@@ -105,6 +106,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       put("maxGraduateOn", students.minBy(_.graduateOn).graduateOn)
     }
     put("alterConfig", alterConfig)
+    put("project", project)
     forward("form")
   }
 

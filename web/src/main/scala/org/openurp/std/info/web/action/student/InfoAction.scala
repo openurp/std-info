@@ -26,7 +26,8 @@ import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.web.helper.GradeHelper
+import org.openurp.std.info.web.helper.CertificateErrors.{NotInSchool, Outdated}
+import org.openurp.std.info.web.helper.{CertificateErrors, GradeHelper}
 
 import java.time.LocalDate
 
@@ -37,19 +38,25 @@ class InfoAction extends StudentSupport {
   @mapping("certificate/{lang}")
   def certificate(): View = {
     val std = getStudent
-    val outdate = !std.within(LocalDate.now)
+    val active = std.within(LocalDate.now)
     put("std", std)
-    if (outdate) {
-      forward("outdate")
-    } else if (!std.registed) {
-      forward("no")
+    if (active) {
+      if (std.registed) {
+        if (std.state.get.inschool) {
+          put("student", std)
+          put("grade", GradeHelper.convert(std.state.get.grade))
+          put("program", programProvider.getProgram(std))
+          put("lang", get("lang", "zh"))
+          put("has_signature", true)
+          forward()
+        } else {
+          error(CertificateErrors.NotInSchool)
+        }
+      } else {
+        error(CertificateErrors.No)
+      }
     } else {
-      put("grade", GradeHelper.convert(std.state.get.grade))
-      put("program", programProvider.getProgram(std))
-      val lang = get("lang").get
-      put("lang", lang)
-      put("has_signature", true)
-      forward()
+      error(CertificateErrors.Outdated)
     }
   }
 
@@ -61,5 +68,10 @@ class InfoAction extends StudentSupport {
     put("examinee", entityDao.unique(OqlBuilder.from(classOf[Examinee], "examinee").where("examinee.std = :student", student)))
     put("avatarUrl", Ems.api + "/platform/user/avatars/" + Digests.md5Hex(student.code))
     forward()
+  }
+
+  private def error(cause: String): View = {
+    put("cause", CertificateErrors.translate(cause))
+    forward("error")
   }
 }

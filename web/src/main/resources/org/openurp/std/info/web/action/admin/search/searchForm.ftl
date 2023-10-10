@@ -10,15 +10,19 @@
   [@b.textfield name="student.code" label="学号"/]
   [@b.textfield name="student.name" label="姓名"/]
   [@b.textfield name="student.state.grade.code" label="年级"/]
+  [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
   [@b.select name="student.level.id" label="培养层次" items=levels empty="..."/]
   [@b.select name="student.state.department.id" label="院系" items=departments empty="..."/]
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
-  [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
+  [@b.textfield name="student.state.squad.name" label="班级"/]
+
   [@b.textfield name="student.duration" label="学制" onKeyup="validateData(this);"/]
   [#if tutorSupported][@b.textfield name="student.tutor.name" label="导师"/][/#if]
   [@b.select name="status" label="状态" items=statuses empty="..." value="active"/]
+  [#if studyTypes?size>1]
+  [@b.select name="student.studyType.id" label="学习形式" items=studyTypes?sort_by("name") empty="..."/]
+  [/#if]
   [@b.select name="student.state.status.id" label="学籍状态" items=states?sort_by("name") empty="..."/]
-  [@b.textfield name="student.state.squad.name" label="班级"/]
   <div class="search-item">
     <select onchange="document.getElementById('custom_field').name=this.value" style="width:50px">
       <option value=""></option>

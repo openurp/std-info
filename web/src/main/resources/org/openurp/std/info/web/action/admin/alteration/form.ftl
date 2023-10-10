@@ -26,7 +26,7 @@
           ${minBeginOn?string('yyyy-MM-dd')}之后
         </td>
         <td style="text-align:right;"><font color='red'>*</font>年级：</td>
-        <td>[#if gradeConfig??][@b.select style="width：160px"  id="gradeId" name="status.grade.id" items=grades empty="..."/][#else]不做变动[/#if]</td>
+        <td>[#if gradeConfig??][@b.select style="width：160px"  id="gradeId" name="status.grade.id" label="年级" items=grades empty="..."/][#else]不做变动[/#if]</td>
       </tr>
       <tr>
         <td style="text-align:right;">异动后状态：</td>
@@ -38,7 +38,7 @@
         </td>
         <td width="40%">
           [#if departmentConfig??]
-          [@b.select style="width：160px" title="院系" id="departmentId" name="status.department.id" items=departments empty="..."/]
+          [@b.select style="width：160px" title="院系" id="departmentId"  label="院系" name="status.department.id" items=departments empty="..."/]
           [#else]不做变动[/#if]
         </td>
       </tr>
@@ -54,8 +54,8 @@
          </td>
          <td>
             [#if majorConfig??]
-            [@b.select style="width：160px" id="majorId" name="status.major.id" items={} empty="..." /]
-            [@b.select style="width：160px" id="directionId" name="status.direction.id" items={} empty="..." /]
+            [@b.select style="width：160px" id="majorId" name="status.major.id"  label="专业"  items={} empty="..." /]
+            [@b.select style="width：160px" id="directionId" name="status.direction.id"  label="方向" items={} empty="..." /]
             [#else]不做变动
             [/#if]
          </td>
@@ -164,10 +164,10 @@
     [#if majorConfig??]
     if (jQuery("#departmentId").length) {
       jQuery("#departmentId").change(function(){
-        projectMajorDwr.majors("${projectContext.project.id}", null, jQuery("#departmentId").val(), setMajorOptions);
+        projectMajorDwr.majors("${project.id}", null, jQuery("#departmentId").val(), setMajorOptions);
       });
     } else {
-      projectMajorDwr.majors("${projectContext.project.id}", null, jQuery("#departmentId").val(), setMajorOptions);
+      projectMajorDwr.majors("${project.id}", null, jQuery("#departmentId").val(), setMajorOptions);
     }
     jQuery("#majorId").change(function(){
       projectMajorDwr.directions(jQuery("#majorId").val(), setDirectionOptions);

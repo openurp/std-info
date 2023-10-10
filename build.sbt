@@ -1,5 +1,5 @@
-import org.openurp.parent.Settings._
-import org.openurp.parent.Dependencies._
+import org.openurp.parent.Dependencies.*
+import org.openurp.parent.Settings.*
 
 ThisBuild / organization := "org.openurp.std.info"
 ThisBuild / version := "0.0.4-SNAPSHOT"
@@ -23,9 +23,9 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
-val apiVer = "0.34.1"
-val starterVer = "0.3.8"
-val baseVer = "0.4.6"
+val apiVer = "0.34.3-SNAPSHOT"
+val starterVer = "0.3.9-SNAPSHOT"
+val baseVer = "0.4.7-SNAPSHOT"
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
@@ -39,8 +39,8 @@ lazy val web = (project in file("web"))
     name := "openurp-std-info-web",
     common,
     libraryDependencies ++= Seq(beangle_commons_core, beangle_data_orm, beangle_webmvc_core, beangle_webmvc_support),
-    libraryDependencies ++= Seq(openurp_std_api, openurp_edu_api,beangle_serializer_text),
-    libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag,beangle_doc_docx)
+    libraryDependencies ++= Seq(openurp_std_api, openurp_edu_api, beangle_serializer_text),
+    libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag, beangle_doc_docx)
   )
 
 lazy val webapp = (project in file("webapp"))

@@ -24,7 +24,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
 import org.openurp.edu.program.domain.ProgramProvider
-import org.openurp.std.info.web.helper.GradeHelper
+import org.openurp.std.info.web.helper.{CertificateErrors, GradeHelper}
 
 import java.time.LocalDate
 
@@ -37,21 +37,38 @@ class CertificateAction extends ActionSupport, EntityAction[Student] {
 
   var programProvider: ProgramProvider = _
 
+  /** 学籍证明打印
+   * outdate 表示学籍失效 no 表示无学籍 notinschool 表示不在校
+   *
+   * @return
+   */
   @mapping("{lang}")
   def index(): View = {
     val std = entityDao.get(classOf[Student], getLongId("student"))
-    val outdate = !std.within(LocalDate.now)
+    val active = std.within(LocalDate.now)
     put("std", std)
-    if (outdate) {
-      forward("outdate")
+    if (active) {
+      if (std.registed) {
+        if (std.state.get.inschool) {
+          put("student", std)
+          put("grade", GradeHelper.convert(std.state.get.grade))
+          put("program", programProvider.getProgram(std))
+          put("lang", get("lang", "zh"))
+          forward()
+        } else {
+          error(CertificateErrors.NotInSchool)
+        }
+      } else {
+        error(CertificateErrors.No)
+      }
     } else {
-      put("student", std)
-      put("grade", GradeHelper.convert(std.state.get.grade))
-      put("program", programProvider.getProgram(std))
-      val lang = get("lang").get
-      put("lang", lang)
-      forward(if (std.registed) lang else "no")
+      error(CertificateErrors.Outdated)
     }
+  }
+
+  private def error(cause: String): View = {
+    put("cause", CertificateErrors.translate(cause))
+    forward("error")
   }
 
 }
