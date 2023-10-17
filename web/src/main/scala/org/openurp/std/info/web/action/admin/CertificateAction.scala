@@ -54,7 +54,7 @@ class CertificateAction extends ActionSupport, EntityAction[Student] {
           put("grade", GradeHelper.convert(std.state.get.grade))
           put("program", programProvider.getProgram(std))
           put("lang", get("lang", "zh"))
-          forward()
+          forward(get("lang", "zh"))
         } else {
           error(CertificateErrors.NotInSchool)
         }

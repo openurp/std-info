@@ -339,8 +339,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     }
     sheet.add("学历生", "student.registed").required().remark("Y|N")
     sheet.add("学籍生效日期", "student.beginOn").required().remark("格式：YYYYMMDD")
-    sheet.add("预计毕业日期", "student.graduateOn").required()
     sheet.add("学籍失效日期", "student.endOn").required().remark("格式：YYYYMMDD")
+    sheet.add("入校日期", "student.studyOn").required().remark("格式：YYYYMMDD")
+    sheet.add("预计毕业日期", "student.graduateOn").required().remark("格式：YYYYMMDD")
     sheet.add("学籍状态", "state.status.code").ref(statuses).required()
     sheet.add("手机", "contact.mobile")
     sheet.add("联系地址", "contact.address")

@@ -45,7 +45,7 @@
 <script>
   var form = document.searchForm;
   function exportData(){
-    bg.form.addInput(form, "titles", "graduateOn:毕业日期,std.state.major.name:专业,std.level.name:学历,std.name:姓名,"+
+    bg.form.addInput(form, "titles", "graduateOn:毕业日期,std.state.major.name:专业,std.state.direction.name:方向,std.level.name:学历,std.name:姓名,"+
                      "std.gender.name:性别,std.person.code:身份证,std.code:学号,"+
                      "std.person.nation.name:民族,diplomaNo:学位证书号,certificateNo:毕业证书号,"+
                      "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位");
