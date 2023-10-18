@@ -72,6 +72,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     val code = data.get(STUDENT_CODE).orNull.asInstanceOf[String]
     val personCode = data.get(PERSON_CODE).orNull.asInstanceOf[String]
     val newMap = Collections.newMap[String, AnyRef]
+    var person: Person = null
     val stdBuilder = OqlBuilder.from(classOf[Student], "std")
     stdBuilder.where("std.code=:code", code)
     stdBuilder.where("std.project=:project", currProject)
@@ -84,22 +85,22 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       })
       entityDao.findBy(classOf[Contact], "std", student).foreach { c => newMap.put("contact", c) }
       entityDao.findBy(classOf[Examinee], "std", student).foreach { c => newMap.put("examinee", c) }
+      person = student.person
+    } else {
+      if (Strings.isBlank(personCode)) {
+        person = entityDao.findBy(classOf[Person], "code", List(personCode)).headOption.orNull
+      }
     }
-    val people = entityDao.findBy(classOf[Person], "code", List(personCode))
-    if (people.nonEmpty) {
-      newMap.put("person", people(0))
-    }
+    if null != person then newMap.put("person", person)
 
     tr.transfer.current_=(newMap)
     if (stds.isEmpty) {
       checkMustBe(tr, PERSON_CODE)
-      if (people.isEmpty) {
+      if (null == person || !person.persisted) {
         checkMustBe(tr, STUDENT_CODE, PERSON_FORMATEDNAME, PERSON_GENDER, PERSON_CODE, PERSON_IDTYPE,
           STATE_GRADE, STUDENT_STUDYTYPE, STUDENT_DURATION, STATE_DEPARTMENT, STUDENT_EDUCATION, STUDENT_STDTYPE, STATE_MAJOR, STATE_CAMPUS,
           STUDENT_REGISTED, STUDENT_BEGINON, STUDENT_ENDON, STATE_STATUS, STUDENT_GRADUATE_ON)
-      }
-      else {
-        // 如果已经存在该学生的Person信息，则有关person的字段将忽略
+      } else { // 如果已经存在该学生的Person信息，则有关person的字段将忽略
         checkMustBe(tr, STUDENT_CODE, STATE_GRADE, STUDENT_STUDYTYPE, STUDENT_DURATION, STATE_DEPARTMENT, STUDENT_EDUCATION, STUDENT_STDTYPE, STATE_MAJOR, STATE_CAMPUS,
           STUDENT_REGISTED, STUDENT_BEGINON, STUDENT_ENDON, STATE_STATUS, STUDENT_GRADUATE_ON)
       }
@@ -121,7 +122,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
 
   private def checkMustBe(tr: ImportResult, fieldNames: String*): Unit = {
     fieldNames.foreach(fieldName => {
-      val value = tr.transfer.curData.get(fieldName).orNull.asInstanceOf[String]
+      val value = tr.transfer.curData.get(fieldName).orNull
       if value == null then
         tr.addFailure("“" + tr.transfer.asInstanceOf[AbstractImporter].description(fieldName) + "”没有填写！", "")
     })

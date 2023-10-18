@@ -382,17 +382,15 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def loadSquadAjax: View = {
     val grade = get("grade")
     val projectId = getInt("projectId").getOrElse(getProject.id)
-    getBoolean("isEdit").foreach(e => {
-      e match {
-        case true => {
-          if (grade.isEmpty || getInt("levelId").isEmpty || getInt("stdTypeId").isEmpty || getInt("departmentId").isEmpty || getLong("majorId").isEmpty) {
-            logger.error("No primary keys in form!!!")
-            forward()
-          }
+    getBoolean("isEdit").foreach {
+      case true => {
+        if (grade.isEmpty || getInt("levelId").isEmpty || getInt("stdTypeId").isEmpty || getInt("departmentId").isEmpty || getLong("majorId").isEmpty) {
+          logger.error("No primary keys in form!!!")
+          forward()
         }
-        case false =>
       }
-    })
+      case false =>
+    }
     val query = OqlBuilder.from(classOf[Squad], "squad")
     grade.foreach(g => {
       query.where("squad.grade like '%' || :grade || '%'", g)
