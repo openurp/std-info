@@ -10,7 +10,7 @@
                  }/]
 [#if advisorSupported!false][#assign fields=fields+{'student.advisor.name':'学位论文导师'}/] [/#if]
 [@b.form name="studentSearchForm" id="studentSearchForm" action="!search" title="ui.searchForm" target="studentList" theme="search"]
-  [@b.textfield name="student.code" label="学号"/]
+  [@b.textfield name="student.code" label="学号" maxlength="2000"/]
   [@b.textfield name="student.name" label="姓名"/]
   [@b.textfield name="student.state.grade.code" label="年级"/]
   [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
