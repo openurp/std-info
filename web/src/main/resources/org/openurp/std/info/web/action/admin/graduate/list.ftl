@@ -62,8 +62,8 @@
                      "std.person.politicalStatus.name:政治面貌(ZZMM),std.person.birthday:出生日期(CSRQ),"+
                      "std.person.idType.code:证件类型码(ZJLXM),std.person.idType.name:证件类型(ZJLX),"+
                      "std.person.code:证件号码(ZJHM),std.project.school.code:学位授予单位码(XWSYDWM),"+
-                     "std.project.school.name:学位授予单位(XWSYDW),blank.1(校长):学位授予单位校长（院长、所长）姓名(XZXM),"+
-                     "blank.2(主席):学位评定委员会主席姓名(ZXXM),std.project.school.code:培养单位码(PYDWM),"+
+                     "std.project.school.name:学位授予单位(XWSYDW),blank.1:学位授予单位校长（院长、所长）姓名(XZXM):校长,"+
+                     "blank.2:学位评定委员会主席姓名(ZXXM):主席,std.project.school.code:培养单位码(PYDWM),"+
                      "std.project.school.name:培养单位(PYDW),degree.code:学位类别码(XWLBM),degree.name:学位类别(XWLB),"+
                      [#if project.category.name?contains("成人")]
                      "std.state.major.code:学士专业码(ZYDM),std.state.major.name:学士专业(ZYMC),"+
@@ -75,7 +75,7 @@
                      "std.duration:学制(XZ),std.studyType.code:学习形式码(XXXSM),std.studyType.name:学习形式(XXXS),"+
                      [#if project.category.name?contains("成人")]"foreignLangPassedOn:通过英语水平考试年月(WYKSNY),"+[/#if]
                      "graduateOn:毕业年月(BYNY),"+
-                     "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),blank.3(文号):决议编号（文号）(JYBH),"+
+                     "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),blank.3:决议编号（文号）(JYBH):文号,"+
                      "std.person.code:照片文件名称(ZP),blank.4:备注(BZ),blank.5:QQ号码(QQHM),blank.6:微信账号(WXZH),"+
                      "blank.7:电子邮箱(DZYX),blank.8:院系代码(YXDM)");
     bg.form.addInput(form, "fileName", "上传学位网");

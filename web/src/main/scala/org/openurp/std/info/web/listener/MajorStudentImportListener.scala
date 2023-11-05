@@ -35,7 +35,7 @@ class MajorStudentImportListener(entityDao: EntityDao) extends ImportListener {
       if (cs.nonEmpty) {
         transfer.current = cs.head
       } else {
-        val stds = entityDao.findBy(classOf[Student], "user.code", List(code))
+        val stds = entityDao.findBy(classOf[Student], "code", List(code))
         if (stds.nonEmpty) transfer.current.asInstanceOf[MajorStudent].std = stds.head
       }
     }

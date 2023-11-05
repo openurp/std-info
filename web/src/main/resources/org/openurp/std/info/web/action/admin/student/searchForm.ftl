@@ -6,9 +6,10 @@
                  'student.person.phoneticName':'英文名',
                  'contact.mobile':'移动电话',
                  'student.person.nation.name':'民族',
-                 'student.person.country.name':'国家地区'
-                 }/]
+                 'student.person.country.name':'国家地区'}/]
 [#if advisorSupported!false][#assign fields=fields+{'student.advisor.name':'学位论文导师'}/] [/#if]
+[#assign fields=fields+{'student.remark':'备注'}/]
+
 [@b.form name="studentSearchForm" id="studentSearchForm" action="!search" title="ui.searchForm" target="studentList" theme="search"]
   [@b.textfield name="student.code" label="学号" maxlength="2000"/]
   [@b.textfield name="student.name" label="姓名"/]
