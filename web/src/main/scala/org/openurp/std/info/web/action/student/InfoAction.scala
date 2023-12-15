@@ -22,6 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
+import org.openurp.base.model.User
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.StudentSupport
@@ -29,7 +30,7 @@ import org.openurp.std.info.model.{Contact, Examinee, Home}
 import org.openurp.std.info.web.helper.CertificateErrors.{NotInSchool, Outdated}
 import org.openurp.std.info.web.helper.{CertificateErrors, GradeHelper}
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 
 class InfoAction extends StudentSupport {
 
@@ -68,6 +69,50 @@ class InfoAction extends StudentSupport {
     put("examinee", entityDao.unique(OqlBuilder.from(classOf[Examinee], "examinee").where("examinee.std = :student", student)))
     put("avatarUrl", Ems.api + "/platform/user/avatars/" + Digests.md5Hex(student.code))
     forward()
+  }
+
+  def edit(): View = {
+    val std = getStudent
+    val contact = entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact)
+    put("std", std)
+    put("contact", contact)
+    put("api", Ems.api)
+    forward()
+  }
+
+  def save(): View = {
+    val std = getStudent
+    val person = std.person
+    val user = entityDao.findBy(classOf[User], "school" -> std.project.school, "code" -> std.code).head
+    val contact = entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact)
+    if (contact.std == null) contact.std = std
+
+    get("enName") foreach { en =>
+      val enName = en.trim()
+      std.enName = Some(enName)
+      std.person.phoneticName = Some(enName)
+      user.enName = Some(enName)
+    }
+    get("email") foreach { e =>
+      val email = e.trim()
+      user.email = Some(email)
+      contact.email = Some(email)
+    }
+    get("phone") foreach { p =>
+      contact.phone = Some(p.trim())
+    }
+    get("address") foreach { p =>
+      contact.address = Some(p.trim())
+    }
+    get("mobile") foreach { m =>
+      val mobile = m.trim()
+      contact.mobile = Some(mobile)
+      user.mobile = Some(mobile)
+    }
+    contact.updatedAt = Instant.now
+    user.updatedAt = Instant.now
+    entityDao.saveOrUpdate(person, user, contact)
+    redirect("index", "info.save.success")
   }
 
   private def error(cause: String): View = {

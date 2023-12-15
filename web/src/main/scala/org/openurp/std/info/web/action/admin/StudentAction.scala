@@ -19,32 +19,28 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.bean.Initializing
 import org.beangle.commons.codec.digest.Digests
-import org.beangle.commons.collection.{Collections, Order}
-import org.beangle.commons.lang.{Charsets, Strings}
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Charsets
 import org.beangle.commons.net.http.HttpUtils
-import org.beangle.data.dao.{Condition, OqlBuilder}
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.excel.schema.ExcelSchema
-import org.beangle.data.model.Entity
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.listener.ForeignerListener
-import org.beangle.data.transfer.importer.{DefaultEntityImporter, ImportSetting, MultiEntityImporter}
+import org.beangle.data.transfer.importer.{ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
 import org.beangle.ems.app.datasource.AppDataSourceFactory
 import org.beangle.web.action.annotation.{ignore, mapping, response}
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
-import org.openurp.base.Features
-import org.openurp.base.edu.code.EducationType
 import org.openurp.base.edu.model.*
 import org.openurp.base.model.*
-import org.openurp.base.service.UserRepo
 import org.openurp.base.service.impl.DefaultUserRepo
-import org.openurp.base.std.code.{StdLabel, StdType}
+import org.openurp.base.service.{Features, UserRepo}
+import org.openurp.base.std.code.StdLabel
 import org.openurp.base.std.model.*
-import org.openurp.code.edu.model.{EducationLevel, EducationMode, EnrollMode, StudyType}
+import org.openurp.code.edu.model.{EducationMode, StudyType}
 import org.openurp.code.geo.model.{Country, Division}
-import org.openurp.code.hr.model.UserCategory
 import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
 import org.openurp.code.std.model.StudentStatus
 import org.openurp.starter.web.support.ProjectSupport
@@ -57,7 +53,6 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.net.URLEncoder
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, LocalDate}
-import scala.util.control.Breaks.{break, breakable}
 
 /**
  * 学籍维护
@@ -76,8 +71,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   override def indexSetting(): Unit = {
     given project: Project = getProject
 
-    put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
-    put("advisorSupported", getProjectProperty(Features.StdInfoAdvisorSupported, false))
+    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("advisorSupported", getConfig(Features.StdInfoAdvisorSupported))
 
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
@@ -96,8 +91,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   override def getQueryBuilder: OqlBuilder[Student] = {
     given project: Project = getProject
 
-    put("squadSupported", getProjectProperty(Features.StdInfoSquadSupported, true))
-    put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
+    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
+    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
     val builder = new StdSearchHelper(entityDao, project, getDeparts)
     builder.build()
   }
@@ -125,8 +120,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("EMS", Ems)
     put("now", DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()).toInt)
     put("api", Ems.api)
-    put("squadSupported", projectPropertyService.get(project, Features.StdInfoSquadSupported, false))
-    put("advisorSupported", getProjectProperty(Features.StdInfoAdvisorSupported, false))
+    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
+    put("advisorSupported", getConfig(Features.StdInfoAdvisorSupported))
   }
 
   /**
@@ -135,11 +130,11 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
    * @return
    */
   def displayExpAttrs(): View = {
-    val project = getProject
+    given project: Project = getProject
 
-    val squadSupported = projectPropertyService.get(project, Features.StdInfoSquadSupported, true)
-    val tutorSupported = projectPropertyService.get(project, Features.StdInfoTutorSupported, false)
-    val advisorSupported = projectPropertyService.get(project, Features.StdInfoAdvisorSupported, true)
+    val squadSupported = getConfig(Features.StdInfoSquadSupported).asInstanceOf[Boolean]
+    val tutorSupported = getConfig(Features.StdInfoTutorSupported).asInstanceOf[Boolean]
+    val advisorSupported = getConfig(Features.StdInfoAdvisorSupported).asInstanceOf[Boolean]
 
     val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
     std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
@@ -216,7 +211,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     state.std = student
     student.updatedAt = Instant.now()
     entityDao.saveOrUpdate(student.person, student)
-    userRepo.createUser(student)
+    userRepo.createUser(student, None)
     redirect("search", "&isOk=" + true, "info.save.success")
   }
 
@@ -248,7 +243,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.gender = person.gender
     person.name.formatedName = student.name
     entityDao.saveOrUpdate(person, student)
-    userRepo.createUser(student)
+    userRepo.createUser(student, None)
 
     val examinee = populateEntity(classOf[Examinee], "examinee")
     if (examinee.code != null) {
@@ -287,9 +282,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def downloadTemplate(): Any = {
     given project: Project = getProject
 
-    val squadSupported = getProjectProperty(Features.StdInfoSquadSupported, true)
-    val tutorSupported = getProjectProperty(Features.StdInfoTutorSupported, false)
-    val advisorSupported = getProjectProperty(Features.StdInfoAdvisorSupported, false)
+    val squadSupported = getConfig(Features.StdInfoSquadSupported).asInstanceOf[Boolean]
+    val tutorSupported = getConfig(Features.StdInfoTutorSupported).asInstanceOf[Boolean]
+    val advisorSupported = getConfig(Features.StdInfoAdvisorSupported).asInstanceOf[Boolean]
     //features.std.info.tutorSupported
 
     val genders = getCodes(classOf[Gender]).sortBy(_.code).map(x => x.code + " " + x.name)
@@ -376,52 +371,6 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     setting.listeners foreach { l =>
       importer.addListener(l)
     }
-  }
-
-  @deprecated("not use")
-  def loadSquadAjax: View = {
-    val grade = get("grade")
-    val projectId = getInt("projectId").getOrElse(getProject.id)
-    getBoolean("isEdit").foreach {
-      case true => {
-        if (grade.isEmpty || getInt("levelId").isEmpty || getInt("stdTypeId").isEmpty || getInt("departmentId").isEmpty || getLong("majorId").isEmpty) {
-          logger.error("No primary keys in form!!!")
-          forward()
-        }
-      }
-      case false =>
-    }
-    val query = OqlBuilder.from(classOf[Squad], "squad")
-    grade.foreach(g => {
-      query.where("squad.grade like '%' || :grade || '%'", g)
-    })
-    query.where("squad.project.id = :projectId", projectId)
-    getInt("levelId").foreach(levelId => {
-      query.where("squad.level.id = :levelId", levelId)
-    })
-    getInt("stdTypeId").foreach(stdTypeId => {
-      query.where("squad.stdType.id = :stdTypeId", stdTypeId)
-    })
-    getInt("departmentId").foreach(departmentId => {
-      query.where("squad.department.id = :departmentId", departmentId)
-    })
-    getLong("majorId").foreach(majorId => {
-      query.where("squad.major.id = :majorId", majorId)
-    })
-    getLong("directionId").foreach(directionId => {
-      query.where("squad.direction.id = :directionId", directionId)
-    })
-    getInt("campusId").foreach(campusId => {
-      query.where("squad.campus is null or squad.campus.id = :campusId", campusId)
-    })
-    query.limit(1, 20)
-    query.orderBy(Order.parse("squad.code, squad.id"))
-    val squads = entityDao.search(query)
-    if (squads.size > 20) {
-      put("caption", "over")
-    }
-    put("squades", squads)
-    forward()
   }
 
   def checkStudentCodeAjax(): View = {

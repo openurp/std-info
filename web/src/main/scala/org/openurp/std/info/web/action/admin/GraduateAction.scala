@@ -18,12 +18,12 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.text.{Formatters, TemporalFormatter}
+import org.beangle.commons.lang.text.TemporalFormatter
 import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
-import org.beangle.web.action.annotation.{mapping, param, response}
+import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
@@ -34,7 +34,7 @@ import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
 import org.openurp.code.std.model.StudentStatus
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.web.helper.{StdDocHelper, GraduatePropertyExtractor}
+import org.openurp.std.info.web.helper.{GraduatePropertyExtractor, StdDocHelper}
 import org.openurp.std.info.web.listener.GraduateImportListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
@@ -59,8 +59,8 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   override def search(): View = {
     val query = getQueryBuilder
     get("degree").orNull match {
-      case "0" => query.where("graduation.diplomaNo is null")
-      case "1" => query.where("graduation.diplomaNo is not null")
+      case "0" => query.where("graduate.degree is null")
+      case "1" => query.where("graduate.degree is not null")
       case _ =>
     }
     put("graduates", entityDao.search(query))
@@ -68,9 +68,16 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     forward()
   }
 
-  @mapping("degreeDownload/{id}")
-  def degreeDownload(@param("id") id: String): View = {
-    val graduate = entityDao.get(classOf[Graduate], id.toLong)
+  def certificate(): View = {
+    val ids = getLongIds("graduate")
+    val graduates = entityDao.find(classOf[Graduate], ids)
+    put("graduates", graduates)
+    forward()
+  }
+
+  def degreeDownload(): View = {
+    val id = getLongId("graduate")
+    val graduate = entityDao.get(classOf[Graduate], id)
     val bytes = StdDocHelper.toDegreeDoc(entityDao, graduate)
     val filename = new String(("学位证书-" + graduate.std.name).getBytes, "ISO8859-1")
     response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
@@ -82,9 +89,9 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     null
   }
 
-  @mapping("certificationDownload/{id}")
-  def certificationDownload(@param("id") id: String): View = {
-    val graduate = entityDao.get(classOf[Graduate], id.toLong)
+  def certificationDownload(): View = {
+    val id = getLongId("graduate")
+    val graduate = entityDao.get(classOf[Graduate], id)
     val bytes = StdDocHelper.toCertificationDoc(entityDao, graduate)
     val filename = if (graduate.std.project.minor) {
       new String(("专业证书-" + graduate.std.name).getBytes, "ISO8859-1")
@@ -137,11 +144,12 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     val sheet = schema.createScheet("数据模板")
     sheet.title("毕业信息模板")
     sheet.remark("特别说明：\n1、不可改变本表格的行列结构以及批注，否则将会导入失败！\n2、必须按照规格说明的格式填写。\n3、可以多次导入，重复的信息会被新数据更新覆盖。\n4、保存的excel文件名称可以自定。")
-    sheet.add("学号", "std.code").length(10).required().remark("≤10位")
+    sheet.add("学号", "std.code").length(15).required().remark("≤15位")
     sheet.add("毕业界别", "graduate.season.code").ref(seasons).required()
     sheet.add("毕结业结论", "graduate.result.code").ref(results).required()
     sheet.add("毕业日期", "graduate.graduateOn").date().required()
-    sheet.add("毕结业证书号", "graduate.certificateNo").length(30).required()
+    sheet.add("学历证书编号（电子注册号）", "graduate.certificateNo").length(30)
+    sheet.add("毕结业证书序列号", "graduate.certificateSeqNo").length(30)
     sheet.add("学位", "graduate.degree.code").ref(degrees)
     sheet.add("学位授予日期", "graduate.degreeAwardOn").date()
     sheet.add("学位证书号", "graduate.diplomaNo").length(30)

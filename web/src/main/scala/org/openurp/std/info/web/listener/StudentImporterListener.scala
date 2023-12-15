@@ -117,14 +117,13 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     if (null != beginOn && (beginOn.isAfter(endOn) || beginOn == endOn)) {
       tr.addFailure("所填写的“" + tr.transfer.asInstanceOf[AbstractImporter].description(STUDENT_BEGINON) + "”和“" + tr.transfer.asInstanceOf[AbstractImporter].description(STUDENT_ENDON) + "”之日期区间无效！", STUDENT_BEGINON + "[" + sdf.format(beginOn) + "], " + STUDENT_ENDON + "[" + sdf.format(endOn) + "]")
     }
-
   }
 
   private def checkMustBe(tr: ImportResult, fieldNames: String*): Unit = {
     fieldNames.foreach(fieldName => {
       val value = tr.transfer.curData.get(fieldName).orNull
       if value == null then
-        tr.addFailure("“" + tr.transfer.asInstanceOf[AbstractImporter].description(fieldName) + "”没有填写！", "")
+        tr.addFailure("“" + fieldName+ tr.transfer.asInstanceOf[AbstractImporter].description(fieldName) + "”没有填写！", "")
     })
   }
 
@@ -190,7 +189,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       }
       student.calcCurrentState()
       entityDao.saveOrUpdate(person, student)
-      userRepo.createUser(student)
+      userRepo.createUser(student, None)
     }
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]

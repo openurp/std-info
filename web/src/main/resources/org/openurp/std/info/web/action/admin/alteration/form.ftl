@@ -54,8 +54,8 @@
          </td>
          <td>
             [#if majorConfig??]
-            [@b.select style="width：160px" id="majorId" name="status.major.id"  label="专业"  items={} empty="..." /]
-            [@b.select style="width：160px" id="directionId" name="status.direction.id"  label="方向" items={} empty="..." /]
+            [@b.select style="width：160px" id="majorId" name="status.major.id"  label="专业"  items=majors empty="..." /]
+            [@b.select style="width：160px" id="directionId" name="status.direction.id"  label="方向" items=directions empty="..." /]
             [#else]不做变动
             [/#if]
          </td>
@@ -67,7 +67,7 @@
         </td>
         <td style="text-align:right;">班级：</td>
         <td>
-          [#if squadConfig??][@b.select style="width：250px" id="squadId" name="status.squad.id" items=squades empty="请输入内容查询" theme="html"/][#else]不做变动[/#if]
+          [#if squadConfig??][@b.select style="width：250px" id="squadId" name="status.squad.id" items=squads empty="请输入内容查询" theme="html"/][#else]不做变动[/#if]
         </td>
       </tr>
       <tr>

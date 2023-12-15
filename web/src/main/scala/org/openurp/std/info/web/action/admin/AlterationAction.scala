@@ -86,7 +86,9 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("statuses", getCodes(classOf[StudentStatus]))
     put("grades", entityDao.findBy(classOf[Grade], "project", project))
     put("departments", project.departments)
-    put("squades", entityDao.findBy(classOf[Squad], "project", project))
+    put("majors",entityDao.findBy(classOf[Major], "project", project))
+    put("directions",entityDao.findBy(classOf[Direction], "project", project))
+    put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
     val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
     val columnValues = Strings.split(alterConfig.attributes)

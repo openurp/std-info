@@ -25,7 +25,7 @@ import org.beangle.web.action.annotation.{ignore, mapping}
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
-import org.openurp.base.Features
+import org.openurp.base.service.Features
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.base.std.code.StdLabel
 import org.openurp.base.std.model.{Graduate, Student}
@@ -51,7 +51,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
   def index(): View = {
     given project: Project = getProject
 
-    put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
+    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
     put("levels", getCodes(classOf[EducationLevel])) // 培养层次
@@ -68,8 +68,8 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
   def search(): View = {
     given project: Project = getProject
 
-    put("squadSupported", getProjectProperty(Features.StdInfoSquadSupported, true))
-    put("tutorSupported", getProjectProperty(Features.StdInfoTutorSupported, false))
+    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
+    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
     val builder = new StdSearchHelper(entityDao, getProject, getDeparts)
     val stds = entityDao.search(builder.build())
     put("students", stds)

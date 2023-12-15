@@ -17,7 +17,6 @@
 
 package org.openurp.std.info.web.helper
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.EntityDao
@@ -25,8 +24,6 @@ import org.beangle.doc.docx.DocHelper
 import org.openurp.base.std.model.Graduate
 import org.openurp.std.info.model.MajorStudent
 
-import java.io.ByteArrayOutputStream
-import java.net.URL
 import java.time.LocalDate
 
 object StdDocHelper {
@@ -87,10 +84,16 @@ object StdDocHelper {
     data.put("M", month)
     data.put("d", day)
 
-    val url = ClassLoaders.getResource("org/openurp/std/info/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx"))
+    val url = ClassLoaders.getResource(s"org/openurp/std/info/templates/${std.project.id}/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx"))
     DocHelper.toDoc(url.get, data)
   }
 
+  /** 生成专业证书
+   *
+   * @param entityDao
+   * @param graduate
+   * @return
+   */
   def toCertificationDoc(entityDao: EntityDao, graduate: Graduate): Array[Byte] = {
     val std = graduate.std
     val minors = entityDao.findBy(classOf[MajorStudent], "std", List(std))
@@ -116,13 +119,14 @@ object StdDocHelper {
     data.put("eY", std.endOn.getYear.toString)
     data.put("eM", std.endOn.getMonthValue.toString)
 
-    data.put("y", LocalDate.now().getYear.toString)
-    data.put("M", LocalDate.now().getMonthValue.toString)
-    data.put("d", LocalDate.now().getDayOfMonth.toString)
 
-    data.put("code", graduate.certificateNo)
+    data.put("y", graduate.graduateOn.getYear.toString)
+    data.put("M", graduate.graduateOn.getMonthValue.toString)
+    data.put("d", graduate.graduateOn.getDayOfMonth.toString)
 
-    val url = this.getClass.getResource("/org/openurp/std/info/minorCertificationDoc.docx")
+    data.put("code", graduate.certificateNo.getOrElse("--"))
+
+    val url = this.getClass.getResource("/org/openurp/std/info/templates/minorCertificationDoc.docx")
     DocHelper.toDoc(url, data)
   }
 

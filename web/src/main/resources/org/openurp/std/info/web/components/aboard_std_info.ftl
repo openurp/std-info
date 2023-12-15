@@ -9,7 +9,7 @@
         </#if>
         <@b.messages slash="7"/>
          <tr>
-          <td class="title"  width="15%">CSC 编号：</td>
+          <td class="title"  width="15%">CSC 编号:</td>
             <td width="35%">
               <#if abroadResitrict?seq_contains("cscno")>
           <input type="text" id="cscno" title="CSC编号" maxLength="20" name="abroadStudent.cscno" value="${(abroadStudent.cscno)?if_exists}" style="width:150px"/>
@@ -17,7 +17,7 @@
           ${(abroadStudent.cscno)?if_exists}
         </#if>
             </td>
-            <td class="title" width="15%">HSK等级：</td>
+            <td class="title" width="15%">HSK等级:</td>
             <td width="35%">
               <#if abroadResitrict?seq_contains("HskLevel")>
           <@htm.i18nSelect datas=hskLevels?sort_by("code") selected=(abroadStudent.HskLevel.id?string)!
@@ -28,7 +28,7 @@
             </td>
         </tr>
          <tr>
-           <td class="title">护照编号：</td>
+           <td class="title">护照编号:</td>
             <td>
               <#if abroadResitrict?seq_contains("passportNo")>
           <input type="text" id="passportNo" title="护照编号" maxLength="20" name="abroadStudent.passportNo" value="${(abroadStudent.passportNo)?if_exists}" style="width:150px"/>
@@ -36,7 +36,7 @@
           ${(abroadStudent.passportNo)?if_exists}
         </#if>
             </td>
-          <td class="title">护照类别：</td>
+          <td class="title">护照类别:</td>
             <td>
               <#if abroadResitrict?seq_contains("passportType")>
           <@htm.i18nSelect datas=passportTypes?sort_by("code") selected=(abroadStudent.passportType.id?string)!
@@ -47,7 +47,7 @@
             </td>
         </tr>
          <tr>
-           <td class="title">护照到期时间：</td>
+           <td class="title">护照到期时间:</td>
             <td>
               <#if abroadResitrict?seq_contains("passportExpiredOn")>
           <input type="text" name="abroadStudent.passportExpiredOn" class="Wdate" value="${(abroadStudent.passportExpiredOn)?if_exists}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})" style="width:154px"/>
@@ -55,7 +55,7 @@
           ${(abroadStudent.passportExpiredOn?string("yyyy-MM-dd"))?if_exists}
         </#if>
             </td>
-          <td class="title">签证编号：</td>
+          <td class="title">签证编号:</td>
             <td>
               <#if abroadResitrict?seq_contains("visaNo")>
           <input type="text" id="visaNo" title="签证编号" maxLength="20" name="abroadStudent.visaNo" value="${(abroadStudent.visaNo)?if_exists}" style="width:150px"/>
@@ -65,7 +65,7 @@
             </td>
         </tr>
          <tr>
-           <td class="title">签证类别：</td>
+           <td class="title">签证类别:</td>
             <td>
               <#if abroadResitrict?seq_contains("visaType")>
           <@htm.i18nSelect datas=visaTypes?sort_by("code") selected=(abroadStudent.visaType.id?string)!
@@ -74,7 +74,7 @@
           <@i18nName (abroadStudent.visaType)!/>
         </#if>
             </td>
-          <td class="title">签证到期时间：</td>
+          <td class="title">签证到期时间:</td>
             <td>
               <#if abroadResitrict?seq_contains("visaExpiredOn")>
           <input type="text" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})" name="abroadStudent.visaExpiredOn" value="${((abroadStudent.visaExpiredOn)?string("yyyy-MM-dd"))!}"  style="width:154px"/>
@@ -84,7 +84,7 @@
             </td>
         </tr>
          <tr>
-          <td class="title"> 居住许可证编号：</td>
+          <td class="title"> 居住许可证编号:</td>
             <td>
               <#if abroadResitrict?seq_contains("resideCaedNo")>
           <input type="text" id="resideCaedNo" title="居住许可证编号" maxLength="20" name="abroadStudent.resideCaedNo" value="${(abroadStudent.resideCaedNo)?if_exists}" style="width:150px"/>
@@ -92,7 +92,7 @@
           ${(abroadStudent.resideCaedNo)!}
         </#if>
             </td>
-          <td class="title">居住许可证到期时间：</td>
+          <td class="title">居住许可证到期时间:</td>
             <td>
               <#if abroadResitrict?seq_contains("resideCaedExpiredOn")>
           <input type="text" class="Wdate" name="abroadStudent.resideCaedExpiredOn" value="${((abroadStudent.resideCaedExpiredOn)?string("yyyy-MM-dd"))!}" style="width:154px" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})"/>

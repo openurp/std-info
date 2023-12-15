@@ -33,7 +33,7 @@
       [/@]
   </div>
   <div class="search-list">
-        [@b.div id="contentDiv" href="!search?orderBy=std.code" /]
+        [@b.div id="contentDiv" href="!search?orderBy=std.code desc" /]
   </div>
 </div>
 [@b.foot/]

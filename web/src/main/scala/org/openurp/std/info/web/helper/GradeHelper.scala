@@ -25,8 +25,11 @@ import java.text.SimpleDateFormat
 object GradeHelper {
 
   def convert(grade1: Grade): Int = {
-    val gradeStr = grade1.code
-    var year, month = 0;
+    convert2(grade1.code)
+  }
+
+  def convert2(gradeStr: String): Int = {
+    var year, month = 0
     val format = new SimpleDateFormat("yyyyMM")
     if (gradeStr.contains("-")) {
       year = Strings.substringBefore(gradeStr, "-").toInt
@@ -49,5 +52,9 @@ object GradeHelper {
       }
     }
     grade
+  }
+
+  def main(args: Array[String]): Unit = {
+    println(convert2("2018-9"))
   }
 }

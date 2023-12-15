@@ -114,18 +114,18 @@
 [/@]
 
 <br>
-  <script>
-    $(function() {
-      jQuery('#phoneticName').after("<a href='javascript:void(0)' style='margin-left: 10px;' onclick='return auto_pinyin()'>获取拼音</a>");
+<script>
+  $(function() {
+    jQuery('#phoneticName').after("<a href='javascript:void(0)' style='margin-left: 10px;' onclick='return auto_pinyin()'>获取拼音</a>");
+  });
+  function auto_pinyin(){
+    var name = document.studentForm['student.name'].value;
+    if(name) name = encodeURIComponent(name);
+    $.get("${api}/tools/sns/person/pinyin/"+name+".json",function(data,status){
+        jQuery('#phoneticName').val(data);
     });
-    function auto_pinyin(){
-      var name = document.studentForm['student.name'].value;
-      if(name) name = encodeURIComponent(name);
-      $.get("${api}/tools/sns/person/pinyin/"+name+".json",function(data,status){
-          jQuery('#phoneticName').val(data);
-      });
-      return false;
-    }
-  </script>
+    return false;
+  }
+</script>
 
 [@b.foot/]

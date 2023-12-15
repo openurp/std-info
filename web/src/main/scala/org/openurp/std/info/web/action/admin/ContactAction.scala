@@ -60,9 +60,7 @@ class ContactAction extends SearchAction {
     contact.std = std
     entityDao.saveOrUpdate(contact)
 
-    /**
-     * 同步更新用户信息
-     */
+    //同步更新用户信息
     entityDao.findBy(classOf[User], "code", std.code) foreach { user =>
       if (contact.mobile.nonEmpty) user.mobile = contact.mobile
       if (contact.email.nonEmpty) user.email = contact.email

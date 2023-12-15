@@ -3,6 +3,7 @@
 [#assign fields={'student.state.campus.name':'校区',
                  'student.person.code':'证件号码',
                  'examinee.code':'考生号',
+                 'examinee.originDivision.name':'生源地',
                  'student.person.phoneticName':'英文名',
                  'contact.mobile':'移动电话',
                  'student.person.nation.name':'民族',
