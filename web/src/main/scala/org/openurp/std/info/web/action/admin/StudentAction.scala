@@ -71,8 +71,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   override def indexSetting(): Unit = {
     given project: Project = getProject
 
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
-    put("advisorSupported", getConfig(Features.StdInfoAdvisorSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
+    put("advisorSupported", getConfig(Features.Std.AdvisorSupported))
 
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
@@ -91,8 +91,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   override def getQueryBuilder: OqlBuilder[Student] = {
     given project: Project = getProject
 
-    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("squadSupported", getConfig(Features.Std.SquadSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val builder = new StdSearchHelper(entityDao, project, getDeparts)
     builder.build()
   }
@@ -120,8 +120,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("EMS", Ems)
     put("now", DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()).toInt)
     put("api", Ems.api)
-    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
-    put("advisorSupported", getConfig(Features.StdInfoAdvisorSupported))
+    put("squadSupported", getConfig(Features.Std.SquadSupported))
+    put("advisorSupported", getConfig(Features.Std.AdvisorSupported))
   }
 
   /**
@@ -132,9 +132,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def displayExpAttrs(): View = {
     given project: Project = getProject
 
-    val squadSupported = getConfig(Features.StdInfoSquadSupported).asInstanceOf[Boolean]
-    val tutorSupported = getConfig(Features.StdInfoTutorSupported).asInstanceOf[Boolean]
-    val advisorSupported = getConfig(Features.StdInfoAdvisorSupported).asInstanceOf[Boolean]
+    val squadSupported = getConfig(Features.Std.SquadSupported).asInstanceOf[Boolean]
+    val tutorSupported = getConfig(Features.Std.TutorSupported).asInstanceOf[Boolean]
+    val advisorSupported = getConfig(Features.Std.AdvisorSupported).asInstanceOf[Boolean]
 
     val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
     std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
@@ -282,9 +282,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   def downloadTemplate(): Any = {
     given project: Project = getProject
 
-    val squadSupported = getConfig(Features.StdInfoSquadSupported).asInstanceOf[Boolean]
-    val tutorSupported = getConfig(Features.StdInfoTutorSupported).asInstanceOf[Boolean]
-    val advisorSupported = getConfig(Features.StdInfoAdvisorSupported).asInstanceOf[Boolean]
+    val squadSupported = getConfig(Features.Std.SquadSupported).asInstanceOf[Boolean]
+    val tutorSupported = getConfig(Features.Std.TutorSupported).asInstanceOf[Boolean]
+    val advisorSupported = getConfig(Features.Std.AdvisorSupported).asInstanceOf[Boolean]
     //features.std.info.tutorSupported
 
     val genders = getCodes(classOf[Gender]).sortBy(_.code).map(x => x.code + " " + x.name)

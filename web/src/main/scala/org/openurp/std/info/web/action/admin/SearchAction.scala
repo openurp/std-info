@@ -51,7 +51,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
   def index(): View = {
     given project: Project = getProject
 
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     put("departments", project.departments) // 院系部门
     put("studentTypes", project.stdTypes) // 学生类别
     put("levels", getCodes(classOf[EducationLevel])) // 培养层次
@@ -68,8 +68,8 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
   def search(): View = {
     given project: Project = getProject
 
-    put("squadSupported", getConfig(Features.StdInfoSquadSupported))
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("squadSupported", getConfig(Features.Std.SquadSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val builder = new StdSearchHelper(entityDao, getProject, getDeparts)
     val stds = entityDao.search(builder.build())
     put("students", stds)

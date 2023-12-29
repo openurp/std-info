@@ -50,7 +50,7 @@ class StudentAction extends MentorSupport, EntityAction[Student], ExportSupport[
     put("levels", codeService.get(classOf[EducationLevel])) // 培养层次
     put("genders", codeService.get(classOf[Gender])) // 性别
     put("states", codeService.get(classOf[StudentStatus])) // 状态
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     put("project", project)
     forward()
   }
@@ -66,7 +66,7 @@ class StudentAction extends MentorSupport, EntityAction[Student], ExportSupport[
   def search(): View = {
     given project: Project = getProject
 
-    put("tutorSupported", getConfig(Features.StdInfoTutorSupported))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val stds = entityDao.search(getQueryBuilder)
     put("students", stds)
     forward()
