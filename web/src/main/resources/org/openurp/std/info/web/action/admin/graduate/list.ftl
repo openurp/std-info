@@ -12,15 +12,17 @@
   [/@]
   [@b.row]
       [@b.boxcol /]
-      [@b.col title="学号" property="std.code" width="100px"]
+      [@b.col title="学号" property="std.code" width="110px"]
         <div class="text-ellipsis">${graduate.std.code}</div>
       [/@]
       [@b.col title="姓名" property="std.name" width="6%"]
-        [@b.a href="student!info?id=${graduate.std.id}" target="_blank"]${graduate.std.name}[/@]
+        <div class="text-ellipsis" title="${graduate.std.name}">
+          [@b.a href="student!info?id=${graduate.std.id}" target="_blank"]${graduate.std.name}[/@]
+        </div>
       [/@]
       [@b.col title="培养层次" property="std.level.name" width="6%"][/@]
       [@b.col title="培养类型" property="std.eduType.name" width="6%"][/@]
-      [@b.col title="院系" property="std.state.department.name" width="10%"]
+      [@b.col title="院系" property="std.state.department.name" width="8%"]
       ${graduate.std.state.department.shortName!graduate.std.state.department.name}
       [/@]
       [@b.col title="专业/方向" property="std.state.major.name"]
