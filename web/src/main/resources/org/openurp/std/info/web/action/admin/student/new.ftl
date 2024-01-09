@@ -16,7 +16,7 @@
     [@b.textfield label="学号" name="student.code" value="" maxlength="30" required="true" style="width: 200px"/]
     [@b.textfield label="姓名" name="student.name" required="true" value="" maxlength="100" style="width: 200px"/]
     [@base.code type="genders" label="性别" name="person.gender.id" empty="..." required="true" /]
-    [@b.datepicker label="出生年月" name="person.birthday"  required="true" format="yyyy-MM-dd" readonly="readonly" value="" style="width: 200px"/]
+    [@b.date label="出生年月" name="person.birthday"  required="true" format="yyyy-MM-dd" readonly="readonly" value="" style="width: 200px"/]
     [@base.code type="id-types" label="证件类型" name="person.idType.id" empty="..."  required="true"/]
     [@b.textfield label="证件号码" name="person.code" required="true" value="" maxlength="30" style="width: 200px"/]
     [#assign s = "state_"/]
@@ -134,7 +134,7 @@
               if(data.person){
                 alert(data.person)
                 putValueInFormItem("person.id", data.person.id);
-                putValueInFormItem("student.name", data.person.formatedName);
+                putValueInFormItem("student.name", data.person.formattedName);
                 putValueInFormItem("person.gender.id", data.person.gender.id);
                 putValueInFormItem("person.birthday", data.person.birthday);
                 putValueInFormItem("person.idType.id", data.person.idType.id);

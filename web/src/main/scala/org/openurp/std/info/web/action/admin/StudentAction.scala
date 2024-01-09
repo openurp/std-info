@@ -196,7 +196,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
       person = entityDao.findBy(classOf[Person], "code", person.code).headOption.getOrElse(person)
     }
     val project = getProject
-    person.name.formatedName = student.name
+    person.name.formattedName = student.name
     student.registed = true
     student.project = project
     student.gender = person.gender
@@ -241,7 +241,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     populate(person, "person")
     person.updatedAt = Instant.now()
     student.gender = person.gender
-    person.name.formatedName = student.name
+    person.name.formattedName = student.name
     entityDao.saveOrUpdate(person, student)
     userRepo.createUser(student, None)
 

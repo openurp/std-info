@@ -14,7 +14,7 @@
         [@b.textfield name="admission.std.code" label="attr.stdNo" /]
         [@b.textfield name="admission.std.name" label="attr.personName" /]
         [@b.textfield name="admission.std.state.grade" label="std.state.grade" /]
-        [@b.datepicker label="录取年月" name="admission.enrollOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
+        [@b.date label="录取年月" name="admission.enrollOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
         [@b.select label="录取专业" name="admission.major.id" items=majors id="majorId" empty="..."/]
         [@b.select label="录取院系" name="admission.department.id" items=departments id="departmentId" empty="..."/]
         [@b.textfield name="admission.letterNo" label="通知书号" /]

@@ -19,6 +19,7 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.text.TemporalFormatter
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.ImportSetting
@@ -56,13 +57,18 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     super.indexSetting()
   }
 
-  override def search(): View = {
-    val query = getQueryBuilder
+  override def getQueryBuilder: OqlBuilder[Graduate] = {
+    val query = super.getQueryBuilder
     get("degree").orNull match {
       case "0" => query.where("graduate.degree is null")
       case "1" => query.where("graduate.degree is not null")
       case _ =>
     }
+    query
+  }
+
+  override def search(): View = {
+    val query = getQueryBuilder
     put("graduates", entityDao.search(query))
     put("project", getProject)
     forward()

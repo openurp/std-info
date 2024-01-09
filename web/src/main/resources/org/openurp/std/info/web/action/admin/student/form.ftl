@@ -22,7 +22,7 @@
           [@b.textfield label="英文名" id="phoneticName" name="person.phoneticName" value=(person.phoneticName)! maxlength="100" style="width: 120px"/]
           [@b.textfield label="曾用名" name="person.formerName" value=(person.formerName)! maxlength="100" /]
           [@base.code type="genders" label="性别" name="person.gender.id" empty="..." required="true" value=(person.gender)! /]
-          [@b.datepicker label="出生年月" name="person.birthday" format="yyyy-MM-dd" readonly="readonly" value=(person.birthday)! /]
+          [@b.date label="出生年月" name="person.birthday" format="yyyy-MM-dd" readonly="readonly" value=(person.birthday)! /]
           [@base.code type="id-types" label="证件类型" name="person.idType.id" empty="..." value=(person.idType)! /]
           [@b.textfield label="证件号码" name="person.code" required="true" value=(person.code)! maxlength="32" /]
           [@base.code type="countries" label="国家地区" name="person.country.id" empty="..." value=(person.country)! /]
@@ -96,7 +96,7 @@
           [@base.code type="education-modes" label="培养方式" name="examinee.educationMode.id" empty="..." value=examinee.educationMode!/]
           [@b.textfield label="委培单位" name="examinee.client"   value=examinee.client!  style="width: 400px"/]
           [@b.textfield label="毕业学校名称" name="examinee.schoolName" value=(examinee.schoolName)! maxlength="100" style="width: 400px"/]
-          [@b.datepicker label="毕业日期" id="examinee.graduateOn" name="examinee.graduateOn" value=examinee.graduateOn!  /]
+          [@b.date label="毕业日期" id="examinee.graduateOn" name="examinee.graduateOn" value=examinee.graduateOn!  /]
           [@b.textfield label="招生录取总分" name="examinee.score" value=(examinee.score)! maxlength="100" /]
         [/@]
       </div>

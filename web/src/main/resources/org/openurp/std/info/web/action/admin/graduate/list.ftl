@@ -4,8 +4,9 @@
   [@b.gridbar]
     var m1 = bar.addMenu("${b.text('action.export')}", "exportData()");
     m1.addItem("导出学位网格式","exportDegree()");
+    m1.addItem("导出学位证书打印数据","exportDegreeData()");
     bar.addItem("导入..",action.method('importForm'));
-    bar.addItem("证书打印", action.multi('certificate',null,null,false));
+    //bar.addItem("证书打印", action.multi('certificate',null,null,false));
     [#if (Parameters['graduate.season.id']!'')?length>0]
     bar.addItem("学籍状态处理", action.method("batchUpdateStdState","确定根据毕业状态处理该批次处理学籍状态？"));
     [/#if]
@@ -41,7 +42,7 @@
 <script>
   var form = document.searchForm;
   function exportData(){
-    bg.form.addInput(form, "titles", "graduateOn:毕业日期,std.state.major.name:专业,std.state.direction.name:方向,std.level.name:学历,std.name:姓名,"+
+    bg.form.addInput(form, "properties", "graduateOn:毕业日期,std.state.major.name:专业,std.state.direction.name:方向,std.level.name:学历,std.name:姓名,"+
                      "std.gender.name:性别,std.person.code:身份证,std.code:学号,"+
                      "std.person.nation.name:民族,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
                      "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位");
@@ -50,13 +51,28 @@
     bg.form.submit(form, "${b.url('!exportData')}","_self");
   }
 
+  function exportDegreeData(){
+    bg.form.addInput(form, "properties", "std.name:姓名,std.gender.name:性别,std.person.birthday_year:出生年,"+
+                     "std.person.birthday_month:出生月,std.person.birthday_day:出生日,"+
+                     "degree.name_print:学位类别,std.college.name:院系,"+
+                     "std.major.name:专业,std.enName:英文名,std.gender.enName2:英性别,"+
+                     "std.person.birthday_month_en:英文月,std.person.birthday_day:英文日,std.person.birthday_year:英文年,"+
+                     "std.college.enName:学院英文,degree.enName:学位类别英,std.major.enName:专业英文,diplomaNo:证书编号,"+
+                     "degreeAwardOn_year:证件年,degreeAwardOn_month:证件月,degreeAwardOn_day:证件日,"+
+                     "std.code:学号,photoFile:照片,std.person.code:身份证号,std.person.birthday:出生日期,"+
+                     "degree.remark:学位类别（排序）,std.state.squad.name:班级");
+    bg.form.addInput(form, "convertToString", "0");
+    bg.form.addInput(form, "fileName", "学位证书打印数据");
+    bg.form.submit(form, "${b.url('!exportData')}","_self");
+  }
+
   function exportDegree(){
-    bg.form.addInput(form, "titles",
+    bg.form.addInput(form, "properties",
                      "std.name:姓名(XM),std.enName:姓名拼音(XMPY),std.gender.code:性别码(XBM),std.gender.name:性别(XB),"+
                      "std.person.country.code:国家或地区码(GBM),std.person.nation.code:民族码(MZM),"+
                      "std.person.nation.name:民族(MZ),std.person.politicalStatus.code:政治面貌码(ZZMMM),"+
                      "std.person.politicalStatus.name:政治面貌(ZZMM),std.person.birthday:出生日期(CSRQ),"+
-                     "std.person.idType.code:证件类型码(ZJLXM),std.person.idType.name:证件类型(ZJLX),"+
+                     "std.person.idType.code_xw:证件类型码(ZJLXM),std.person.idType.name_xw:证件类型(ZJLX),"+
                      "std.person.code:证件号码(ZJHM),std.project.school.code:学位授予单位码(XWSYDWM),"+
                      "std.project.school.name:学位授予单位(XWSYDW),blank.1:学位授予单位校长（院长、所长）姓名(XZXM):校长,"+
                      "blank.2:学位评定委员会主席姓名(ZXXM):主席,std.project.school.code:培养单位码(PYDWM),"+

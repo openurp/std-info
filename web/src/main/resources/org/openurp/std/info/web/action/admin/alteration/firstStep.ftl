@@ -30,7 +30,7 @@
         jQuery("#conditionTable tr:last").find(".stdId").val(jQuery(this).val());
         jQuery("#conditionTable tr:last").find("td.rm").html("<a href='javascript:void(0)' onclick='del("+jQuery(this).val()+")' id='stdId"+jQuery(this).val()+"'>移除</a>");
       });
-      jQuery.colorbox({transition : 'none', height:"80%",width:"60%", inline:true, href:"#setAlterationDiv"});
+      jQuery.colorbox({transition : 'none', "opacity" :0.2, height:"80%",width:"60%", inline:true, href:"#setAlterationDiv"});
   }
 [/@]
 <div class="search-container">
@@ -71,7 +71,7 @@
       [/@]
       [@b.form action="!secondStep" name="alterSettingForm" target="contentDiv"]
           <input type="hidden" value="" name="studentIds" id="studentIds">
-          <table id="columnTable" class="gridtable">
+          <table id="columnTable" class="grid-table">
           <tr>
             <td>
               <label for="alterConfig">异动类型</label>
@@ -84,8 +84,8 @@
           </tr>
           </table>
           <br/>
-          <table id="conditionTable" class="gridtable" style="border: 0.5px solid #006CB2;">
-            <thead class="gridhead">
+          <table id="conditionTable" class="grid-table" style="border: 0.5px solid #006CB2;">
+            <thead class="grid-head">
               <tr>
                 <th style="width: 100px;">学号</th>
                 <th style="width: 100px;">姓名</th>

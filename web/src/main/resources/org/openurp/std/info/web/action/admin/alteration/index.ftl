@@ -17,10 +17,9 @@
        [@b.select name="stdAlteration.std.state.major.id" label="专业" items=majors empty="..."/]
        [@b.select label="异动类型" name="stdAlteration.alterType.id" items=modes empty="..." /]
        [@b.select label="异动原因" name="stdAlteration.reason.id" items=reasons empty="..." /]
-       [@b.datepicker label="生效从" id="alterFromDate" name="alterFromDate" value=""  format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'alterToDate\\')}" readOnly="readOnly"/]
-       [@b.datepicker label="至" id="alterToDate" name="alterToDate" value="" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'alterFromDate\\')}" readOnly="readOnly"/]
-       [@b.datepicker label="入学从" id="enrollFrom" name="enrollFrom" value=""  format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'enrollTo\\')}" readOnly="readOnly"/]
-       [@b.datepicker label="至" id="enrollTo" name="enrollTo" value="" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'enrollFrom\\')}" readOnly="readOnly"/]
+       [@b.date label="变动从" id="alterFromDate" name="alterFromDate" value=""  format="yyyy-MM-dd" maxDate="#F{$dp.$D(\\'alterToDate\\')}" readOnly="readOnly"/]
+       [@b.date label="至" id="alterToDate" name="alterToDate" value="" format="yyyy-MM-dd" minDate="#F{$dp.$D(\\'alterFromDate\\')}" readOnly="readOnly"/]
+       [@b.select label="变动项目" name="meta.id" items=metas value="" empty="..." /]
     [/@]
   </div>
   <div class="search-list">

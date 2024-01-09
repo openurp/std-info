@@ -25,9 +25,10 @@ import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{ignore, mapping}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
-import org.openurp.base.service.Features
+import org.openurp.base.hr.model.Mentor
 import org.openurp.base.model.Project
-import org.openurp.base.std.model.{Graduate, Mentor, Student}
+import org.openurp.base.service.Features
+import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.*
 import org.openurp.code.person.model.*

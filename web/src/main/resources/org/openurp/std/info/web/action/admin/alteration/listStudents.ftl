@@ -5,7 +5,7 @@
     [@b.boxcol/]
     [@b.col property="code" title="学号" width="10%" classname="stdCode"/]
     [@b.col property="name" title="姓名" width="8%" classname="stdName"]
-      <a href="studentSearch!info.action?studentId=${student.id}" target="_blank" title="查看学籍信息">${(student.name)?if_exists}</a>
+      [@b.a href="search!info?id="+student.id target="_blank" title="查看学籍信息"]${student.name}[/@]
     [/@]
     [@b.col property="person.gender.name" title="性别" width="5%"/]
     [@b.col property="state.grade.code" title="年级" width="5%" classname="stdGrade"/]

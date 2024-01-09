@@ -18,7 +18,7 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.{Collections, Order}
-import org.beangle.commons.lang.{Objects, Strings}
+import org.beangle.commons.lang.{Enums, Objects, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
@@ -50,6 +50,15 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("modes", getCodes(classOf[StdAlterType]))
     put("reasons", getCodes(classOf[StdAlterReason]))
     put("currentSemester", getSemester)
+    put("metas", AlterMeta.values)
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[StdAlteration] = {
+    val query = super.getQueryBuilder
+    getInt("meta.id") foreach { metaId =>
+      query.where("exists(from stdAlteration.items as item where item.meta=:meta)", Enums.of(classOf[AlterMeta], metaId))
+    }
+    query
   }
 
   def firstStep(): View = {
@@ -86,8 +95,8 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("statuses", getCodes(classOf[StudentStatus]))
     put("grades", entityDao.findBy(classOf[Grade], "project", project))
     put("departments", project.departments)
-    put("majors",entityDao.findBy(classOf[Major], "project", project))
-    put("directions",entityDao.findBy(classOf[Direction], "project", project))
+    put("majors", entityDao.findBy(classOf[Major], "project", project))
+    put("directions", entityDao.findBy(classOf[Direction], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
     val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
@@ -156,8 +165,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
 
     val alteration = populateEntity(classOf[StdAlteration], "stdAlteration")
-    if (null == alteration.endOn) alteration.endOn = alteration.beginOn
-    val semester = semesterService.get(project, alteration.beginOn)
+    val semester = semesterService.get(project, alteration.alterOn)
     if (null == semester) return forward("当前时间不在有效学期内")
     val stdAlterType = entityDao.get(classOf[StdAlterType], alteration.alterType.id)
     alteration.semester = semester
@@ -264,21 +272,19 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     n.std = std
     n.semester = template.semester
     n.reason = template.reason
-    n.endOn = template.endOn
-    n.beginOn = template.beginOn
+    n.alterOn = template.alterOn
     n.alterType = template.alterType
     n.effective = template.effective
     n.updatedAt = template.updatedAt
     n.remark = template.remark
-    n.code = Instant.now.getEpochSecond.toString
     n
   }
 
   private def applyStd(alteration: StdAlteration, std: Student): String = {
-    var target = std.states.find(x => !alteration.beginOn.isBefore(x.beginOn) && !alteration.endOn.isAfter(x.endOn))
+    var target = std.states.find(x => !alteration.alterOn.isBefore(x.beginOn) && !alteration.alterOn.isAfter(x.endOn))
     val alterConfig = entityDao.findBy(classOf[StdAlterConfig], "alterType", alteration.alterType).head
     if (target.isEmpty) {
-      if (alteration.beginOn == alteration.endOn && alterConfig.alterEndOn) {
+      if (alterConfig.alterEndOn) {
         target = std.states.sortBy(_.endOn).lastOption
       }
     }
@@ -288,12 +294,12 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       case Some(t) =>
         val state =
           if (alterConfig.alterEndOn) {
-            val endOn = if alteration.endOn.isAfter(std.endOn) then std.endOn else alteration.endOn
+            val endOn = if alteration.alterOn.isAfter(std.endOn) then std.endOn else alteration.alterOn
             std.endOn = endOn
             t.endOn = endOn
             generateState(t, endOn, endOn, alterConfig)
           } else {
-            generateState(t, alteration.beginOn, alteration.endOn, alterConfig)
+            generateState(t, alteration.alterOn, alteration.alterOn, alterConfig)
           }
 
         alteration.items foreach { item =>

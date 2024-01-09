@@ -83,17 +83,17 @@
       </tr>
     </thead>
     <tbody>
-      [#list student.states?sort_by("beginOn")?reverse as hisState]
-      <tr[#if (hisState.id!0) != student.state.id] class="text-muted"[/#if] style="text-align:center">
-        <td>${hisState.beginOn?string("yyyy-MM-dd")}~${(hisState.endOn?string("yyyy-MM-dd"))!}</td>
-        <td>${hisState.grade}</td>
-        <td>${hisState.department.shortName!hisState.department.name}</td>
-        <td>${(hisState.major.name)?if_exists} ${(hisState.direction.name)!}</td>
-        <td>${(hisState.squad.shortName)?default((hisState.squad.name)!)}</td>
-        <td>${hisState.inschool?string("是", "否")}</td>
-        <td>${hisState.status.name}</td>
-        <td>${(hisState.campus.name)!}</td>
-        <td>${(hisState.remark?html)!}</td>
+      [#list student.states?sort_by("beginOn")?reverse as state]
+      <tr[#if (state.id!0) != student.state.id] class="text-muted"[/#if] style="text-align:center">
+        <td>${state.beginOn?string("yyyy-MM-dd")}~${(state.endOn?string("yyyy-MM-dd"))!}</td>
+        <td>${state.grade}</td>
+        <td>${state.department.shortName!state.department.name}</td>
+        <td>${(state.major.name)?if_exists} ${(state.direction.name)!}</td>
+        <td class="text-ellipsis">${(state.squad.shortName)?default((state.squad.name)!)}</td>
+        <td>${state.inschool?string("是", "否")}</td>
+        <td>${state.status.name}</td>
+        <td>${(state.campus.shortName!state.campus.name)!}</td>
+        <td>${(state.remark?html)!}</td>
       </tr>
       [/#list]
     </tbody>

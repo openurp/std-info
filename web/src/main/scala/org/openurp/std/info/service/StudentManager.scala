@@ -357,10 +357,9 @@ class StudentManager extends AbstractBaseService {
   def getAdminClass: Seq[Squad] = {
     val builder = OqlBuilder.from(classOf[Squad], "squad").where("squad.beginOn <= :now and (squad.endOn is null or squad.endOn >= :now)", LocalDate.now()).orderBy("squad.id")
     val rs = entityDao.search(builder)
-    if (!(rs.isEmpty)) {
+    if (rs.nonEmpty) {
       rs
-    }
-    else {
+    } else {
       null
     }
   }

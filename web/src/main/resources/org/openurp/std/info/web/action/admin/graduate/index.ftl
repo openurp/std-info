@@ -20,9 +20,9 @@
         [@b.select name="graduate.std.state.major.id" label="专业" items=majors empty="..."/]
         [@b.select name="graduate.std.state.direction.id" label="方向" items=directions empty="..."/]
         [@b.textfield name="graduate.code" label="毕业证书" /]
-        [@b.datepicker label="毕业日期" name="graduate.graduateOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
+        [@b.date label="毕业日期" name="graduate.graduateOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
         [@b.textfield name="graduate.degree.name" label="学位" /]
-        [@b.datepicker label="学位授予" name="graduate.degreeAwardOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
+        [@b.date label="学位授予" name="graduate.degreeAwardOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
         [@b.textfield name="graduate.diplomaNo" label="学位证书" /]
         [@b.select label="有学位" name="degree" items={}]
           <option value="2">...</option>

@@ -3,7 +3,7 @@
 {
   "person": {
     "id": "${(person.id)!}",
-    "formatedName": "${(user.name?js_string)!}",
+    "formattedName": "${(user.name?js_string)!}",
     "phoneticName": "${(person.phoneticName?js_string)!}",
     "formerName": "${(person.formerName?js_string)!}",
     "gender": { "id": "${(person.gender.id)!}" },

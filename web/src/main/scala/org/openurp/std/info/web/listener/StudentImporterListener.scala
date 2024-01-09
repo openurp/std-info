@@ -23,6 +23,7 @@ import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{AbstractImporter, ImportListener, ImportResult, MultiEntityImporter}
 import org.openurp.base.edu.model.*
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Person, Project, User}
 import org.openurp.base.service.UserRepo
 import org.openurp.base.std.model.{Student, StudentState}
@@ -174,7 +175,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       val personCode = data.get(PERSON_CODE).orNull.asInstanceOf[String]
       val stdName = data.get(PERSON_FORMATEDNAME).orNull.asInstanceOf[String]
       person.code = personCode
-      person.name.formatedName = stdName
+      person.name.formattedName = stdName
       person.updatedAt = Instant.now()
       student.gender = person.gender
       student.person = person

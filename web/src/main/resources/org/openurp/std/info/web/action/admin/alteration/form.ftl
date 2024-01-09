@@ -3,17 +3,17 @@
 <link rel="stylesheet" type="text/css" href="${b.base}/static/css/ext-like-table.css" />
 
 [@b.toolbar title="<font color='red'>第二步：</font>设置异动信息"]
-  bar.addItem("返回","bg.Go('stdAlteration!firstStep.action','main')");
+  bar.addBack();
 [/@]
 
 [@b.form name="alterationForm" title="异动信息" action="!save" theme="html" onsubmit="validParams"]
 <input name="alterConfigId" type="hidden" value="${alterConfig.id}"/>
-  <table width="100%" class="extTable">
+  <table width="100%" class="grid-table">
     <caption class="normal">异动设置</caption>
     <thead>
       <tr>
-        <th colSpan="2">异动信息</th>
-        <th colSpan="2">异动项信息</th>
+        <th colSpan="2" style="text-align:center">异动信息</th>
+        <th colSpan="2" style="text-align:center">异动项信息</th>
       </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
           <font color='red'>*</font>生效日期：
         </td>
         <td width="40%">
-          [@b.datepicker  label="" id="beginOn" name="stdAlteration.beginOn" format="yyyy-MM-dd"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
+          [@b.date  label="" id="beginOn" name="stdAlteration.alterOn" format="yyyy-MM-dd"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
           ${minBeginOn?string('yyyy-MM-dd')}之后
         </td>
         <td style="text-align:right;"><font color='red'>*</font>年级：</td>
@@ -79,21 +79,21 @@
         <td style="text-align:right;">预计毕业：</td>
         <td>
           [#if graduateOnConfig]
-            [@b.datepicker  label="日期" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
+            [@b.date  label="日期" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
           [#else]
             不做变动
           [/#if]
         </td>
       </tr>
       <tr>
-        <td colspan="4">[@b.submit value="提交异动结果" class="btn btn-primary" /]</td>
+        <td colspan="4" style="text-align:center">[@b.submit value="提交异动结果" class="btn btn-primary btm-sm" /]</td>
       </tr>
     </tbody>
   </table>
   [@b.div]
     [#assign studentIds][#list studentStates as state][#if state_index>0],[/#if]${state.std.id}[/#list][/#assign]
-    <table width="100%" class="extTable">
-      <thead>
+    <table width="100%" class="grid-table">
+      <thead class="grid-head">
         <tr>
           <th>学号</th>
           <th>姓名</th>
@@ -105,7 +105,7 @@
           <th>学生类别</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="grid-body">
         [#list studentStates?sort_by(["std","code"]) as state]
         <tr>
           <td>${(state.std.code)!}</td>
