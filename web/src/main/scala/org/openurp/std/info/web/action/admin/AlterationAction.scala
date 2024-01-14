@@ -49,7 +49,8 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
 
     put("modes", getCodes(classOf[StdAlterType]))
     put("reasons", getCodes(classOf[StdAlterReason]))
-    put("currentSemester", getSemester)
+    println(getSemester)
+    put("semester", getSemester)
     put("metas", AlterMeta.values)
   }
 

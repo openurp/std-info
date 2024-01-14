@@ -70,7 +70,7 @@
     [@b.col property="alterType.name" title="异动类型"/]
     [@b.col property="reason.name" title="异动原因"/]
     [@b.col property="semester.code" title="学年学期" width="7%"/]
-    [@b.col property="beginOn" title="生效日期"]${stdAlteration.alterOn}[/@]
+    [@b.col property="alterOn" title="生效日期"]${stdAlteration.alterOn}[/@]
     [@b.col property="effective" title="是否生效" width="7%"]${((stdAlteration.effective)?string("是","否"))?default("否")}[/@]
   [/@]
 [/@]

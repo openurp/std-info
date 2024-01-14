@@ -142,6 +142,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型", "level.name" -> "培养层次")
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
     std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "学籍生效日期", "endOn" -> "学籍失效日期")
+    std.add("maxEndOn" -> "学籍最晚失效日期")
     std.add("studyOn" -> "入校日期", "graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
     if squadSupported then std.add("state.squad.name", "行政班级")
     if tutorSupported then std.add("tutor.name", "导师姓名")
@@ -210,6 +211,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.states += state
     state.std = student
     student.updatedAt = Instant.now()
+    student.maxEndOn = student.endOn
     entityDao.saveOrUpdate(student.person, student)
     userRepo.createUser(student, None)
     redirect("search", "&isOk=" + true, "info.save.success")

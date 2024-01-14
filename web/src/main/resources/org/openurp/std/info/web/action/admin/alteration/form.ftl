@@ -2,7 +2,7 @@
 [@b.head/]
 <link rel="stylesheet" type="text/css" href="${b.base}/static/css/ext-like-table.css" />
 
-[@b.toolbar title="<font color='red'>第二步：</font>设置异动信息"]
+[@b.toolbar title="<font color='red'>第二步:</font>设置异动信息"]
   bar.addBack();
 [/@]
 
@@ -10,6 +10,10 @@
 <input name="alterConfigId" type="hidden" value="${alterConfig.id}"/>
   <table width="100%" class="grid-table">
     <caption class="normal">异动设置</caption>
+    <colgroup>
+      <col width="10%"/><col width="50%"/>
+      <col width="10%"/><col width="50%"/>
+    </colgroup>
     <thead>
       <tr>
         <th colSpan="2" style="text-align:center">异动信息</th>
@@ -18,68 +22,68 @@
     </thead>
     <tbody>
       <tr>
-        <td width="10%" style="text-align:right;">
-          <font color='red'>*</font>生效日期：
+        <td style="text-align:right;">
+          <font color='red'>*</font>生效日期:
         </td>
-        <td width="40%">
-          [@b.date  label="" id="beginOn" name="stdAlteration.alterOn" format="yyyy-MM-dd"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
+        <td>
+          [@b.date label="" id="beginOn" name="stdAlteration.alterOn" format="yyyy-MM-dd"  value="" minDate='${(minBeginOn!.now)?string("yyyy-MM-dd")}' readOnly="readOnly"/]
           ${minBeginOn?string('yyyy-MM-dd')}之后
         </td>
-        <td style="text-align:right;"><font color='red'>*</font>年级：</td>
-        <td>[#if gradeConfig??][@b.select style="width：160px"  id="gradeId" name="status.grade.id" label="年级" items=grades empty="..."/][#else]不做变动[/#if]</td>
+        <td style="text-align:right;"><font color='red'>*</font>年级:</td>
+        <td >[#if gradeConfig??][@b.select style="width:160px"  id="gradeId" name="status.grade.id" label="" items=grades empty="..."/][#else]不做变动[/#if]</td>
       </tr>
       <tr>
-        <td style="text-align:right;">异动后状态：</td>
+        <td style="text-align:right;">异动后状态:</td>
         <td>
           ${alterConfig.status.name}
         </td>
-        <td width="10%" style="text-align:right;">
-           <font color='red'>*</font>院系：
+        <td  style="text-align:right;">
+           <font color='red'>*</font>院系:
         </td>
-        <td width="40%">
+        <td style="overflow:auto;">
           [#if departmentConfig??]
-          [@b.select style="width：160px" title="院系" id="departmentId"  label="院系" name="status.department.id" items=departments empty="..."/]
+          [@b.select style="width:160px" title="院系" id="departmentId"  label="" name="status.department.id" items=departments empty="..."/]
           [#else]不做变动[/#if]
         </td>
       </tr>
       <tr>
         <td style="text-align:right;">
-          <font color='red'>*</font>异动类型：
+          <font color='red'>*</font>异动类型:
         </td>
         <td>
-          [@b.select style="width：160px" id="alterationType" items=modes  value=alterConfig.alterType.id name="stdAlteration.alterType.id" theme="html"/]
+          [@b.select style="width:160px" id="alterationType" items=modes  value=alterConfig.alterType.id name="stdAlteration.alterType.id" theme="html"/]
         </td>
          <td style="text-align:right;">
-           <font color='red'>*</font>专业和方向：
+           <font color='red'>*</font>专业和方向:
          </td>
-         <td>
+         <td style="overflow:auto;">
             [#if majorConfig??]
-            [@b.select style="width：160px" id="majorId" name="status.major.id"  label="专业"  items=majors empty="..." /]
-            [@b.select style="width：160px" id="directionId" name="status.direction.id"  label="方向" items=directions empty="..." /]
+            [@b.select style="width:160px" id="majorId" name="status.major.id"  label=""  items=majors empty="..." /]
+            [@b.select style="width:160px" id="directionId" name="status.direction.id"  label="" items=directions empty="..." /]
             [#else]不做变动
             [/#if]
          </td>
       </tr>
       <tr>
-        <td style="text-align:right;">异动原因：</td>
+        <td style="text-align:right;">异动原因:</td>
         <td>
-          [@b.select style="width：160px" items=reasons empty="..." name="stdAlteration.reason.id" theme="html"/]
+          [@b.select style="width:160px" items=reasons empty="..." name="stdAlteration.reason.id" theme="html"/]
         </td>
-        <td style="text-align:right;">班级：</td>
-        <td>
-          [#if squadConfig??][@b.select style="width：250px" id="squadId" name="status.squad.id" items=squads empty="请输入内容查询" theme="html"/][#else]不做变动[/#if]
+        <td style="text-align:right;">班级:</td>
+        <td style="overflow:auto;">
+          [#if squadConfig??][@b.select style="width:250px" id="squadId" name="status.squad.id" items=squads empty="请输入内容查询" theme="html"/][#else]不做变动[/#if]
         </td>
       </tr>
       <tr>
-        <td style="text-align:right;">备注：</td>
+        <td style="text-align:right;">备注:</td>
         <td>
           <span id="remarkSpan"><a href="#" onClick="jQuery('#stdAlterationRemark').show().height('90%').width('95%');jQuery('#remarkSpan').hide();">填写备注</a></span>
-          <input id="stdAlterationRemark" title="备注" style="display:none" maxLength="200" style="width：95%;" name="stdAlteration.remark" title="备注"></textarea>
+          <input id="stdAlterationRemark" title="备注" style="display:none" maxLength="200" style="width:95%;" name="stdAlteration.remark" title="备注"></textarea>
         </td>
-        <td style="text-align:right;">预计毕业：</td>
-        <td>
+        <td style="text-align:right;">预计毕业:</td>
+        <td style="overflow:auto;">
           [#if graduateOnConfig]
-            [@b.date  label="日期" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
+            [@b.date  label="" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
           [#else]
             不做变动
           [/#if]
@@ -95,19 +99,21 @@
     <table width="100%" class="grid-table">
       <thead class="grid-head">
         <tr>
-          <th>学号</th>
-          <th>姓名</th>
-          <th>年级</th>
-          <th>所属院系</th>
+          <th width="4%">序号</th>
+          <th width="12%">学号</th>
+          <th width="10%">姓名</th>
+          <th width="8%">年级</th>
+          <th width="13%">所属院系</th>
           <th>专业和方向</th>
-          <th>班级</th>
-          <th>预计毕业时间</th>
-          <th>学生类别</th>
+          <th width="18%">班级</th>
+          <th width="9%">预计毕业时间</th>
+          <th width="9%">学籍状态</th>
         </tr>
       </thead>
       <tbody class="grid-body">
         [#list studentStates?sort_by(["std","code"]) as state]
         <tr>
+          <td>${state_index+1}</td>
           <td>${(state.std.code)!}</td>
           <td>${(state.std.name)!}</td>
           <td>${(state.grade.code?html)!}</td>
@@ -115,7 +121,7 @@
           <td>${(state.major.name?html)!} ${(state.direction.name?html)!}</td>
           <td>${(state.squad.name?html)!}</td>
           <td>${(state.std.endOn?string('yyyy-MM-dd'))!}</td>
-          <td>${(state.std.stdType.name)!}</td>
+          <td>${(state.status.name)!}</td>
         </tr>
         [/#list]
       </tbody>

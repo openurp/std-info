@@ -22,18 +22,15 @@ import org.beangle.commons.conversion.string.TemporalConverter
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{AbstractImporter, ImportListener, ImportResult, MultiEntityImporter}
-import org.openurp.base.edu.model.*
 import org.openurp.base.hr.model.Teacher
-import org.openurp.base.model.{Person, Project, User}
+import org.openurp.base.model.{Person, Project}
 import org.openurp.base.service.UserRepo
 import org.openurp.base.std.model.{Student, StudentState}
-import org.openurp.code.hr.model.UserCategory
 import org.openurp.std.info.model.{Contact, Examinee}
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, LocalDate}
 import java.util
-import scala.util.control.Breaks.{break, breakable}
 
 class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProject: Project) extends ImportListener {
 
@@ -124,7 +121,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     fieldNames.foreach(fieldName => {
       val value = tr.transfer.curData.get(fieldName).orNull
       if value == null then
-        tr.addFailure("“" + fieldName+ tr.transfer.asInstanceOf[AbstractImporter].description(fieldName) + "”没有填写！", "")
+        tr.addFailure("“" + fieldName + tr.transfer.asInstanceOf[AbstractImporter].description(fieldName) + "”没有填写！", "")
     })
   }
 
@@ -184,6 +181,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
 
       state.beginOn = student.beginOn
       state.endOn = student.endOn
+      student.maxEndOn = student.endOn
       putStateInStudent(student, state)
       if (student.studyOn == null) {
         student.studyOn = student.beginOn
