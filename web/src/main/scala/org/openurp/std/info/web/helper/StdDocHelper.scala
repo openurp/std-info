@@ -119,10 +119,10 @@ object StdDocHelper {
     data.put("eY", std.endOn.getYear.toString)
     data.put("eM", std.endOn.getMonthValue.toString)
 
-
-    data.put("y", graduate.graduateOn.getYear.toString)
-    data.put("M", graduate.graduateOn.getMonthValue.toString)
-    data.put("d", graduate.graduateOn.getDayOfMonth.toString)
+    val leaveDate = graduate.graduateOn.orElse(graduate.finishOn).get
+    data.put("y", leaveDate.getYear.toString)
+    data.put("M", leaveDate.getMonthValue.toString)
+    data.put("d", leaveDate.getDayOfMonth.toString)
 
     data.put("code", graduate.certificateNo.getOrElse("--"))
 

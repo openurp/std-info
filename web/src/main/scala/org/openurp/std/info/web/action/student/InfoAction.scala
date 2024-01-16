@@ -20,47 +20,14 @@ package org.openurp.std.info.web.action.student
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
-import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.openurp.base.model.User
 import org.openurp.base.std.model.{Graduate, Student}
-import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.web.helper.CertificateErrors.{NotInSchool, Outdated}
-import org.openurp.std.info.web.helper.{CertificateErrors, GradeHelper}
-
-import java.time.{Instant, LocalDate}
+import java.time.Instant
 
 class InfoAction extends StudentSupport {
-
-  var programProvider: ProgramProvider = _
-
-  @mapping("certificate/{lang}")
-  def certificate(): View = {
-    val std = getStudent
-    val active = std.within(LocalDate.now)
-    put("std", std)
-    if (active) {
-      if (std.registed) {
-        if (std.state.get.inschool) {
-          put("student", std)
-          put("grade", GradeHelper.convert(std.state.get.grade))
-          put("program", programProvider.getProgram(std))
-          put("lang", get("lang", "zh"))
-          put("has_signature", true)
-          forward()
-        } else {
-          error(CertificateErrors.NotInSchool)
-        }
-      } else {
-        error(CertificateErrors.No)
-      }
-    } else {
-      error(CertificateErrors.Outdated)
-    }
-  }
-
   override def projectIndex(student: Student): View = {
     val graduate = entityDao.unique(OqlBuilder.from(classOf[Graduate], "graduate").where("graduate.std = :student", student))
     put("graduate", graduate)
@@ -115,8 +82,4 @@ class InfoAction extends StudentSupport {
     redirect("index", "info.save.success")
   }
 
-  private def error(cause: String): View = {
-    put("cause", CertificateErrors.translate(cause))
-    forward("error")
-  }
 }

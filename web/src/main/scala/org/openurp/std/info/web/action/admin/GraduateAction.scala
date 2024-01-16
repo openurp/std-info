@@ -28,6 +28,7 @@ import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
+import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
 import org.openurp.base.std.code.StdType
 import org.openurp.base.std.model.{Graduate, GraduateSeason}
@@ -81,6 +82,31 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     forward()
   }
 
+  /** 证书翻译件
+   *
+   * @return
+   */
+  def certEn(): View = {
+    val id = getLongId("graduate")
+    val g = entityDao.get(classOf[Graduate], id)
+    put("graduate", g)
+    put("student", g.std)
+    val cert = get("cert", "degree")
+    val date = cert match {
+      case "degree" => g.degreeAwardOn
+      case "graduate" => g.graduateOn.orElse(g.finishOn)
+    }
+    date foreach { d =>
+      val query = OqlBuilder.from(classOf[President], "p")
+      query.where("p.school=:school", g.std.project.school)
+      query.where("p.beginOn<=:date", d)
+      query.where("p.endOn is null or p.endOn>=:date", d)
+      put("president", entityDao.search(query).headOption)
+    }
+    put("cert", cert)
+    forward()
+  }
+
   def degreeDownload(): View = {
     val id = getLongId("graduate")
     val graduate = entityDao.get(classOf[Graduate], id)
@@ -131,7 +157,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     graduates foreach { g =>
       resultStatus.get(g.result) match {
         case None => missingCount += 1
-        case Some(s) => studentService.graduate(g.std, g.graduateOn, s)
+        case Some(s) => studentService.graduate(g.std, g.graduateOn.orElse(g.finishOn).get, s)
       }
     }
     if missingCount > 0 then

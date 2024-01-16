@@ -51,9 +51,22 @@
 [/#if]
 
 [#if graduate??]
-[@panel title="毕业信息"]
+<div class="card card-info card-outline">
+  <div class="card-header">
+    <h3 class="card-title">毕业信息</h3>
+    [#if graduate.certificateNo??]
+    [@b.card_tools]
+       [#if .get_optional_template("/org/openurp/std/info/web/components/${student.project.id}/cert_graduate_en.ftl",{'parse': false}).exists]
+       [@b.a href="graduate!certEn?cert=graduate&graduate.id="+graduate.id target="_blank"]<i class="fa-solid fa-stamp"></i>毕业证书翻译件[/@]&nbsp;
+       [/#if]
+       [#if graduate.degree?? && .get_optional_template("/org/openurp/std/info/web/components/${student.project.id}/cert_degree_en.ftl",{'parse': false}).exists]
+       [@b.a href="graduate!certEn?cert=degree&graduate.id="+graduate.id target="_blank"]<i class="fa-solid fa-stamp"></i>学位证书翻译件[/@]
+       [/#if]
+    [/@]
+    [/#if]
+  </div>
   [#include "/org/openurp/std/info/web/components/graduate_info.ftl"/]
-[/@]
+</div>
 [/#if]
 
 </div>

@@ -40,6 +40,8 @@ class DefaultModule extends BindModule {
     bind(classOf[mentor.StudentAction])
 
     bind(classOf[student.InfoAction])
+    bind(classOf[student.CertificateAction])
+    bind(classOf[student.GraduateAction])
     bind(classOf[student.RegisterAction])
 
     // services
