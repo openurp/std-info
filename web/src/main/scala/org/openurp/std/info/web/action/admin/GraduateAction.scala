@@ -30,11 +30,10 @@ import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulA
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
-import org.openurp.base.std.code.StdType
 import org.openurp.base.std.model.{Graduate, GraduateSeason}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
-import org.openurp.code.std.model.StudentStatus
+import org.openurp.code.std.model.{StdType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.web.helper.{GraduatePropertyExtractor, StdDocHelper}
 import org.openurp.std.info.web.listener.GraduateImportListener
@@ -199,7 +198,8 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   }
 
   override protected def configExport(context: ExportContext): Unit = {
-    if (context.fileName.startsWith("上传学位网")) {
+    val fileName = get("fileName", "exportFile")
+    if (fileName.startsWith("上传学位网")) {
       context.registerFormatter(classOf[LocalDate], TemporalFormatter("yyyyMMdd"))
       context.attrs.indices foreach { i =>
         if (context.titles(i).contains("年月")) {

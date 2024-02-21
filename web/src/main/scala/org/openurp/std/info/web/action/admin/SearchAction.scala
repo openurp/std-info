@@ -27,12 +27,11 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.service.Features
 import org.openurp.base.model.{Campus, Project}
-import org.openurp.base.std.code.StdLabel
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.*
 import org.openurp.code.person.model.*
-import org.openurp.code.std.model.StudentStatus
+import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 import org.openurp.std.info.service.StudentPropertyExtractor

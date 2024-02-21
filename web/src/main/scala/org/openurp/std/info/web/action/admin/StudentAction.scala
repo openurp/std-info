@@ -37,12 +37,11 @@ import org.openurp.base.edu.model.*
 import org.openurp.base.model.*
 import org.openurp.base.service.impl.DefaultUserRepo
 import org.openurp.base.service.{Features, UserRepo}
-import org.openurp.base.std.code.StdLabel
 import org.openurp.base.std.model.*
 import org.openurp.code.edu.model.{EducationMode, StudyType}
 import org.openurp.code.geo.model.{Country, Division}
 import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
-import org.openurp.code.std.model.StudentStatus
+import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 import org.openurp.std.info.service.StudentPropertyExtractor
