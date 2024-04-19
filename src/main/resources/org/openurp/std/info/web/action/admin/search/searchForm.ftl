@@ -14,6 +14,7 @@
   [@b.select name="student.level.id" label="培养层次" items=levels empty="..."/]
   [@b.select name="student.state.department.id" label="院系" items=departments empty="..."/]
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
+  [@b.textfield name="student.state.direction.name" label="专业方向"/]
   [@b.textfield name="student.state.squad.name" label="班级"/]
 
   [@b.textfield name="student.duration" label="学制" onKeyup="validateData(this);"/]

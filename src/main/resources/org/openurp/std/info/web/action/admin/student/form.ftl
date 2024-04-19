@@ -95,7 +95,7 @@
           [@b.textfield label="委培单位" name="examinee.client"   value=examinee.client!  style="width: 400px"/]
           [@b.textfield label="毕业学校名称" name="examinee.schoolName" value=(examinee.schoolName)! maxlength="100" style="width: 400px"/]
           [@b.date label="毕业日期" id="examinee.graduateOn" name="examinee.graduateOn" value=examinee.graduateOn!  /]
-          [@b.textfield label="招生录取总分" name="examinee.score" value=(examinee.score)! maxlength="100" /]
+          [@b.textfield label="招生录取成绩" name="examinee.score" value=(examinee.score)! maxlength="100" /]
         [/@]
       </div>
     </div>

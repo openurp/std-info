@@ -4,6 +4,7 @@
                  'student.person.code':'证件号码',
                  'examinee.code':'考生号',
                  'examinee.originDivision.name':'生源地',
+                 'examinee.enrollMode.name':'入学方式',
                  'student.person.phoneticName':'英文名',
                  'contact.mobile':'移动电话',
                  'student.person.nation.name':'民族',

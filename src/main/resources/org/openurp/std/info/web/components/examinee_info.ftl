@@ -16,16 +16,16 @@
       <td>${(examinee.schoolName?html)!}</td>
       <td class="title">毕业日期:</td>
       <td>${(examinee.graduateOn?string("yyyy-MM-dd"))!}</td>
-      <td class="title">录取总分:</td>
+      <td class="title">录取成绩:</td>
       <td>${(examinee.score?html)!}</td>
     </tr>
     <tr>
       <td class="title">培养方式:</td>
       <td>${(examinee.educationMode.name)!}</td>
+      <td class="title">入学方式:</td>
+      <td>${(examinee.enrollMode.name)!}</td>
       <td class="title">委培单位:</td>
       <td>${(examinee.client)!}</td>
-      <td class="title">维护时间:</td>
-      <td>${(examinee.updatedAt?string("yyyy-MM-dd"))!}</td>
     </tr>
   </table>
 [/#if]

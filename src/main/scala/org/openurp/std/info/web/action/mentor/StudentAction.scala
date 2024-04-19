@@ -25,6 +25,7 @@ import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{ignore, mapping}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
+import org.openurp.base.edu.model.Major
 import org.openurp.base.hr.model.Mentor
 import org.openurp.base.model.Project
 import org.openurp.base.service.Features
@@ -47,7 +48,8 @@ class StudentAction extends MentorSupport, EntityAction[Student], ExportSupport[
 
   protected override def projectIndex(mentor: Mentor)(using project: Project): View = {
     put("departments", project.departments) // 院系部门
-    put("studentTypes", project.stdTypes) // 学生类别
+    put("stdTypes", project.stdTypes) // 学生类别
+    put("majors", entityDao.findBy(classOf[Major], "project", project))
     put("levels", codeService.get(classOf[EducationLevel])) // 培养层次
     put("genders", codeService.get(classOf[Gender])) // 性别
     put("states", codeService.get(classOf[StudentStatus])) // 状态

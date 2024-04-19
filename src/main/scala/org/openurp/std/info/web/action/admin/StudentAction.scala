@@ -17,7 +17,6 @@
 
 package org.openurp.std.info.web.action.admin
 
-import org.beangle.commons.bean.Initializing
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Charsets
@@ -28,17 +27,15 @@ import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.doc.transfer.importer.{ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
-import org.beangle.ems.app.datasource.AppDataSourceFactory
 import org.beangle.web.action.annotation.{ignore, mapping, response}
 import org.beangle.web.action.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.openurp.base.edu.model.*
 import org.openurp.base.model.*
-import org.openurp.base.service.impl.DefaultUserRepo
-import org.openurp.base.service.{Features, UserRepo}
+import org.openurp.base.service.Features
 import org.openurp.base.std.model.*
-import org.openurp.code.edu.model.{EducationMode, StudyType}
+import org.openurp.code.edu.model.{EducationMode, EnrollMode, StudyType}
 import org.openurp.code.geo.model.{Country, Division}
 import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
 import org.openurp.code.std.model.{StdLabel, StudentStatus}
@@ -67,7 +64,6 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("advisorSupported", getConfig(Features.Std.AdvisorSupported))
 
     put("departments", project.departments) // 院系部门
-    put("studentTypes", project.stdTypes) // 学生类别
     put("levels", project.levels) // 培养层次
     put("stdTypes", project.stdTypes)
     put("majors", findInProject(classOf[Major]))
@@ -134,7 +130,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型", "level.name" -> "培养层次")
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
     std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "学籍生效日期", "endOn" -> "学籍失效日期")
-    std.add("maxEndOn" -> "学籍最晚失效日期")
+    std.add("maxEndOn" -> "学籍最晚失效日期", "remark" -> "备注")
     std.add("studyOn" -> "入校日期", "graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
     if squadSupported then std.add("state.squad.name", "行政班级")
     if tutorSupported then std.add("tutor.name", "导师姓名")
@@ -142,7 +138,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
     val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
-    p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌")
+    p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌", "homeTown" -> "籍贯")
 
     val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
     contact.add("mobile", "手机")
@@ -151,7 +147,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
     val examinee = EntityMeta(classOf[Examinee].getName, "考生信息", Collections.newBuffer[PropertyMeta])
     examinee.add("code" -> "考生号", "examNo" -> "准考证号", "educationMode.name" -> "培养方式")
-    examinee.add("originDivision.name" -> "生源地")
+    examinee.add("originDivision.name" -> "生源地", "schoolName" -> "毕业学校", "graduateOn" -> "毕业日期")
+    examinee.add("score" -> "录取成绩", "enrollMode.name" -> "入学方式")
     if tutorSupported then
       examinee.add("client" -> "委培单位")
 
@@ -289,6 +286,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val idTypes = getCodes(classOf[IdType]).sortBy(_.code).map(x => x.code + " " + x.name)
     val studyTypes = getCodes(classOf[StudyType]).sortBy(_.code).map(x => x.code + " " + x.name)
     val eduModes = getCodes(classOf[EducationMode]).sortBy(_.code).map(x => x.code + " " + x.name)
+    val enrollModes = getCodes(classOf[EnrollMode]).sortBy(_.code).map(x => x.code + " " + x.name)
     val departments = project.departments.map(x => x.code + " " + x.name).toSeq.sorted
     val levels = project.levels.map(x => x.code + " " + x.name).toSeq.sorted
     val eduTypes = project.eduTypes.map(x => x.code + " " + x.name).toSeq.sorted
@@ -339,7 +337,9 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     sheet.add("考生号", "examinee.code")
     sheet.add("考生毕业学校", "examinee.schoolName")
     sheet.add("考生毕业日期", "examinee.graduateOn").date()
+    sheet.add("招生录取成绩", "examinee.score").decimal()
     sheet.add("准考证号", "examinee.examNo")
+    sheet.add("入学方式", "examinee.enrollMode.code").ref(enrollModes)
     sheet.add("培养方式", "examinee.educationMode.code").ref(eduModes)
     sheet.add("生源地", "examinee.originDivision.code").ref(divisions)
     sheet.add("委培单位", "examinee.client")

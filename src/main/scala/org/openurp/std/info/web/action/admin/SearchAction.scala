@@ -25,6 +25,7 @@ import org.beangle.web.action.annotation.{ignore, mapping}
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
+import org.openurp.base.edu.model.Major
 import org.openurp.base.service.Features
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.base.std.model.{Graduate, Student}
@@ -52,7 +53,8 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
 
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
     put("departments", project.departments) // 院系部门
-    put("studentTypes", project.stdTypes) // 学生类别
+    put("stdTypes", project.stdTypes) // 学生类别
+    put("majors", findInProject(classOf[Major]))
     put("levels", getCodes(classOf[EducationLevel])) // 培养层次
     put("genders", getCodes(classOf[Gender])) // 性别
     put("states", getCodes(classOf[StudentStatus])) // 状态
