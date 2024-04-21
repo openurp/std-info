@@ -50,7 +50,7 @@
       <td class="title">学籍有效:</td>
       <td>${(student.beginOn?string("yyyy-MM-dd"))!}~${(student.endOn?string("yyyy-MM-dd"))!}</td>
       <td class="title">学籍状态:</td>
-      <td>${(student.state.status.name)?if_exists}</td>
+      <td>${(student.state.status.name)?if_exists} [#if student.graduationDeferred]延期[/#if]</td>
       <td class="title">[#if student.tutor??]导师[#else]班主任[/#if]:</td>
       <td>
       [#if student.tutor??]${(student.tutor.name)!}[#else]${(student.state.squad.master.name)!}[/#if]

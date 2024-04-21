@@ -29,7 +29,7 @@
   [#if studyTypes?size>1]
   [@b.select name="student.studyType.id" label="学习形式" items=studyTypes?sort_by("name") empty="..."/]
   [/#if]
-
+  [@b.select label="是否延期" name="student.graduationDeferred" items={'1':'是','0':'否'} empty="...."/]
   <div class="search-item">
     <select onchange="document.getElementById('custom_field').name=this.value" style="width:60px">
       <option value=""></option>

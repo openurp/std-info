@@ -51,6 +51,7 @@
           [@base.teacher label="学位论文导师" name="student.advisor.id" empty="..." value=student.advisor! style="width: 400px"/]
           [/#if]
           [@b.select label="标签" name="labelIds" items=stdLabels values=student.labels?values /]
+          [@b.radios label="是否延期毕业" name="student.graduationDeferred" required="true" value=student.graduationDeferred?string(1, 0)/]
           [@b.textfield label="备注" name="student.remark" value=(student.remark?html)! style="width: 400px;" check="maxLength(100)" comments="（限长100个字符）"/]
         [/@]
       </div>
