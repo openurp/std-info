@@ -132,15 +132,11 @@
             },
             "success": function(data) {
               if(data.person){
-                alert(data.person)
                 putValueInFormItem("person.id", data.person.id);
                 putValueInFormItem("student.name", data.person.formattedName);
                 putValueInFormItem("person.gender.id", data.person.gender.id);
                 putValueInFormItem("person.birthday", data.person.birthday);
                 putValueInFormItem("person.idType.id", data.person.idType.id);
-                //putValueInFormItem("person.country.id", data.person.country.id);
-                //putValueInFormItem("person.nation.id", data.person.nation.id);
-                //putValueInFormItem("person.homeTown", data.person.homeTown);
               }
             }
           });

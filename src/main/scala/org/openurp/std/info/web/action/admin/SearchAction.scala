@@ -26,8 +26,8 @@ import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.edu.model.Major
-import org.openurp.base.service.Features
 import org.openurp.base.model.{Campus, Project}
+import org.openurp.base.service.Features
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.*
@@ -71,8 +71,9 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
 
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
-    val builder = new StdSearchHelper(entityDao, getProject, getDeparts)
-    val stds = entityDao.search(builder.build())
+    val builder = new StdSearchHelper(entityDao, getProject).build()
+    queryByDepart(builder, "student.state.department")
+    val stds = entityDao.search(builder)
     put("students", stds)
     forward()
   }

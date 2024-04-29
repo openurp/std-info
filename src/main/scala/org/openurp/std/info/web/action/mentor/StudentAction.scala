@@ -60,7 +60,7 @@ class StudentAction extends MentorSupport, EntityAction[Student], ExportSupport[
 
   override def getQueryBuilder: OqlBuilder[Student] = {
     val project: Project = getProject
-    val builder = new StdSearchHelper(entityDao, project, project.departments)
+    val builder = new StdSearchHelper(entityDao, project)
     val query = builder.build()
     query.where("student.state.squad.mentor.code = :me", Securities.user)
     query

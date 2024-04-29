@@ -28,7 +28,7 @@ import org.openurp.std.info.model.{Contact, Examinee, Home}
 
 import java.time.LocalDate
 
-class StdSearchHelper(entityDao: EntityDao, project: Project, departs: Iterable[Department]) {
+class StdSearchHelper(entityDao: EntityDao, project: Project) {
 
   def build(): OqlBuilder[Student] = {
     val builder = OqlBuilder.from(classOf[Student], "student")
@@ -38,7 +38,6 @@ class StdSearchHelper(entityDao: EntityDao, project: Project, departs: Iterable[
     builder.limit(QueryHelper.pageLimit)
 
     builder.where("student.project=:project", project)
-    builder.where("student.state.department in (:departments)", departs)
     val date = LocalDate.now()
     Params.get("status").foreach {
       case "active" => builder.where("student.beginOn<= :now and student.endOn>=:now and student.registed=true and student.state.inschool = true", date)
