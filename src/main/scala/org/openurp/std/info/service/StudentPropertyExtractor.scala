@@ -20,11 +20,9 @@ package org.openurp.std.info.service
 import org.beangle.commons.bean.{DefaultPropertyExtractor, Properties}
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.base.model.Person
-import org.openurp.base.std.model.{Graduate, Student, StudentState}
+import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 
-import java.lang.reflect.Method
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -35,35 +33,37 @@ class StudentPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtr
   /** std_id_{home|contact|...} */
   private val stdInfoMap = Collections.newMap[String, Object]
 
-  private val sdfYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  private var sdfYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   override def get(target: Object, property: String): Any = {
     val student = target.asInstanceOf[Student]
-    val secptions = property.split("_")
-    val fieldName = secptions(0)
-    val className = secptions(1)
-    if ("std" == className) {
-      if ("code_std" == property) {
-        return student.code
-      } else if ("labels_std" == property) {
-        val labelValue = new StringBuilder
-        student.labels.keySet.foreach(labelType => {
-          if (labelValue.nonEmpty) {
-            labelValue.append(";")
-          }
-          student.labels.get(labelType).foreach(label => {
-            labelValue.append(labelType.name).append(":").append(label.name)
+    val idx = property.indexOf('.')
+    if (idx == -1) {
+      loadPropertyValue(student, property)
+    } else {
+      val className = property.substring(0, idx)
+      val fieldName = property.substring(idx + 1)
+      if ("std" == className) {
+        if ("labels" == fieldName) {
+          val labelValue = new StringBuilder
+          student.labels.keySet.foreach(labelType => {
+            if (labelValue.nonEmpty) {
+              labelValue.append(";")
+            }
+            student.labels.get(labelType).foreach(label => {
+              labelValue.append(labelType.name).append(":").append(label.name)
+            })
           })
-        })
-        return labelValue.toString
-      } else {
-        return loadPropertyValue(student, fieldName)
+          return labelValue.toString
+        } else {
+          return loadPropertyValue(student, fieldName)
+        }
       }
+      if ("person" == className) {
+        return loadPropertyValue(student.person, fieldName)
+      }
+      loadPropertyValue(loadStdOtherEntity(student, className), fieldName)
     }
-    if ("person" == className) {
-      return loadPropertyValue(student.person, fieldName)
-    }
-    loadPropertyValue(loadStdOtherEntity(student, className), fieldName)
   }
 
   private def loadPropertyValue(target: Object, fieldName: String): Any = {
@@ -86,6 +86,10 @@ class StudentPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtr
     } catch {
       case e: Exception => throw new RuntimeException(e)
     }
+  }
+
+  def usingDateFormat(format: String): Unit = {
+    sdfYMD = DateTimeFormatter.ofPattern(format)
   }
 
   private def loadStdOtherEntity(student: Student, className: String): Object = {

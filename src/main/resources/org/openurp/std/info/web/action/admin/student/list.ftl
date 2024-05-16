@@ -36,7 +36,9 @@
         [@b.col property="gender.name" title="性别" width="50px"/]
         [@b.col property="state.grade" title="年级" width="60px"/]
         [@b.col property="level.name" title="培养层次" width="60px"/]
+        [#if project.eduTypes?size>1]
         [@b.col property="eduType.name" title="培养类型" width="60px"/]
+        [/#if]
         [@b.col property="state.department.name" title="院系" width="100px"]
           ${student.state.department.shortName!student.state.department.name}
         [/@]

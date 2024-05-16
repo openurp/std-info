@@ -2,15 +2,21 @@
   [@b.form name="studentListForm" action="!search"]
     [@b.grid items=students var="student" sortable="true"]
       [@b.gridbar]
-        var titles="gender.name_person:性别,birthday_person:出生日期,nation.name_person:民族,country.name_person:国家地区,"+
-                   "idType.name_person:证件类型,code_person:证件号码,politicalStatus.name_person:政治面貌,code_std:学号,"+
-                   "name_std:姓名,state.grade.code_std:年级,studyType.name_std:学习形式,duration_std:学制,"+
-                   "level.name_std:培养层次,stdType.name_std:学生类别,eduType.name_std:培养类型,"+
-                   "state.department.name_std:院系,state.major.name_std:专业,state.direction.name_std:专业方向,"+
-                   "studyOn_std:入校日期,graduateOn_std:预计毕业日期,state.status.name_std:学籍状态,tutor.name_std:导师姓名,"+
-                   "advisor.name_std:学位论文导师姓名,mobile_contact:手机,address_contact:联系地址,email_contact:电子邮箱,"+
-                   "code_examinee:考生号,examNo_examinee:准考证号,educationMode.name_examinee:培养方式,"+
-                   "originDivision.name_examinee:生源地,client_examinee:委培单位"
+        var titles="std.code:学号,std.name:姓名,std.enName:姓名拼音,person.gender.name:性别,"+
+           "std.state.grade.code:年级,std.studyType.name:学习形式,std.duration:学制,"+
+           "std.level.name:培养层次,std.stdType.name:学生类别,"+
+           [#if project.eduTypes?size>1]"std.eduType.name:培养类型,"+[/#if]
+           "std.state.department.name:院系,std.state.major.name:专业,std.state.direction.name:专业方向,"+
+           "std.state.squad.name:班级,std.state.status.name:学籍状态,"+
+           [#if project.category.name?contains("成人")]"std.state.squad.master.name:班主任,"+[#else]"std.state.squad.mentor.name:辅导员,"+[/#if]
+           "person.birthday:出生日期,person.nation.name:民族,person.politicalStatus.name:政治面貌,person.country.name:国家地区,"+
+           "person.idType.name:证件类型,person.code:证件号码,"+
+           "std.studyOn:入校日期,std.graduateOn:预计毕业日期,"+
+           [#if tutorSupported]"std.tutor.name:导师姓名,std.advisor.name:学位论文导师姓名,"+[/#if]
+           "contact.mobile:手机,contact.address:联系地址,contact.email:电子邮箱,"+
+           "examinee.code:考生号,examinee.examNo:准考证号,examinee.educationMode.name:培养方式,"+
+           "examinee.originDivision.name:生源地,examinee.client:委培单位";
+
         bar.addItem("${b.text('action.export')}",action.exportData(titles,null,'fileName=学籍信息'));
       [/@]
       [@b.row]
@@ -24,7 +30,9 @@
         [@b.col property="gender.name" title="性别" width="50px"/]
         [@b.col property="state.grade" title="年级" width="60px"/]
         [@b.col property="level.name" title="培养层次" width="60px"/]
+        [#if project.eduTypes?size>1]
         [@b.col property="eduType.name" title="培养类型" width="60px"/]
+        [/#if]
         [@b.col property="state.department.name" title="院系" width="100px"]
           ${student.state.department.shortName!student.state.department.name}
         [/@]

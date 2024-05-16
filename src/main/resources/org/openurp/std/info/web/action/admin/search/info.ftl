@@ -30,10 +30,6 @@
 [/@]
 [/#if]
 
-[@panel title="联系信息"]
-  [#include "/org/openurp/std/info/web/components/contact_info.ftl"/]
-[/@]
-
 [#if home??]
 [@panel title="家庭信息"]
   [#include "/org/openurp/std/info/web/components/home_info.ftl"/]

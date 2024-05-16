@@ -298,9 +298,9 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
             val endOn = if alteration.alterOn.isAfter(std.endOn) then std.endOn else alteration.alterOn
             std.endOn = endOn
             t.endOn = endOn
-            generateState(t, endOn, endOn, alterConfig)
+            generateState(t, endOn, endOn, alterConfig, alteration)
           } else {
-            generateState(t, alteration.alterOn, alteration.alterOn, alterConfig)
+            generateState(t, alteration.alterOn, alteration.alterOn, alterConfig, alteration)
           }
 
         alteration.items foreach { item =>
@@ -328,7 +328,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
         ""
   }
 
-  private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: StdAlterConfig): StudentState = { // 向后切
+  private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: StdAlterConfig, alteration: StdAlteration): StudentState = { // 向后切
     if (beginOn == state.beginOn) {
       state
     } else {
@@ -344,7 +344,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       newState.status = state.status
       newState.campus = state.campus
       newState.inschool = state.inschool
-      newState.remark = Some(alterConfig.alterType.name)
+      newState.remark = Some(alteration.reason.map(_.name).getOrElse(alteration.alterType.name))
       if (beginOn == state.beginOn) {
         state.beginOn = endOn.plusDays(1)
       } else {

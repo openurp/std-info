@@ -12,7 +12,7 @@
       <td class="title" width="100px">年级:</td>
       <td>${(student.state.grade)!}</td>
       <td class="title" width="100px" rowspan="5">照片:</td>
-      <td rowspan="5"><img width="80px" height="110px" src="${avatarUrl}" alt="${(student.name)!}" title="${(student.name)!}"/></td>
+      <td rowspan="5"><img height="110px" src="${avatarUrl}" alt="${(student.name)!}" title="${(student.name)!}"/></td>
     </tr>
     <tr>
       <td class="title">培养层次:</td>

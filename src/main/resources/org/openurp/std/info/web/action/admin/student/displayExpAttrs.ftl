@@ -132,7 +132,7 @@
           $("div#selectShowDiv").append("<br>");
         }
         var showObj = $("<label>");
-        showObj.attr("value", checkboxObj.val() + "_" + checkboxObj.attr("name"));
+        showObj.attr("value", checkboxObj.attr("name")+"."+checkboxObj.val());
         showObj.html(checkboxObj.next().html());
         $("div#selectShowDiv").append(showObj);
       }

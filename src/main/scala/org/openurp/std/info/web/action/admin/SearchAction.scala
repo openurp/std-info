@@ -69,6 +69,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
   def search(): View = {
     given project: Project = getProject
 
+    put("project", project)
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val builder = new StdSearchHelper(entityDao, getProject).build()
