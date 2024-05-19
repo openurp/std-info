@@ -18,7 +18,7 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.codec.digest.Digests
-import org.beangle.data.dao.EntityDao
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.annotation.{ignore, mapping}
@@ -66,15 +66,18 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
     forward()
   }
 
+  override protected def getQueryBuilder: OqlBuilder[Student] = {
+    val builder = new StdSearchHelper(entityDao, getProject).build()
+    queryByDepart(builder, "student.state.department")
+  }
+
   def search(): View = {
     given project: Project = getProject
 
     put("project", project)
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
-    val builder = new StdSearchHelper(entityDao, getProject).build()
-    queryByDepart(builder, "student.state.department")
-    val stds = entityDao.search(builder)
+    val stds = entityDao.search(getQueryBuilder)
     put("students", stds)
     forward()
   }

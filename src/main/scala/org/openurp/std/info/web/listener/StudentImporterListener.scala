@@ -204,7 +204,6 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     }
     if (null != examinee) {
       examinee.std = student
-      if (null == examinee.code) examinee.code = "--"
       examinee.updatedAt = Instant.now
       entityDao.saveOrUpdate(examinee)
     }

@@ -14,7 +14,7 @@
            "std.studyOn:入校日期,std.graduateOn:预计毕业日期,"+
            [#if tutorSupported]"std.tutor.name:导师姓名,std.advisor.name:学位论文导师姓名,"+[/#if]
            "contact.mobile:手机,contact.address:联系地址,contact.email:电子邮箱,"+
-           "examinee.code:考生号,examinee.examNo:准考证号,examinee.educationMode.name:培养方式,"+
+           "examinee.code:考生号,examinee.educationMode.name:培养方式,"+
            "examinee.originDivision.name:生源地,examinee.client:委培单位";
 
         bar.addItem("${b.text('action.export')}",action.exportData(titles,null,'fileName=学籍信息'));

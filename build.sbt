@@ -2,7 +2,7 @@ import org.openurp.parent.Dependencies.*
 import org.openurp.parent.Settings.*
 
 ThisBuild / organization := "org.openurp.std.info"
-ThisBuild / version := "0.0.9-SNAPSHOT"
+ThisBuild / version := "0.0.9"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -23,15 +23,13 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
-val apiVer = "0.38.5-SNAPSHOT"
-val starterVer = "0.3.31"
-val baseVer = "0.4.23"
+val apiVer = "0.39.1"
+val starterVer = "0.3.32"
+val baseVer = "0.4.24"
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
-
-val beangle_notify = "org.beangle.notify" % "beangle-notify" % "0.1.7-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(WarPlugin, TomcatPlugin)
