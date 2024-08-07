@@ -54,6 +54,8 @@ class StdSearchHelper(entityDao: EntityDao, project: Project) {
     Params.getInt("stdLabel.id").foreach(stdLabelId => {
       builder.where("exists (from student.labels label where label.id = :labelId)", stdLabelId)
     })
+//    builder.where("length(student.person.code)=18 and to_char(student.person.birthday,'yyyyMMdd')<> substr(student.person.code,7,8)")
+//    builder.where("student.person.idType.id=1")
     builder.orderBy(Params.get(Order.OrderStr).getOrElse("student.state.grade.id desc,student.code"))
     builder.tailOrder("student.id")
     builder

@@ -30,7 +30,7 @@ import org.openurp.code.edu.model.EducationLevel
 import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateResult, Graduation}
-import org.openurp.std.info.service.StudentPropertyExtractor
+import org.openurp.std.info.web.helper.StudentPropertyExtractor
 
 class GraduationAction extends ActionSupport, ProjectSupport, EntityAction[Student], ExportSupport[Student] {
   var entityDao: EntityDao = _

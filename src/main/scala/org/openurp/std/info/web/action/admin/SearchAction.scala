@@ -35,8 +35,7 @@ import org.openurp.code.person.model.*
 import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.service.StudentPropertyExtractor
-import org.openurp.std.info.web.helper.StdSearchHelper
+import org.openurp.std.info.web.helper.{StdSearchHelper, StudentPropertyExtractor}
 
 /**
  * 学籍查询

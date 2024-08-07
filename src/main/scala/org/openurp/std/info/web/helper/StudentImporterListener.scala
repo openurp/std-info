@@ -188,8 +188,8 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       }
       student.calcCurrentState()
       entityDao.saveOrUpdate(person, student)
-      userRepo.createUser(student, None)
     }
+    userRepo.createUser(student, None)
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]
     findTeacher(tutorCode, tr) foreach (t => student.tutor = Some(t))

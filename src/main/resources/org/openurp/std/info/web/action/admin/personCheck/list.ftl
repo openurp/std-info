@@ -1,0 +1,35 @@
+[@b.head/]
+  [@b.grid items=checks var="check"]
+    [@b.gridbar]
+       //bar.addItem("${b.text("action.delete")}",action.multi("remove", "确认要删除所选的记录吗？"));
+    [/@]
+    [@b.row]
+      [@b.boxcol/]
+      [@b.col property="std.code" title="学号" width="120px"/]
+      [@b.col property="std.name" title="姓名" width="100px"]
+        [@b.a href="!info?id="+check.id]${check.std.name}[/@]
+      [/@]
+      [@b.col property="std.state.grade" title="年级" width="60px"/]
+      [@b.col property="std.level.name" title="培养层次" width="60px"/]
+      [@b.col property="std.state.department.name" title="院系" width="100px"]
+        ${check.std.state.department.shortName!check.std.state.department.name}
+      [/@]
+      [@b.col property="std.gender.name" title="性别" width="50px"/]
+      [@b.col property="std.person.nation.name" title="民族" width="80px"/]
+      [@b.col property="std.person.idType.name" title="证件类型" width="180px"/]
+      [@b.col property="std.person.code" title="证件号码"]
+        ${check.std.person.code}
+      [/@]
+      [@b.col property="std.person.birthday" title="出生日期" width="90px"/]
+      [@b.col property="mobile" title="联系方式" width="110px"]
+         <i class="fa-solid fa-phone"></i><span title="${check.mobile}">${(check.mobile[0..2])!}****${(check.mobile[7..10])!}</span>
+      [/@]
+      [@b.col property="confirmed" title="是否确认" width="60px"]
+        [#if check.confirmed]是
+        [#else]
+          <span style="color:red">否</span>
+        [/#if]
+      [/@]
+  [/@]
+[/@]
+[@b.foot/]

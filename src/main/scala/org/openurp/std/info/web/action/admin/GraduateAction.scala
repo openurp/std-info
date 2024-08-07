@@ -17,15 +17,19 @@
 
 package org.openurp.std.info.web.action.admin
 
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.text.TemporalFormatter
+import org.beangle.commons.text.seq.HanZiSeqStyle
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.ImportSetting
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.response
+import org.beangle.web.action.context.ActionContext
 import org.beangle.web.action.view.{Stream, View}
+import org.beangle.web.servlet.url.UrlBuilder
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.hr.model.President
@@ -35,6 +39,7 @@ import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
 import org.openurp.code.std.model.{StdType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.std.info.model.MajorStudent
 import org.openurp.std.info.web.helper.{GraduatePropertyExtractor, StdDocHelper}
 import org.openurp.std.info.web.listener.GraduateImportListener
 
@@ -74,18 +79,11 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     forward()
   }
 
-  def certificate(): View = {
-    val ids = getLongIds("graduate")
-    val graduates = entityDao.find(classOf[Graduate], ids)
-    put("graduates", graduates)
-    forward()
-  }
-
   /** 证书翻译件
    *
    * @return
    */
-  def certEn(): View = {
+  def enDoc(): View = {
     val id = getLongId("graduate")
     val g = entityDao.get(classOf[Graduate], id)
     put("graduate", g)
@@ -106,7 +104,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     forward()
   }
 
-  def degreeDownload(): View = {
+  def degreeDoc(): View = {
     val id = getLongId("graduate")
     val graduate = entityDao.get(classOf[Graduate], id)
     val bytes = StdDocHelper.toDegreeDoc(entityDao, graduate)
@@ -120,22 +118,28 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     null
   }
 
-  def certificationDownload(): View = {
-    val id = getLongId("graduate")
-    val graduate = entityDao.get(classOf[Graduate], id)
-    val bytes = StdDocHelper.toCertificationDoc(entityDao, graduate)
-    val filename = if (graduate.std.project.minor) {
-      new String(("专业证书-" + graduate.std.name).getBytes, "ISO8859-1")
-    } else {
-      new String(("毕业证书-" + graduate.std.name).getBytes, "ISO8859-1")
+  def certificate(): View = {
+    val ids = getLongIds("graduate")
+    val graduates = entityDao.find(classOf[Graduate], ids)
+    put("graduates", graduates)
+    //put("base",)
+    val req = ActionContext.current.request
+    val base = UrlBuilder(req).buildOrigin() + req.getContextPath
+
+    put("base_url", base)
+    val project = getProject
+    if (project.minor && graduates.nonEmpty) {
+      val ms = entityDao.findBy(classOf[MajorStudent], "std", graduates.map(_.std))
+      put("majorStudents", ms.map(x => (x.std, x)).toMap)
     }
-    response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
-    response.setHeader("Content-Length", bytes.length.toString)
-    val out = response.getOutputStream
-    out.write(bytes)
-    out.flush()
-    out.close()
-    null
+    val query = OqlBuilder.from(classOf[President], "p")
+    query.where("p.school=:school", project.school)
+    query.where("p.beginOn<=:date", graduates.head.graduateOn)
+    query.where("p.endOn is null or p.endOn>=:date", graduates.head.graduateOn)
+    put("president", entityDao.search(query).headOption)
+
+    put("hanZi", new HanZiSeqStyle)
+    forward()
   }
 
   /**
@@ -188,7 +192,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     sheet.add("外语通过年月", "graduate.foreignLangPassedOn").date()
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "毕业信息模板.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx.toString, "毕业信息模板.xlsx")
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {
@@ -207,7 +211,12 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
         }
       }
     }
-    context.extractor = new GraduatePropertyExtractor(entityDao)
+
+    var season: Option[GraduateSeason] = None
+    getLong("graduate.season.id") foreach { seasonId =>
+      season = entityDao.find(classOf[GraduateSeason], seasonId)
+    }
+    context.extractor = new GraduatePropertyExtractor(entityDao, season)
     super.configExport(context)
   }
 }

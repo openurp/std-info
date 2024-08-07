@@ -6,8 +6,8 @@
   [@b.grid items=stdAlterConfigs var="stdAlterConfig"]
       [@b.gridbar]
         bar.addItem("${b.text("action.new")}", action.add());
-            bar.addItem("${b.text("action.modify")}",action.single("edit"));
-            bar.addItem("${b.text("action.delete")}",action.multi("remove", "确认要删除所选的记录吗？"));
+        bar.addItem("${b.text("action.modify")}",action.single("edit"));
+        bar.addItem("${b.text("action.delete")}",action.multi("remove", "确认要删除所选的记录吗？"));
       [/@]
     [@b.row]
       [@b.boxcol/]

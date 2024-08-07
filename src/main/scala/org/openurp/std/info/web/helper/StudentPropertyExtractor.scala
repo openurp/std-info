@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.info.service
+package org.openurp.std.info.web.helper
 
 import org.beangle.commons.bean.{DefaultPropertyExtractor, Properties}
 import org.beangle.commons.collection.Collections

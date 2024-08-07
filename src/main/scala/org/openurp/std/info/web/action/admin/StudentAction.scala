@@ -41,8 +41,7 @@ import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
 import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.service.StudentPropertyExtractor
-import org.openurp.std.info.web.helper.{EntityMeta, PropertyMeta, StdSearchHelper, UserHelper}
+import org.openurp.std.info.web.helper.{EntityMeta, PropertyMeta, StdSearchHelper, StudentPropertyExtractor, UserHelper}
 import org.openurp.std.info.web.listener.StudentImporterListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
@@ -83,7 +82,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val builder = new StdSearchHelper(entityDao, project).build()
-    queryByDepart(builder, "student.state.department")
+    builder
+    //queryByDepart(builder, "student.state.department")
   }
 
   protected override def editSetting(student: Student): Unit = {

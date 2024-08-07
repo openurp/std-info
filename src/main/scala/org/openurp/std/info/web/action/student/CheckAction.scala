@@ -32,7 +32,6 @@ import org.openurp.std.info.model.{PersonCheck, PersonField}
 
 import java.time.Instant
 
-
 /** 学生信息确认
  */
 class CheckAction extends StudentSupport {

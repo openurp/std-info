@@ -23,8 +23,10 @@ import org.beangle.ems.app.Ems
 import org.beangle.web.action.view.View
 import org.openurp.base.model.User
 import org.openurp.base.std.model.{Graduate, Student}
+import org.openurp.code.person.model.PoliticalStatus
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
+
 import java.time.Instant
 
 class InfoAction extends StudentSupport {
@@ -40,9 +42,10 @@ class InfoAction extends StudentSupport {
 
   def edit(): View = {
     val std = getStudent
-    val contact = entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact)
     put("std", std)
-    put("contact", contact)
+    put("contact", entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact))
+    put("home", entityDao.findBy(classOf[Home], "std", std).headOption.getOrElse(new Home))
+    put("person", std.person)
     put("api", Ems.api)
     forward()
   }
@@ -52,6 +55,7 @@ class InfoAction extends StudentSupport {
     val person = std.person
     val user = entityDao.findBy(classOf[User], "school" -> std.project.school, "code" -> std.code).head
     val contact = entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact)
+    val home = entityDao.findBy(classOf[Home], "std", std).headOption.getOrElse(new Home)
     if (contact.std == null) contact.std = std
 
     get("enName") foreach { en =>
@@ -76,9 +80,21 @@ class InfoAction extends StudentSupport {
       contact.mobile = Some(mobile)
       user.mobile = Some(mobile)
     }
+    getInt("person.politicalStatus.id") foreach { statusId =>
+      person.politicalStatus = entityDao.find(classOf[PoliticalStatus], statusId)
+    }
+    person.homeTown = get("person.homeTown")
     contact.updatedAt = Instant.now
     user.updatedAt = Instant.now
     entityDao.saveOrUpdate(person, user, contact)
+
+    get("home.address") foreach { a =>
+      home.address = Some(a)
+      home.updatedAt = Instant.now
+      if (home.std == null) home.std = std
+      entityDao.saveOrUpdate(home)
+    }
+
     redirect("index", "info.save.success")
   }
 

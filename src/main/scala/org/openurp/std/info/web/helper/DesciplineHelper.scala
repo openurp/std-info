@@ -27,6 +27,6 @@ class DesciplineHelper(season: GraduateSeason) {
   var graduateOn: LocalDate = season.graduateOn.atDay(1)
 
   def getDisciplineCode(major: Major): String = {
-    major.disciplineCode(graduateOn)
+    major.getDisciplineCode(graduateOn)
   }
 }

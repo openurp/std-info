@@ -3,10 +3,17 @@
 [@b.grid items=graduates var="graduate"]
   [@b.gridbar]
     var m1 = bar.addMenu("${b.text('action.export')}", "exportData()");
+    [#if (Parameters['graduate.season.id']!'')?length>0]
     m1.addItem("导出学位网格式","exportDegree()");
     m1.addItem("导出学位证书打印数据","exportDegreeData()");
+    [/#if]
+
     bar.addItem("导入..",action.method('importForm'));
-    //bar.addItem("证书打印", action.multi('certificate',null,null,false));
+    var m=bar.addMenu("证书打印", action.multi('certificate',null,null,"_blank"));
+    m.addItem("学位证书", action.multi('degreeDoc',null,null,"_blank"));
+    m.addItem("毕业证书翻译件", action.multi('enDoc',null,"cert=graduate","_blank"));
+    m.addItem("学位证书翻译件", action.multi('enDoc',null,"cert=degree","_blank"));
+
     [#if (Parameters['graduate.season.id']!'')?length>0]
     bar.addItem("学籍状态处理", action.method("batchUpdateStdState","确定根据毕业状态处理该批次处理学籍状态？"));
     [/#if]
@@ -66,7 +73,7 @@
     bg.form.submit(form, "${b.url('!exportData')}","_self");
   }
 
-  function exportDegree(){
+  function exportDegree_old(){
     bg.form.addInput(form, "properties",
                      "std.name:姓名(XM),std.enName:姓名拼音(XMPY),std.gender.code:性别码(XBM),std.gender.name:性别(XB),"+
                      "std.person.country.code:国家或地区码(GBM),std.person.nation.code:民族码(MZM),"+
@@ -90,6 +97,25 @@
                      "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),blank.3:决议编号（文号）(JYBH):文号,"+
                      "std.person.code:照片文件名称(ZP),blank.4:备注(BZ),blank.5:QQ号码(QQHM),blank.6:微信账号(WXZH),"+
                      "blank.7:电子邮箱(DZYX),blank.8:院系代码(YXDM)");
+    bg.form.addInput(form, "fileName", "上传学位网");
+    bg.form.addInput(form, "convertToString", "1");
+    bg.form.submit(form, "${b.url('!exportData')}","_self");
+  }
+  function exportDegree(){
+    bg.form.addInput(form, "properties",
+                     "std.code:学号,std.state.department.name:学院,std.name:姓名(XM),std.gender.name:性别(XB),std.person.birthday:出生日期(CSRQ),"+
+                     "std.person.nation.name:民族(MZ),std.person.idType.name:身份证件类型(ZJLX),std.person.code:身份证件号码(ZJHM),"+
+                     "std.person.country.name:国家或地区(GB),examinee.code:考生号(KSH),"+
+                     "std.project.school.code:培养单位码(PYDWM),std.project.school.code:培养单位(PYDW),"+
+                     "std.disciplineCode:学科/专业码(ZYDM),std.disciplineName:学科/专业名称(ZYMC),"+
+                     "std.project.school.code:学位授予单位码(XWSYDWM),"+
+                     "std.project.school.name:学位授予单位(XWSYDW),president.name:学位授予单位校长姓名(XZXM),"+
+                     "president.name:学位评定委员会主席姓名(ZXXM),degree.code:学位类别码(XWLBM),degree.name:学位类别(XWLB),"+
+                     "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),"+
+                     "thesis.advisor:导师姓名(DSXM),thesis.thesisType.name:论文类型(LWLX),"+
+                     "thesis.title:论文题目(LWTM),thesis.keywords:论文关键词(LWGJC),thesis.source.name:论文选题来源(LWXTLY),"+
+                     "thesis.researchField:论文研究方向(LWYJFX),"+
+                     "thesis.language.name:论文撰写语种(LWZXYZ)");
     bg.form.addInput(form, "fileName", "上传学位网");
     bg.form.addInput(form, "convertToString", "1");
     bg.form.submit(form, "${b.url('!exportData')}","_self");

@@ -2,10 +2,10 @@
 [@b.head/]
 [@b.form name="indexForm" action="" /]
 [@b.toolbar title="毕业信息"]
-      bar.addItem("毕业统计", "graduateStat()");
-      function graduateStat() {
-        bg.form.submit(document.indexForm,  "${b.url("graduate-stat")}", "_blank");
-      }
+  bar.addItem("毕业统计", "graduateStat()");
+  function graduateStat() {
+    bg.form.submit(document.indexForm,  "${b.url("graduate-stat")}", "_blank");
+  }
 [/@]
 <div class="search-container">
   <div class="search-panel">
