@@ -35,7 +35,7 @@ import org.openurp.base.edu.model.*
 import org.openurp.base.model.*
 import org.openurp.base.service.Features
 import org.openurp.base.std.model.*
-import org.openurp.code.edu.model.{EducationMode, EnrollMode, StudyType}
+import org.openurp.code.edu.model.{EducationMode, EducationType, EnrollMode, StudyType}
 import org.openurp.code.geo.model.{Country, Division}
 import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
 import org.openurp.code.std.model.{StdLabel, StudentStatus}
@@ -71,6 +71,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("campuses", findInSchool(classOf[Campus]))
 
     put("studyTypes", getCodes(classOf[StudyType]))
+    put("eduTypes", getCodes(classOf[EducationType]))
+
     put("stdLabels", getCodes(classOf[StdLabel]))
     super.indexSetting()
   }

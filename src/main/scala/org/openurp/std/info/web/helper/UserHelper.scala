@@ -20,7 +20,7 @@ package org.openurp.std.info.web.helper
 import org.beangle.commons.bean.Initializing
 import org.beangle.data.dao.EntityDao
 import org.beangle.ems.app.Ems
-import org.beangle.ems.app.datasource.AppDataSourceFactory
+import org.beangle.ems.app.dao.AppDataSourceFactory
 import org.openurp.base.model.User
 import org.openurp.base.service.UserRepo
 import org.openurp.base.service.impl.DefaultUserRepo

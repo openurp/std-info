@@ -61,6 +61,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
     put("enrollModes", getCodes(classOf[EnrollMode])) // 入学方式
 
     put("studyTypes", getCodes(classOf[StudyType]))
+    put("eduTypes", getCodes(classOf[EducationType]))
     put("stdLabels", getCodes(classOf[StdLabel]))
     forward()
   }
