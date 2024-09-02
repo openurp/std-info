@@ -19,6 +19,7 @@ package org.openurp.std.info.web.action.student
 
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.view.View
@@ -46,10 +47,7 @@ class InfoAction extends StudentSupport {
     val std = getStudent
     given project:Project = std.project
     put("std", std)
-    val editables = Collections.newBuffer[String]
-    if(getConfig("std.info.edit.politicalStatus.allow",false)) {
-      editables += "politicalStatus"
-    }
+    val editables = Strings.split(getConfig("std.info.self.editables",""),",").toSet
     put("editables",editables)
     put("contact", entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact))
     put("home", entityDao.findBy(classOf[Home], "std", std).headOption.getOrElse(new Home))
