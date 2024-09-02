@@ -18,16 +18,18 @@
 package org.openurp.std.info.web.action.student
 
 import org.beangle.commons.codec.digest.Digests
+import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
 import org.beangle.web.action.view.View
-import org.openurp.base.model.User
+import org.openurp.base.model.{Project, User}
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.code.person.model.PoliticalStatus
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 
 import java.time.Instant
+import scala.language.postfixOps
 
 class InfoAction extends StudentSupport {
   override def projectIndex(student: Student): View = {
@@ -42,7 +44,13 @@ class InfoAction extends StudentSupport {
 
   def edit(): View = {
     val std = getStudent
+    given project:Project = std.project
     put("std", std)
+    val editables = Collections.newBuffer[String]
+    if(getConfig("std.info.edit.politicalStatus.allow",false)) {
+      editables += "politicalStatus"
+    }
+    put("editables",editables)
     put("contact", entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact))
     put("home", entityDao.findBy(classOf[Home], "std", std).headOption.getOrElse(new Home))
     put("person", std.person)

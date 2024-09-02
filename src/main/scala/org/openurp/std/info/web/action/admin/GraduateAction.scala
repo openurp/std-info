@@ -34,6 +34,7 @@ import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulA
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
+import org.openurp.base.service.Features
 import org.openurp.base.std.model.{Graduate, GraduateSeason}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
@@ -59,10 +60,12 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     put("majors", findInProject(classOf[Major]))
     put("directions", findInProject(classOf[Direction]))
     put("graduateSeasons", findInProject(classOf[GraduateSeason]))
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
     super.indexSetting()
   }
 
   override def getQueryBuilder: OqlBuilder[Graduate] = {
+
     val query = super.getQueryBuilder
     get("degree").orNull match {
       case "0" => query.where("graduate.degree is null")
@@ -75,7 +78,11 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   override def search(): View = {
     val query = getQueryBuilder
     put("graduates", entityDao.search(query))
-    put("project", getProject)
+
+    given project: Project = getProject
+
+    put("tutorSupported", getConfig(Features.Std.TutorSupported))
+    put("project", project)
     forward()
   }
 

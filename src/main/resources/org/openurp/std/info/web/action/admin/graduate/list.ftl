@@ -25,7 +25,7 @@
       [/@]
       [@b.col title="姓名" property="std.name" width="6%"]
         <div class="text-ellipsis" title="${graduate.std.name}">
-          [@b.a href="student!info?id=${graduate.std.id}" target="_blank"]${graduate.std.name}[/@]
+          [@b.a href="search!info?id=${graduate.std.id}" target="_blank"]${graduate.std.name}[/@]
         </div>
       [/@]
       [@b.col title="培养层次" property="std.level.name" width="6%"][/@]
@@ -52,7 +52,7 @@
     bg.form.addInput(form, "properties", "graduateOn:毕业日期,std.state.major.name:专业,std.state.direction.name:方向,std.level.name:学历,std.name:姓名,"+
                      "std.gender.name:性别,std.person.code:身份证,std.code:学号,"+
                      "std.person.nation.name:民族,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
-                     "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位");
+                     "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位[#if tutorSupported],std.tutor.name:导师[/#if]");
     bg.form.addInput(form, "convertToString", "0");
     bg.form.addInput(form, "fileName", "毕业信息");
     bg.form.submit(form, "${b.url('!exportData')}","_self");
