@@ -17,6 +17,7 @@
 
 package org.openurp.std.info.web.action.admin
 
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.importer.ImportSetting
@@ -78,7 +79,7 @@ class MajorStudentAction extends RestfulAction[MajorStudent], ExportSupport[Majo
     code.add("专业学科门类").data(majorCategories)
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "主修学生信息模板.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx, "主修学生信息模板.xlsx")
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {

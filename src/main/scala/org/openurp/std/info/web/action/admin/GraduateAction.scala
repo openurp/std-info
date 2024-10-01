@@ -65,7 +65,6 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   }
 
   override def getQueryBuilder: OqlBuilder[Graduate] = {
-
     val query = super.getQueryBuilder
     get("degree").orNull match {
       case "0" => query.where("graduate.degree is null")
@@ -199,7 +198,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     sheet.add("外语通过年月", "graduate.foreignLangPassedOn").date()
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx.toString, "毕业信息模板.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx, "毕业信息模板.xlsx")
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {

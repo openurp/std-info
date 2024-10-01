@@ -78,7 +78,7 @@ class ThesisAction extends RestfulAction[Thesis], ProjectSupport, ImportSupport[
     sheet.add("评语", "thesis.comments")
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx.toString, "毕业论文数据模板.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx, "毕业论文数据模板.xlsx")
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {

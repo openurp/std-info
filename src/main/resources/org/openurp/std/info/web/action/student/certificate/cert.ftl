@@ -1,11 +1,12 @@
+[#assign profile]/${student.project.school.id}/${student.project.id}[/#assign]
 [#if student.registed]
   [#if lang == "zh"]
-    [@include_optional path="/org/openurp/std/info/web/components/${student.project.id}/certificate_zh.ftl"]
-      missing /org/openurp/std/info/web/components/${student.project.id}/certificate_zh.ftl
+    [@include_optional path="${profile}/org/openurp/std/info/web/components/certificate_zh.ftl"]
+      missing ${profile}/org/openurp/std/info/web/components/certificate_zh.ftl
     [/@]
   [#else]
-    [@include_optional path="/org/openurp/std/info/web/components/${student.project.id}/certificate_en.ftl"]
-      missing /org/openurp/std/info/web/components/${student.project.id}/certificate_en.ftl
+    [@include_optional path="${profile}/org/openurp/std/info/web/components/certificate_en.ftl"]
+      missing ${profile}/org/openurp/std/info/web/components/certificate_en.ftl
     [/@]
   [/#if]
 [#else]

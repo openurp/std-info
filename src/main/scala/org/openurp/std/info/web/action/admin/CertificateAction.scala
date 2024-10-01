@@ -47,10 +47,10 @@ class CertificateAction extends ActionSupport, EntityAction[Student] {
     val std = entityDao.get(classOf[Student], getLongId("student"))
     val active = std.within(LocalDate.now)
     put("std", std)
+    put("student", std)
     if (active) {
       if (std.registed) {
         if (std.state.get.inschool) {
-          put("student", std)
           put("grade", GradeHelper.convert(std.state.get.grade))
           put("program", programProvider.getProgram(std))
           put("lang", get("lang", "zh"))

@@ -49,7 +49,6 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
 
     put("modes", getCodes(classOf[StdAlterType]))
     put("reasons", getCodes(classOf[StdAlterReason]))
-    println(getSemester)
     put("semester", getSemester)
     put("metas", AlterMeta.values)
   }
@@ -58,6 +57,12 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     val query = super.getQueryBuilder
     getInt("meta.id") foreach { metaId =>
       query.where("exists(from stdAlteration.items as item where item.meta=:meta)", Enums.of(classOf[AlterMeta], metaId))
+    }
+    getDate("alterFromDate") foreach { d =>
+      query.where("stdAlteration.alterOn >= :fromDate", d)
+    }
+    getDate("alterToDate") foreach { d =>
+      query.where("stdAlteration.alterOn <= :toDate", d)
     }
     query
   }

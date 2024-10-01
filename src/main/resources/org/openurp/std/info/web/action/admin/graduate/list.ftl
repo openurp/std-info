@@ -17,6 +17,7 @@
     [#if (Parameters['graduate.season.id']!'')?length>0]
     bar.addItem("学籍状态处理", action.method("batchUpdateStdState","确定根据毕业状态处理该批次处理学籍状态？"));
     [/#if]
+    bar.addItem("${b.text("action.delete")}",action.remove("确认删除?"));
   [/@]
   [@b.row]
       [@b.boxcol /]

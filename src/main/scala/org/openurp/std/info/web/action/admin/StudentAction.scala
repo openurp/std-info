@@ -17,6 +17,7 @@
 
 package org.openurp.std.info.web.action.admin
 
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Charsets
@@ -41,7 +42,7 @@ import org.openurp.code.person.model.{Gender, IdType, Nation, PoliticalStatus}
 import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
-import org.openurp.std.info.web.helper.{EntityMeta, PropertyMeta, StdSearchHelper, StudentPropertyExtractor, UserHelper}
+import org.openurp.std.info.web.helper.*
 import org.openurp.std.info.web.listener.StudentImporterListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
@@ -353,7 +354,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "学籍信息模版.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx, "学籍信息模版.xlsx")
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {

@@ -1,4 +1,5 @@
 [#ftl/]
-[@include_optional path="/org/openurp/std/info/web/components/${student.project.id}/certificate_zh.ftl"]
-  missing /org/openurp/std/info/web/components/${student.project.id}/certificate_zh.ftl
+[#assign profile]/${student.project.school.id}/${student.project.id}[/#assign]
+[@include_optional path="${profile}/org/openurp/std/info/web/components/certificate_zh.ftl"]
+  missing ${profile}/org/openurp/std/info/web/components/certificate_zh.ftl
 [/@]
