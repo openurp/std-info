@@ -38,8 +38,8 @@ class UserHelper extends Initializing {
     userRepo = new DefaultUserRepo(entityDao, ds.result, Ems.hostname)
   }
 
-  def createUser(std: Student, oldCode: Option[String]): User = {
-    userRepo.createUser(std, oldCode)
+  def createUser(std: Student,userCode: String, oldCode: Option[String]): User = {
+    userRepo.createUser(std, userCode, oldCode)
   }
 
   def createAccount(user: User): Unit = {

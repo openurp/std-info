@@ -20,7 +20,7 @@ package org.openurp.std.info.web.action.admin
 import org.beangle.commons.activation.MediaTypes
 import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.Charsets
+import org.beangle.commons.lang.{Charsets, Strings}
 import org.beangle.commons.net.http.HttpUtils
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.excel.schema.ExcelSchema
@@ -43,7 +43,6 @@ import org.openurp.code.std.model.{StdLabel, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 import org.openurp.std.info.web.helper.*
-import org.openurp.std.info.web.listener.StudentImporterListener
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.net.URLEncoder
@@ -205,11 +204,24 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     state.std = student
     student.updatedAt = Instant.now()
     student.maxEndOn = student.endOn
+
+
+    userHelper.createUser(student, getStdUserCode(student), None)
     entityDao.saveOrUpdate(student.person, student)
-    userHelper.createUser(student, None)
     redirect("search", "&isOk=" + true, "info.save.success")
   }
 
+  private def getStdUserCode(std:Student):String={
+    get("user.code") match
+      case Some(code)=>
+        if(Strings.isNotBlank(code)){
+          code.trim()
+        }else{
+          if std.user == null then std.code else std.user.code
+        }
+      case None=>
+        if std.user == null then std.code else std.user.code
+  }
   /**
    * 保存学籍信息
    *
@@ -238,7 +250,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.gender = person.gender
     person.name.formattedName = student.name
     entityDao.saveOrUpdate(person, student)
-    userHelper.createUser(student, None)
+    userHelper.createUser(student,getStdUserCode(student), None)
 
     val examinee = populateEntity(classOf[Examinee], "examinee")
     if (examinee.code != null) {
@@ -305,6 +317,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val sheet = schema.createScheet("数据模板")
     sheet.title("新增学籍导入模版")
     sheet.remark("特别说明：\n1、不可改变本表格的行列结构以及批注，否则将会导入失败！\n2、必须按照规格说明的格式填写。\n3、可以多次导入，重复的信息会被新数据更新覆盖。\n4、保存的excel文件名称可以自定。")
+    sheet.add("账号", "user.code").remark("可选，默认为学号")
     sheet.add("学号", "student.code").required()
     sheet.add("姓名", "student.name").required()
     sheet.add("性别", "person.gender.code").ref(genders).required()
@@ -358,8 +371,12 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {
+    val project = getProject
     val fl = new ForeignerListener(entityDao)
     fl.addForeigerKey("name")
+    fl.addScope(classOf[Grade],Map("project" -> project))
+    fl.addScope(classOf[Squad],Map("project" -> project))
+
     val importer = new MultiEntityImporter
     importer.domain = this.entityDao.domain
     importer.populator = PopulateHelper.populator

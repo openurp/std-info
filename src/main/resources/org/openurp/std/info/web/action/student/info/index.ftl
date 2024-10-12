@@ -1,5 +1,6 @@
 [#ftl]
 [@b.head/]
+[#include "/org/openurp/starter/web/components/multi-std-nav.ftl"/]
 <div class="container text-sm">
   [@b.toolbar title="我的学籍"]
     bar.addBack("${b.text("action.back")}");

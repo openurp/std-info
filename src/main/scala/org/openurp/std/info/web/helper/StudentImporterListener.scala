@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.info.web.listener
+package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.conversion.string.TemporalConverter
@@ -159,6 +159,18 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     })
   }
 
+  private def getStdUserCode(data:collection.Map[String,Any],std: Student): String = {
+    data.get("user.code") match
+      case Some(code) =>
+        if (Strings.isNotBlank(code.toString)) {
+          code.toString.trim()
+        } else {
+          if std.user == null then std.code else std.user.code
+        }
+      case None =>
+        if std.user == null then std.code else std.user.code
+  }
+
   override def onItemFinish(tr: ImportResult): Unit = {
     val data = tr.transfer.curData
     val mImporter = transfer.asInstanceOf[MultiEntityImporter]
@@ -167,6 +179,8 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     val state = mImporter.getCurrent("state").asInstanceOf[StudentState]
     val examinee = mImporter.getCurrent("examinee").asInstanceOf[Examinee]
     val contact = mImporter.getCurrent("contact").asInstanceOf[Contact]
+
+    val uu = userRepo.createUser(student,getStdUserCode(data,student), None)
 
     if (!student.persisted) {
       val personCode = data.get(PERSON_CODE).orNull.asInstanceOf[String]
@@ -189,7 +203,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       student.calcCurrentState()
       entityDao.saveOrUpdate(person, student)
     }
-    userRepo.createUser(student, None)
+
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]
     findTeacher(tutorCode, tr) foreach (t => student.tutor = Some(t))

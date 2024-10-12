@@ -89,4 +89,3 @@ class StatMatrix(val dimensions: Seq[StatMatrix.Dimension], val datas: collectio
     rs
   }
 }
-
