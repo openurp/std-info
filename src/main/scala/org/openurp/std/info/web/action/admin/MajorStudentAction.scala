@@ -22,8 +22,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.importer.ImportSetting
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.view.{Stream, View}
+import org.beangle.webmvc.annotation.response
+import org.beangle.webmvc.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.model.Project
 import org.openurp.base.std.model.Student
@@ -45,6 +45,12 @@ class MajorStudentAction extends RestfulAction[MajorStudent], ExportSupport[Majo
     val schools = entityDao.search(builder)
     put("schools", schools)
     super.indexSetting()
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[MajorStudent] = {
+    val query = super.getQueryBuilder
+    query.where("majorStudent.std.project=:project", getProject)
+    query
   }
 
   override def editSetting(entity: MajorStudent): Unit = {

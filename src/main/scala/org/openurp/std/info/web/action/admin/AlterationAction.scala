@@ -20,8 +20,8 @@ package org.openurp.std.info.web.action.admin
 import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.{Enums, Objects, Strings}
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.mapping
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.model.{Department, Project}
@@ -155,9 +155,11 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       if (inschool) builder.where("ss.beginOn<=:now and ss.endOn>=:now and ss.inschool = true", date)
       else builder.where("ss.beginOn>:now or ss.endOn<:now or (ss.beginOn<=:now and ss.endOn>=:now and ss.inschool is false)", date)
     }
-    populateConditions(builder)
-    val orderBy = get(Order.OrderStr).orNull
-    builder.orderBy(if (Strings.isEmpty(orderBy)) "student.code" else orderBy)
+    var orderBy = get(Order.OrderStr).orNull
+    orderBy = if (Strings.isEmpty(orderBy)) "student.code" else orderBy
+    if (orderBy.startsWith("student")) {
+      builder.orderBy(orderBy)
+    }
     put("students", entityDao.search(builder))
     forward()
   }

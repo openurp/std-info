@@ -17,7 +17,7 @@
 
 package org.openurp.std.info
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.commons.cdi.BindModule
 import org.beangle.commons.bean.{Initializing, Properties}
 import org.beangle.commons.lang.Strings
 import org.beangle.commons.lang.reflect.Reflections

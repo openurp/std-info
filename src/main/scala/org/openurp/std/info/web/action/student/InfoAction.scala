@@ -22,7 +22,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Project, User}
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.code.person.model.PoliticalStatus

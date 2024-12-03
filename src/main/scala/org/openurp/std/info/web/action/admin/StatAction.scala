@@ -19,8 +19,8 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Campus, Department}
 import org.openurp.base.std.model.{Grade, Student}
 import org.openurp.code.edu.model.{EducationLevel, EducationType}

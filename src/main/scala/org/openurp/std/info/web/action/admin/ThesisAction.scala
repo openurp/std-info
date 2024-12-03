@@ -22,8 +22,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.importer.ImportSetting
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.view.Stream
+import org.beangle.webmvc.annotation.response
+import org.beangle.webmvc.view.Stream
 import org.beangle.webmvc.support.action.{ImportSupport, RestfulAction}
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Project

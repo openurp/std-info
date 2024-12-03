@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 import java.time.{Instant, LocalDate}
 import java.util
 
-class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProject: Project) extends ImportListener {
+class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project: Project) extends ImportListener {
 
   final private val STUDENT_CODE: String = "student.code"
   final private val PERSON_FORMATEDNAME: String = "student.name"
@@ -73,7 +73,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     var person: Person = null
     val stdBuilder = OqlBuilder.from(classOf[Student], "std")
     stdBuilder.where("std.code=:code", code)
-    stdBuilder.where("std.project=:project", currProject)
+    stdBuilder.where("std.project=:project", project)
     val stds = entityDao.search(stdBuilder)
     if (stds.nonEmpty) {
       val student = stds(0)
@@ -179,9 +179,6 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
     val state = mImporter.getCurrent("state").asInstanceOf[StudentState]
     val examinee = mImporter.getCurrent("examinee").asInstanceOf[Examinee]
     val contact = mImporter.getCurrent("contact").asInstanceOf[Contact]
-
-    val uu = userRepo.createUser(student,getStdUserCode(data,student), None)
-
     if (!student.persisted) {
       val personCode = data.get(PERSON_CODE).orNull.asInstanceOf[String]
       val stdName = data.get(PERSON_FORMATEDNAME).orNull.asInstanceOf[String]
@@ -189,8 +186,8 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
       person.name.formattedName = stdName
       person.updatedAt = Instant.now()
       student.gender = person.gender
+      student.project = project
       student.person = person
-      student.project = currProject
       student.updatedAt = Instant.now()
 
       state.beginOn = student.beginOn
@@ -201,9 +198,9 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
         student.studyOn = student.beginOn
       }
       student.calcCurrentState()
-      entityDao.saveOrUpdate(person, student)
     }
-
+    userRepo.createUser(student,getStdUserCode(data,student), None)
+    entityDao.saveOrUpdate(person, student)
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]
     findTeacher(tutorCode, tr) foreach (t => student.tutor = Some(t))
@@ -226,7 +223,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, currProj
   private def findTeacher(staffCodeName: String, tr: ImportResult): Option[Teacher] = {
     if Strings.isNotBlank(staffCodeName) then
       val query = OqlBuilder.from(classOf[Teacher], "t")
-      query.where("t.staff.school = :school", currProject.school)
+      query.where("t.staff.school = :school", project.school)
       query.where("t.staff.code = :code or t.staff.name =:name", staffCodeName, staffCodeName)
       val tutors = entityDao.search(query)
       if (tutors.size == 1) {

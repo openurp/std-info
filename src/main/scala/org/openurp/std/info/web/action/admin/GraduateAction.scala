@@ -26,11 +26,11 @@ import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.ImportSetting
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.context.ActionContext
-import org.beangle.web.action.view.{Stream, View}
 import org.beangle.web.servlet.url.UrlBuilder
+import org.beangle.webmvc.annotation.response
+import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
+import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
@@ -66,6 +66,8 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
 
   override def getQueryBuilder: OqlBuilder[Graduate] = {
     val query = super.getQueryBuilder
+    val project = getProject
+    query.where("graduate.std.project=:project", project)
     get("degree").orNull match {
       case "0" => query.where("graduate.degree is null")
       case "1" => query.where("graduate.degree is not null")

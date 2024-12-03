@@ -23,7 +23,7 @@ import org.beangle.ems.app.EmsApp
 import org.beangle.notify.sms.{Receiver, SmsCodeService}
 import org.beangle.security.Securities
 import org.beangle.security.authc.DefaultAccount
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Project, User}
 import org.openurp.base.std.model.Student
 import org.openurp.code.person.model.{Gender, IdType, Nation}

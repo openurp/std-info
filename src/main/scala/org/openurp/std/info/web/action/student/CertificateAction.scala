@@ -17,8 +17,8 @@
 
 package org.openurp.std.info.web.action.student
 
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.mapping
+import org.beangle.webmvc.view.View
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.StudentSupport
 import org.openurp.std.info.web.helper.{CertificateErrors, GradeHelper}

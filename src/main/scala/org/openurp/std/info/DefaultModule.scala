@@ -17,7 +17,7 @@
 
 package org.openurp.std.info
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.commons.cdi.BindModule
 import org.beangle.ems.app.EmsApp
 import org.openurp.base.std.service.impl.StudentServiceImpl
 import org.openurp.edu.program.domain.DefaultProgramProvider

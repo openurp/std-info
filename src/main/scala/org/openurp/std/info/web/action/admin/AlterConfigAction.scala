@@ -17,7 +17,7 @@
 
 package org.openurp.std.info.web.action.admin
 
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.code.std.model.{StdAlterType, StudentStatus}

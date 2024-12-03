@@ -19,8 +19,8 @@ package org.openurp.std.info.web.action.student
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.mapping
+import org.beangle.webmvc.view.View
 import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{Semester, User}

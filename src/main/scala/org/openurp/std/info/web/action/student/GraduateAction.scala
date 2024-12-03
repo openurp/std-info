@@ -18,8 +18,8 @@
 package org.openurp.std.info.web.action.student
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.mapping
+import org.beangle.webmvc.view.View
 import org.openurp.base.hr.model.President
 import org.openurp.base.std.model.Graduate
 import org.openurp.starter.web.support.StudentSupport

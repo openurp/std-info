@@ -19,8 +19,8 @@ package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Order
 import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
-import org.beangle.web.action.context.Params
-import org.beangle.web.action.support.ActionSupport
+import org.beangle.webmvc.context.Params
+import org.beangle.webmvc.support.ActionSupport
 import org.beangle.webmvc.support.helper.QueryHelper
 import org.openurp.base.model.{Department, Project}
 import org.openurp.base.std.model.{Graduate, Student}

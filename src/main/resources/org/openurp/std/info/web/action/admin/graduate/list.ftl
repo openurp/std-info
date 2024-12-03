@@ -50,10 +50,14 @@
 <script>
   var form = document.searchForm;
   function exportData(){
-    bg.form.addInput(form, "properties", "graduateOn:毕业日期,std.state.major.name:专业,std.state.direction.name:方向,std.level.name:学历,std.name:姓名,"+
-                     "std.gender.name:性别,std.person.code:身份证,std.code:学号,"+
-                     "std.person.nation.name:民族,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
-                     "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位[#if tutorSupported],std.tutor.name:导师[/#if]");
+    bg.form.addInput(form, "properties", "std.code:学号,std.name:姓名,std.gender.name:性别,"+
+                     "std.state.department.name:院系,std.disciplineCode:专业代码,"+
+                     "std.state.major.name:专业名称,std.state.direction.name:专业方向,std.state.squad.code:班号,std.state.squad.name:班级,"+
+                     "std.studyType.name:学习形式,std.level.name:培养层次,std.studyOn:入学日期,graduateOn:毕业日期,"+
+                     "std.person.birthday:出生日期,std.person.code:身份证号,std.person.nation.name:民族,"+
+                     "examinee.code:考生号,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
+                     "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位,std.state.squad.mentor.name:辅导员,"+
+                     "std.state.squad.master.name:班主任[#if tutorSupported],std.tutor.name:导师[/#if]");
     bg.form.addInput(form, "convertToString", "0");
     bg.form.addInput(form, "fileName", "毕业信息");
     bg.form.submit(form, "${b.url('!exportData')}","_self");

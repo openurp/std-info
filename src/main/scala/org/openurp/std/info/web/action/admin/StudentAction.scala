@@ -28,8 +28,8 @@ import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.doc.transfer.importer.{ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
-import org.beangle.web.action.annotation.{ignore, mapping, response}
-import org.beangle.web.action.view.{Stream, View}
+import org.beangle.webmvc.annotation.{ignore, mapping, response}
+import org.beangle.webmvc.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.openurp.base.edu.model.*

@@ -21,9 +21,9 @@ import org.beangle.commons.codec.digest.Digests
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
-import org.beangle.web.action.annotation.{ignore, mapping}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.{ignore, mapping}
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.{Campus, Project}
