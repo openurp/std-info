@@ -8,7 +8,9 @@
         bar.addItem("导出..",function() {
           var paramMap = {};
           $("#studentSearchForm").find("[name]").each(function() {
-            paramMap[$(this).attr("name")] = $(this).val();
+            if($(this).attr("name")){
+              paramMap[$(this).attr("name")] = $(this).val();
+            }
           });
           $(this).colorbox({
             "transition": "none",
