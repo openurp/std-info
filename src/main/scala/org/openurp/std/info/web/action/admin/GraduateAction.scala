@@ -211,8 +211,8 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
 
   override protected def configExport(context: ExportContext): Unit = {
     val fileName = get("fileName", "exportFile")
+    context.registerFormatter(classOf[LocalDate], TemporalFormatter("yyyyMMdd"))
     if (fileName.startsWith("上传学位网")) {
-      context.registerFormatter(classOf[LocalDate], TemporalFormatter("yyyyMMdd"))
       context.attrs.indices foreach { i =>
         if (context.titles(i).contains("年月")) {
           context.registerFormatter(context.attrs(i), TemporalFormatter("yyyyMM"))

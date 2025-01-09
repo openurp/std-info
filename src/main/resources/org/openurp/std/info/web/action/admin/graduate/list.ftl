@@ -108,19 +108,19 @@
   }
   function exportDegree(){
     bg.form.addInput(form, "properties",
-                     "std.code:学号,std.state.department.name:学院,std.name:姓名(XM),std.gender.name:性别(XB),std.person.birthday:出生日期(CSRQ),"+
-                     "std.person.nation.name:民族(MZ),std.person.idType.name:身份证件类型(ZJLX),std.person.code:身份证件号码(ZJHM),"+
-                     "std.person.country.name:国家或地区(GB),examinee.code:考生号(KSH),"+
-                     "std.project.school.code:培养单位码(PYDWM),std.project.school.code:培养单位(PYDW),"+
-                     "std.disciplineCode:学科/专业码(ZYDM),std.disciplineName:学科/专业名称(ZYMC),"+
-                     "std.project.school.code:学位授予单位码(XWSYDWM),"+
-                     "std.project.school.name:学位授予单位(XWSYDW),president.name:学位授予单位校长姓名(XZXM),"+
-                     "president.name:学位评定委员会主席姓名(ZXXM),degree.code:学位类别码(XWLBM),degree.name:学位类别(XWLB),"+
-                     "degreeAwardOn:获学位日期(HXWRQ),diplomaNo:学位证书编号(XWZSBH),"+
-                     "thesis.advisor:导师姓名(DSXM),thesis.thesisType.name:论文类型(LWLX),"+
-                     "thesis.title:论文题目(LWTM),thesis.keywords:论文关键词(LWGJC),thesis.source.name:论文选题来源(LWXTLY),"+
-                     "thesis.researchField:论文研究方向(LWYJFX),"+
-                     "thesis.language.name:论文撰写语种(LWZXYZ)");
+                     "std.code:学号,std.state.department.name:学院,std.name:XM,std.gender.name:XB,std.person.birthday:CSRQ,"+
+                     "std.person.nation.name:MZ,std.person.idType.name_xw:ZJLX,std.person.code:ZJHM,"+
+                     "std.person.country.shortName:GB,examinee.code:KSH,"+
+                     "std.project.school.institution.code:PYDWM,std.project.school.institution.name:PYDW,"+
+                     "std.disciplineCode:ZYDM,std.disciplineName:ZYMC,"+
+                     "std.project.school.institution.code:XWSYDWM,"+
+                     "std.project.school.institution.name:XWSYDW,president.name:XZXM,"+
+                     "president.name:ZXXM,degree.code:XWLBM,degree.name_xw:XWLB,"+
+                     "degreeAwardOn:HXWRQ,diplomaNo:XWZSBH,"+
+                     "thesis.advisor:DSXM,thesis.thesisType.name:LWLX,"+
+                     "thesis.title:LWTM,thesis.keywords:LWGJC,thesis.source.name:LWXTLY,"+
+                     "thesis.researchField:LWYJFX,"+
+                     "thesis.language.name:LWZXYZ");
     bg.form.addInput(form, "fileName", "上传学位网");
     bg.form.addInput(form, "convertToString", "1");
     bg.form.submit(form, "${b.url('!exportData')}","_self");

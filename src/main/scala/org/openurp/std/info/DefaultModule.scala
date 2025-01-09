@@ -52,6 +52,7 @@ class DefaultModule extends BindModule {
     bind(classOf[student.GraduateAction])
     bind(classOf[student.RegisterAction])
     bind(classOf[student.CheckAction])
+    bind(classOf[student.AlterApplyAction])
     // services
     bind(classOf[StudentServiceImpl])
     bind(classOf[DefaultProgramProvider])

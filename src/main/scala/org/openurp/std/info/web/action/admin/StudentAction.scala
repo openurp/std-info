@@ -205,7 +205,6 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.updatedAt = Instant.now()
     student.maxEndOn = student.endOn
 
-
     userHelper.createUser(student, getStdUserCode(student), None)
     entityDao.saveOrUpdate(student.person, student)
     redirect("search", "&isOk=" + true, "info.save.success")

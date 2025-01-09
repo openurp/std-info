@@ -97,6 +97,10 @@ class GraduatePropertyExtractor(entityDao: EntityDao, season: Option[GraduateSea
     } else if (property == "std.person.idType.name_xw") {
       val idType = graduate.std.person.idType
       if idType.id == 1 then "中华人民共和国居民身份证" else idType.name
+    } else if (property == "degree.name_xw") {
+      graduate.degree match
+        case None => ""
+        case Some(d) => if (d.name.endsWith("学位")) d.name else d.name + "学位"
     } else if (property.startsWith("thesis.")) {
       if (thesis == null || thesis.std != graduate.std) {
         thesis = entityDao.findBy(classOf[Thesis], "std", graduate.std).headOption.orNull
