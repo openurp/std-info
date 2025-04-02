@@ -19,6 +19,7 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.data.stat.{Columns, Matrix}
 import org.beangle.webmvc.support.ActionSupport
 import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Campus, Department}
@@ -26,7 +27,6 @@ import org.openurp.base.std.model.{Grade, Student}
 import org.openurp.code.edu.model.{EducationLevel, EducationType}
 import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.info.web.helper.StatMatrix
 
 import java.time.LocalDate
 
@@ -71,7 +71,7 @@ class StatAction extends ActionSupport, ProjectSupport {
       put("eduType", entityDao.get(classOf[EducationType], id))
     }
 
-    val datas = Collections.newBuffer[StatMatrix.Row]
+    val datas = Collections.newBuffer[Matrix.Row]
     entityDao.search(q) foreach { d =>
       val gradeId = d(0).asInstanceOf[Long]
       val levelId = d(1).asInstanceOf[Int]
@@ -81,13 +81,18 @@ class StatAction extends ActionSupport, ProjectSupport {
       val campusId = d(5).asInstanceOf[Int]
       val total = d(6).asInstanceOf[Number].intValue
       val female = d(7).asInstanceOf[Number].intValue
-      val data = StatMatrix.Row(Seq(gradeId, levelId, departmentId, stdTypeId, eduTypeId, campusId), Array(total, female))
+      val data = Matrix.Row(Seq(gradeId, levelId, departmentId, stdTypeId, eduTypeId, campusId), Array(total, female))
       datas.addOne(data)
     }
-    val dimensions = StatMatrix.statDimensions(entityDao, datas,
-      Seq("grade" -> classOf[Grade], "level" -> classOf[EducationLevel], "depart" -> classOf[Department],
-        "stdType" -> classOf[StdType], "eduType" -> classOf[EducationType], "campus" -> classOf[Campus]))
-    val matrix = new StatMatrix(dimensions, datas)
+
+    val ds = Columns(entityDao)
+    ds.add("grade", "年级", datas, classOf[Grade])
+    ds.add("level", "培养层次", datas, classOf[EducationLevel])
+    ds.add("depart", "院系", datas, classOf[Department])
+    ds.add("stdType", "学生类别", datas, classOf[StdType])
+    ds.add("eduType", "培养类型", datas, classOf[EducationType])
+    ds.add("campus", "校区", datas, classOf[Campus])
+    val matrix = new Matrix(ds.build(), datas)
     put("matrix", matrix)
     put("project", project)
     forward()

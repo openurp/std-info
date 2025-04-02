@@ -53,7 +53,7 @@
     bg.form.addInput(form, "properties", "std.code:学号,std.name:姓名,std.gender.name:性别,"+
                      "std.state.department.name:院系,std.disciplineCode:专业代码,"+
                      "std.state.major.name:专业名称,std.state.direction.name:专业方向,std.state.squad.code:班号,std.state.squad.name:班级,"+
-                     "std.studyType.name:学习形式,std.level.name:培养层次,std.studyOn:入学日期,graduateOn:毕业日期,"+
+                     "std.studyType.name:学习形式,std.level.name:培养层次,std.beginOn:入学日期,graduateOn:毕业日期,"+
                      "std.person.birthday:出生日期,std.person.code:身份证号,std.person.nation.name:民族,"+
                      "examinee.code:考生号,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
                      "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位,std.state.squad.mentor.name:辅导员,"+
@@ -95,7 +95,7 @@
                      "std.state.major.code:专业码(ZYDM),std.state.major.name:专业(ZYMC),"+
                      [/#if]
                      "std.state.major.name:证书专业名称(ZSZYMC),"+
-                     "examinee.code:考生号(KSH),std.studyOn:入学年月(RXNY),std.code:学号(XH),"+
+                     "examinee.code:考生号(KSH),std.beginOn:入学年月(RXNY),std.code:学号(XH),"+
                      "std.duration:学制(XZ),std.studyType.code:学习形式码(XXXSM),std.studyType.name:学习形式(XXXS),"+
                      [#if project.category.name?contains("成人")]"foreignLangPassedOn:通过英语水平考试年月(WYKSNY),"+[/#if]
                      "graduateOn:毕业年月(BYNY),"+

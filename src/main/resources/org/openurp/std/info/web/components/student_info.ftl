@@ -35,7 +35,7 @@
     <tr>
       <td class="title">学生类别:</td>
       <td>${(student.stdType.name)!}</td>
-      <td class="title">行政班:</td>
+      <td class="title">班级:</td>
       <td>${(student.state.squad.name)?if_exists}</td>
     </tr>
     <tr>
@@ -47,8 +47,8 @@
       <td>${(student.state.campus.name)?if_exists}</td>
     </tr>
     <tr>
-      <td class="title">学籍有效:</td>
-      <td>${(student.beginOn?string("yyyy-MM-dd"))!}~${(student.endOn?string("yyyy-MM-dd"))!}</td>
+      <td class="title">入学~预计毕业:</td>
+      <td>${(student.beginOn?string("yyyy-MM-dd"))!}~${(student.graduateOn?string("yyyy-MM-dd"))!}[#if (graduate.graduateOn)??]<span class="text-muted">[#if graduate.graduateOn!=student.graduateOn]实际${graduate.graduateOn?string('yyyy-MM-dd')}[#else]如期毕业[/#if]</span>[/#if]</td>
       <td class="title">学籍状态:</td>
       <td>${(student.state.status.name)?if_exists} [#if student.graduationDeferred]延期[/#if]</td>
       <td class="title">[#if student.tutor??]导师[#else]班主任[/#if]:</td>
@@ -58,8 +58,8 @@
       </td>
     </tr>
     <tr>
-      <td class="title">入学~毕业:</td>
-      <td>${(student.studyOn?string("yyyy-MM-dd"))!}~[#if (graduation.graduateOn)??]${graduation.graduateOn?string('yyyy-MM-dd')}[#else]${(student.graduateOn?string("yyyy-MM-dd"))!}[/#if]</td>
+      <td class="title">预计离校~最晚:</td>
+      <td>${(student.endOn?string("yyyy-MM-dd"))!}[#if student.maxEndOn != student.endOn]~${(student.maxEndOn?string("yyyy-MM-dd"))}[/#if]</td>
       <td class="title">备注:</td>
       <td colspan="3">${(student.remark?html)!}</td>
     </tr>
@@ -74,8 +74,7 @@
         <th width="15%">时间</th>
         <th width="6%">年级</th>
         <th width="10%">院系</th>
-        <th>专业、方向</th>
-        <th>行政班</th>
+        <th>专业、方向、班级</th>
         <th width="6%">是否在校</th>
         <th width="6%">状态</th>
         <th width="8%">校区</th>
@@ -88,8 +87,7 @@
         <td>${state.beginOn?string("yyyy-MM-dd")}~${(state.endOn?string("yyyy-MM-dd"))!}</td>
         <td>${state.grade}</td>
         <td>${state.department.shortName!state.department.name}</td>
-        <td>${(state.major.name)?if_exists} ${(state.direction.name)!}</td>
-        <td class="text-ellipsis">${(state.squad.shortName)?default((state.squad.name)!)}</td>
+        <td class="text-ellipsis">${(state.major.name)?if_exists} ${(state.direction.name)!} ${(state.squad.shortName)?default((state.squad.name)!)}</td>
         <td>${state.inschool?string("是", "否")}</td>
         <td>${state.status.name}</td>
         <td>${(state.campus.shortName!state.campus.name)!}</td>

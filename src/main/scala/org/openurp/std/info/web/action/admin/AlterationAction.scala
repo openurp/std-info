@@ -29,7 +29,7 @@ import org.openurp.base.std.model.{Grade, Squad, Student, StudentState}
 import org.openurp.code.edu.model.{EducationLevel, EducationMode}
 import org.openurp.code.std.model.{StdAlterReason, StdAlterType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.alter.config.StdAlterConfig
+import org.openurp.std.alter.config.AlterConfig
 import org.openurp.std.alter.model.{AlterMeta, StdAlteration, StdAlterationItem}
 
 import java.time.{Instant, LocalDate}
@@ -77,7 +77,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("directions", entityDao.search(directionQuery))
     put("levels", getCodes(classOf[EducationLevel]))
     put("educationModes", getCodes(classOf[EducationMode]))
-    val ac = OqlBuilder.from(classOf[StdAlterConfig], "ac").where("ac.project=:project", project)
+    val ac = OqlBuilder.from(classOf[AlterConfig], "ac").where("ac.project=:project", project)
     put("alterConfigs", entityDao.search(ac))
     forward()
   }
@@ -105,7 +105,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("directions", entityDao.findBy(classOf[Direction], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
-    val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
+    val alterConfig = entityDao.get(classOf[AlterConfig], getLongId("alterConfig"))
     val columnValues = Strings.split(alterConfig.attributes)
     if (columnValues.length > 0) {
       for (column <- columnValues) {
@@ -118,10 +118,6 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     }
     put("minBeginOn", students.minBy(_.beginOn).beginOn)
     put("maxEndOn", students.minBy(_.endOn).endOn)
-    put("graduateOnConfig", alterConfig.alterGraduateOn)
-    if (alterConfig.alterGraduateOn) {
-      put("maxGraduateOn", students.minBy(_.graduateOn).graduateOn)
-    }
     put("alterConfig", alterConfig)
     put("project", project)
     forward("form")
@@ -170,7 +166,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     val project = getProject
 
     val students = entityDao.find(classOf[Student], getLongIds("student"))
-    val alterConfig = entityDao.get(classOf[StdAlterConfig], getLongId("alterConfig"))
+    val alterConfig = entityDao.get(classOf[AlterConfig], getLongId("alterConfig"))
 
     val alteration = populateEntity(classOf[StdAlteration], "stdAlteration")
     val semester = semesterService.get(project, alteration.alterOn)
@@ -189,13 +185,9 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     val status = populateEntity(classOf[StudentState], "status")
     status.inschool = alterConfig.inschool
     status.status = alterConfig.status
-    val graduateOn = getDate("graduateOn")
     for (student <- students) {
       val alter = cloneTo(alteration, student)
       val targetState = student.state.get
-      graduateOn foreach { g =>
-        addItem(alter, AlterMeta.GraduateOn, student.graduateOn, g)
-      }
       diff(alter, targetState, status)
       entityDao.saveOrUpdate(alter)
       val msg = applyStd(alter, student)
@@ -290,7 +282,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
 
   private def applyStd(alteration: StdAlteration, std: Student): String = {
     var target = std.states.find(x => !alteration.alterOn.isBefore(x.beginOn) && !alteration.alterOn.isAfter(x.endOn))
-    val alterConfig = entityDao.findBy(classOf[StdAlterConfig], "alterType", alteration.alterType).head
+    val alterConfig = entityDao.findBy(classOf[AlterConfig], "alterType", alteration.alterType).head
     if (target.isEmpty) {
       if (alterConfig.alterEndOn) {
         target = std.states.sortBy(_.endOn).lastOption
@@ -326,7 +318,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
             case AlterMeta.Inschool =>
               state.inschool = item.newvalue.get.toBoolean
             case AlterMeta.Status => state.status = entityDao.get(classOf[StudentStatus], item.newvalue.get.toInt)
-            case AlterMeta.GraduateOn => state.std.graduateOn = LocalDate.parse(item.newvalue.get)
+            case AlterMeta.EndOn => state.std.endOn = LocalDate.parse(item.newvalue.get)
             case _ => throw new RuntimeException(s"cannot support ${item.meta}")
           }
         }
@@ -335,7 +327,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
         ""
   }
 
-  private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: StdAlterConfig, alteration: StdAlteration): StudentState = { // 向后切
+  private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: AlterConfig, alteration: StdAlteration): StudentState = { // 向后切
     if (beginOn == state.beginOn) {
       state
     } else {

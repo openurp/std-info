@@ -18,14 +18,11 @@
 package org.openurp.std.info
 
 import org.beangle.commons.cdi.BindModule
-import org.beangle.ems.app.EmsApp
 import org.openurp.base.std.service.impl.StudentServiceImpl
 import org.openurp.edu.program.domain.DefaultProgramProvider
 import org.openurp.std.info.service.{StudentInfoService, StudentManager}
 import org.openurp.std.info.web.action.{admin, mentor, student}
 import org.openurp.std.info.web.helper.UserHelper
-
-import java.io.FileInputStream
 
 class DefaultModule extends BindModule {
 
@@ -37,6 +34,7 @@ class DefaultModule extends BindModule {
     bind(classOf[admin.CertificateAction])
     bind(classOf[admin.StatAction])
     bind(classOf[admin.AlterConfigAction], classOf[admin.AlterationAction])
+    bind(classOf[admin.AlterAuditAction], classOf[admin.AlterApplyAction])
     bind(classOf[admin.RegisterAction], classOf[admin.RegisterSessionAction])
     bind(classOf[admin.GraduationAction])
     bind(classOf[admin.PersonCheckAction])

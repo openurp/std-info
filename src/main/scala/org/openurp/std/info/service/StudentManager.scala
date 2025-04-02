@@ -51,7 +51,7 @@ object StudentManager {
   propertyMap.put("beginOn", "学籍生效日期")
   propertyMap.put("campus", "校区")
   propertyMap.put("endOn", "学籍失效日期")
-  propertyMap.put("squad", "所在行政班级")
+  propertyMap.put("squad", "班级")
   propertyMap.put("studyType", "学习形式")
   propertyMap.put("levelType", "教育形式")
   propertyMap.put("remark", "备注")
@@ -352,7 +352,7 @@ class StudentManager extends AbstractBaseService {
   }
 
   /**
-   * 获取所有行政班级
+   * 获取所有班级
    */
   def getAdminClass: Seq[Squad] = {
     val builder = OqlBuilder.from(classOf[Squad], "squad").where("squad.beginOn <= :now and (squad.endOn is null or squad.endOn >= :now)", LocalDate.now()).orderBy("squad.id")

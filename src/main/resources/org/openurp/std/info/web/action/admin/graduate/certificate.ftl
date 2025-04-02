@@ -58,7 +58,7 @@
         <div class="certificate">
           <div class="content">
             &nbsp;&nbsp;${std.name}，${std.gender.name}，${std.person.birthday?string('yyyy 年 MM 月 dd 日')}生。<br/>
-            ${(majorStudents.get(std).school.name)!"主修学校"} ${(majorStudents.get(std).majorName)!"主修专业"} 专业学生。该生于${std.studyOn?string(" yyyy 年 MM 月 ")}至
+            ${(majorStudents.get(std).school.name)!"主修学校"} ${(majorStudents.get(std).majorName)!"主修专业"} 专业学生。该生于${std.beginOn?string(" yyyy 年 MM 月 ")}至
             ${graduate.graduateOn?string(" yyyy 年 MM 月 ")}辅修我校 ${(std.major.name)!} 专业。成绩合格，经审核授予辅修专业证书。
 
             <div class="sig">学校盖章：</div>

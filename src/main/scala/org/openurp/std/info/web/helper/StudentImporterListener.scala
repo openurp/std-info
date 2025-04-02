@@ -159,7 +159,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project:
     })
   }
 
-  private def getStdUserCode(data:collection.Map[String,Any],std: Student): String = {
+  private def getStdUserCode(data: collection.Map[String, Any], std: Student): String = {
     data.get("user.code") match
       case Some(code) =>
         if (Strings.isNotBlank(code.toString)) {
@@ -194,12 +194,9 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project:
       state.endOn = student.endOn
       student.maxEndOn = student.endOn
       putStateInStudent(student, state)
-      if (student.studyOn == null) {
-        student.studyOn = student.beginOn
-      }
       student.calcCurrentState()
     }
-    userRepo.createUser(student,getStdUserCode(data,student), None)
+    userRepo.createUser(student, getStdUserCode(data, student), None)
     entityDao.saveOrUpdate(person, student)
 
     val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]

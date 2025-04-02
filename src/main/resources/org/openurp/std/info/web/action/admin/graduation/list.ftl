@@ -4,7 +4,7 @@
         bar.addItem("${b.text("action.export")}",action.exportData("code:学号,name:姓名,gender.name:性别,state.grade.code:年级,"+
                 "level.name:层次,duration:学制,department.name:院系,disciplineCode:专业代码,disciplineName:专业名称,"+
                 "state.squad.code:班级号码,person.idType.name:证件类型,person.code:证件号码,"+
-                "person.nation.name:民族,person.politicalStatus.name:政治面貌,examinee.code:考生号,studyOn:入学日期,graduateOn:预计毕业日期"
+                "person.nation.name:民族,person.politicalStatus.name:政治面貌,examinee.code:考生号,beginOn:入学日期,endOn:预计离校日期"
                 ,null,'fileName=预计毕业生数据'));
       [/@]
       [@b.row]

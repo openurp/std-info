@@ -80,7 +80,7 @@
           <span id="remarkSpan"><a href="#" onClick="jQuery('#stdAlterationRemark').show().height('90%').width('95%');jQuery('#remarkSpan').hide();">填写备注</a></span>
           <input id="stdAlterationRemark" title="备注" style="display:none" maxLength="200" style="width:95%;" name="stdAlteration.remark" title="备注"></textarea>
         </td>
-        <td style="text-align:right;">预计毕业:</td>
+        <td style="text-align:right;">预计毕业日期:</td>
         <td style="overflow:auto;">
           [#if graduateOnConfig]
             [@b.date  label="" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
@@ -106,7 +106,7 @@
           <th width="13%">所属院系</th>
           <th>专业和方向</th>
           <th width="18%">班级</th>
-          <th width="9%">预计毕业时间</th>
+          <th width="9%">预计毕业日期</th>
           <th width="9%">学籍状态</th>
         </tr>
       </thead>

@@ -29,9 +29,9 @@ import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.doc.transfer.importer.{ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
 import org.beangle.webmvc.annotation.{ignore, mapping, response}
-import org.beangle.webmvc.view.{Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
+import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.edu.model.*
 import org.openurp.base.model.*
 import org.openurp.base.service.Features
@@ -132,10 +132,10 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     std.add("studyType.name" -> "学习形式", "duration" -> "学制", "level.name" -> "培养层次")
     std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型", "level.name" -> "培养层次")
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
-    std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "学籍生效日期", "endOn" -> "学籍失效日期")
-    std.add("maxEndOn" -> "学籍最晚失效日期", "remark" -> "备注", "graduationDeferred" -> "是否延期毕业")
-    std.add("studyOn" -> "入校日期", "graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
-    if squadSupported then std.add("state.squad.name", "行政班级")
+    std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "入学日期", "endOn" -> "预计离校日期")
+    std.add("maxEndOn" -> "最晚离校日期", "remark" -> "备注", "graduationDeferred" -> "是否延期毕业")
+    std.add("graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
+    if squadSupported then std.add("state.squad.name", "班级")
     if tutorSupported then std.add("tutor.name", "导师姓名")
     if advisorSupported then std.add("advisor.name", "学位论文导师姓名")
 
@@ -210,17 +210,18 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     redirect("search", "&isOk=" + true, "info.save.success")
   }
 
-  private def getStdUserCode(std:Student):String={
+  private def getStdUserCode(std: Student): String = {
     get("user.code") match
-      case Some(code)=>
-        if(Strings.isNotBlank(code)){
+      case Some(code) =>
+        if (Strings.isNotBlank(code)) {
           code.trim()
-        }else{
+        } else {
           if std.user == null then std.code else std.user.code
         }
-      case None=>
+      case None =>
         if std.user == null then std.code else std.user.code
   }
+
   /**
    * 保存学籍信息
    *
@@ -230,16 +231,12 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
   override def save(): View = {
     val student = populateEntity(classOf[Student], "student")
     val state = populateEntity(classOf[StudentState], "state")
-    var earlier = student.endOn
-    var first: StudentState = null
-    student.states.foreach(state => {
-      if (state.beginOn.isBefore(earlier)) {
-        first = state
-        earlier = state.beginOn
-      }
-    })
-    if (null != first) {
+    if (student.states.nonEmpty) {
+      val states = student.states.sortBy(_.beginOn)
+      val first = states.head
+      val last = states.last
       first.beginOn = student.beginOn
+      last.endOn = student.endOn
     }
     student.calcCurrentState()
     student.updatedAt = Instant.now()
@@ -249,7 +246,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     student.gender = person.gender
     person.name.formattedName = student.name
     entityDao.saveOrUpdate(person, student)
-    userHelper.createUser(student,getStdUserCode(student), None)
+    userHelper.createUser(student, getStdUserCode(student), None)
 
     val examinee = populateEntity(classOf[Examinee], "examinee")
     if (examinee.code != null) {
@@ -339,13 +336,13 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     sheet.add("校区", "state.campus.code").ref(campuses).required()
     if (squadSupported) {
       val squads = findInProject(classOf[Squad]).map(x => x.code + " " + x.name)
-      sheet.add("行政班级", "state.squad.code").ref(squads)
+      sheet.add("班级", "state.squad.code").ref(squads)
     }
     sheet.add("学历生", "student.registed").required().remark("Y|N")
-    sheet.add("学籍生效日期", "student.beginOn").required().remark("格式：YYYYMMDD")
-    sheet.add("学籍失效日期", "student.endOn").required().remark("格式：YYYYMMDD")
-    sheet.add("入校日期", "student.studyOn").required().remark("格式：YYYYMMDD")
+    sheet.add("入校日期", "student.beginOn").required().remark("格式：YYYYMMDD")
+    sheet.add("预计离校日期", "student.endOn").required().remark("格式：YYYYMMDD")
     sheet.add("预计毕业日期", "student.graduateOn").required().remark("格式：YYYYMMDD")
+    sheet.add("最晚离校日期", "student.maxEndOn").required().remark("格式：YYYYMMDD")
     sheet.add("是否延期毕业", "student.graduationDeferred").required().remark("Y|N")
     sheet.add("学籍状态", "state.status.code").ref(statuses).required()
     sheet.add("手机", "contact.mobile")
@@ -373,8 +370,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val project = getProject
     val fl = new ForeignerListener(entityDao)
     fl.addForeigerKey("name")
-    fl.addScope(classOf[Grade],Map("project" -> project))
-    fl.addScope(classOf[Squad],Map("project" -> project))
+    fl.addScope(classOf[Grade], Map("project" -> project))
+    fl.addScope(classOf[Squad], Map("project" -> project))
 
     val importer = new MultiEntityImporter
     importer.domain = this.entityDao.domain

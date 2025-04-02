@@ -22,19 +22,19 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.code.std.model.{StdAlterType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.alter.config.StdAlterConfig
+import org.openurp.std.alter.config.AlterConfig
 
-class AlterConfigAction extends RestfulAction[StdAlterConfig] with ProjectSupport {
+class AlterConfigAction extends RestfulAction[AlterConfig] with ProjectSupport {
 
   protected override def indexSetting(): Unit = {
     initDatas()
   }
 
-  protected override def editSetting(entity: StdAlterConfig): Unit = {
+  protected override def editSetting(entity: AlterConfig): Unit = {
     initDatas()
   }
 
-  protected override def saveAndRedirect(entity: StdAlterConfig): View = {
+  protected override def saveAndRedirect(entity: AlterConfig): View = {
     entity.project = getProject
     super.saveAndRedirect(entity)
   }

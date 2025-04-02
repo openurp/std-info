@@ -43,8 +43,10 @@
           [@base.code type="std-types" label="学生类别" name="student.stdType.id" empty="..." required="true" value=student.stdType!/]
           [@b.textfield label="学制" name="student.duration" required="true" value=student.duration  check="greaterThan(0).match('number')" maxlength="5"/]
           [@b.radios label="是否有学籍" name="student.registed" required="true" value=student.registed?string(1, 0)/]
-          [@b.startend label="最长学习年限" name="student.beginOn,student.endOn" required="true" start=student.beginOn end=student.endOn style="width: 120px"/]
-          [@b.startend label="入学-毕业日期" name="student.studyOn,student.graduateOn" required="true" start=student.studyOn end=student.graduateOn style="width: 120px" /]
+          [@b.startend label="入学~预计毕业" name="student.beginOn,student.graduateOn" required="true" start=student.beginOn end=student.graduateOn style="width: 120px"/]
+          [@b.startend label="预计离校~最晚" name="student.endOn,student.maxEndOn" required="true" start=student.endOn end=student.maxEndOn style="width: 120px"
+          onchange="syncGraduateOn(this)"
+          comment="最晚离校，不随学籍异动而变化"/]
           [@base.code type="study-types" label="学习形式" name="student.studyType.id" required="true" empty="..." value=(student.studyType.id)! /]
           [@base.teacher label="导师" name="student.tutor.id" empty="..." value=student.tutor! style="width: 400px"/]
           [#if advisorSupported]
@@ -74,7 +76,7 @@
           [@b.select id="major" label="专业" name="state.major.id" items=majors empty="..." value=state.major! /]
           [@b.select id="direction" label="方向" name="state.direction.id" items=directions empty="..." value=state.direction! /]
           [@base.campus label="校区" name="state.campus.id" empty="..." required="true" value=state.campus! /]
-          [@b.select label="行政班级" name="state.squad.id" items=squads empty="..." value=state.squad! /]
+          [@b.select label="班级" name="state.squad.id" items=squads empty="..." value=state.squad! /]
           [@b.radios label="是否在校" name="state.inschool" value=state.inschool/]
           [@base.code type="student-statuses" label="学籍状态" name="state.status.id" empty="..." value=state.status! /]
           [@b.startend label="起始结束" name="state.beginOn,state.endOn" required="true" start=state.beginOn end=state.endOn style="width: 100px"/]
@@ -114,8 +116,20 @@
 
 <br>
 <script>
+  //如果更改毕业日期，同步更改预计离校日期
+  function syncGraduateOn() {
+    var form = document.studentForm;
+    var date = form['student.graduateOn'].value;
+    if (date) {
+      var maxEndOn = form['student.maxEndOn'].value;
+      if(maxEndOn != form['student.endOn'].value){
+        form['student.endOn'].value = date;
+      }
+    }
+  }
   $(function() {
     jQuery('#phoneticName').after("<a href='javascript:void(0)' style='margin-left: 10px;' onclick='return auto_pinyin()'>获取拼音</a>");
+    document.studentForm['student.graduateOn'].onchange=syncGraduateOn;
   });
   function auto_pinyin(){
     var name = document.studentForm['student.name'].value;
