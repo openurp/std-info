@@ -19,10 +19,10 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.json.{Json, JsonObject}
 import org.beangle.commons.lang.Strings
-import org.beangle.ems.app.EmsApp
-import org.beangle.ems.app.oa.Flows
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.webmvc.annotation.{mapping, param}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.support.action.EntityAction
 import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Project
@@ -31,9 +31,10 @@ import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.alter.model.StdAlterApply
 import org.openurp.std.info.web.helper.AlterApplyInfo
 
-class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
+class AlterApplySearchAction extends ActionSupport, EntityAction[StdAlterApply], ProjectSupport {
+  var entityDao: EntityDao = _
 
-  override def indexSetting(): Unit = {
+  def index(): View = {
     given project: Project = getProject
 
     put("project", project)
@@ -42,34 +43,22 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     put("majors", findInProject(classOf[Major]))
 
     put("modes", getCodes(classOf[StdAlterType]))
+    forward()
   }
 
-  override protected def removeAndRedirect(applies: Seq[StdAlterApply]): View = {
-    applies foreach { apply =>
-      apply.processId foreach { processId =>
-        val blob = EmsApp.getBlobRepository(true)
-        val process = Flows.getProcess(processId)
-        process.tasks foreach { task =>
-          val path = task.data.getString("signaturePath")
-          if (Strings.isNotBlank(path)) {
-            blob.remove(path)
-          }
-          val pSignPath = task.data.getString("parentSignaturePath")
-          if (Strings.isNotBlank(pSignPath)) {
-            blob.remove(pSignPath)
-          }
-          task.attachments foreach { at =>
-            blob.remove(at.filePath)
-          }
-        }
-        Flows.cancel(processId)
-      }
-    }
-    super.removeAndRedirect(applies)
+  def search(): View = {
+    put("stdAlterApplies", entityDao.search(getQueryBuilder))
+    forward()
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[StdAlterApply] = {
+    val query = super.getQueryBuilder
+    query.where("stdAlterApply.passed=true")
+    query
   }
 
   @mapping(value = "{id}")
-  override def info(@param("id") id: String): View = {
+  def info(@param("id") id: String): View = {
     val apply = entityDao.get(classOf[StdAlterApply], id.toLong)
     put("apply", apply)
     put("applyInfo", AlterApplyInfo.build(List(apply)).head)
@@ -79,6 +68,9 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
       put("alter", Json.parse(apply.alterDataJson))
     }
     put("auditable", false)
+    apply.processId foreach { processId =>
+      put("auditable", false)
+    }
     forward("../alterAudit/info")
   }
 }

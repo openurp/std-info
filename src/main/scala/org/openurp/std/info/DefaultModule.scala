@@ -34,7 +34,7 @@ class DefaultModule extends BindModule {
     bind(classOf[admin.CertificateAction])
     bind(classOf[admin.StatAction])
     bind(classOf[admin.AlterConfigAction], classOf[admin.AlterationAction])
-    bind(classOf[admin.AlterAuditAction], classOf[admin.AlterApplyAction])
+    bind(classOf[admin.AlterAuditAction], classOf[admin.AlterApplyAction], classOf[admin.AlterApplySearchAction])
     bind(classOf[admin.RegisterAction], classOf[admin.RegisterSessionAction])
     bind(classOf[admin.GraduationAction])
     bind(classOf[admin.PersonCheckAction])

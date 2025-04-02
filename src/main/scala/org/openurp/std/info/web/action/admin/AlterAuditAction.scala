@@ -23,8 +23,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
 import org.beangle.ems.app.oa.Flows
 import org.beangle.security.Securities
-import org.beangle.security.context.SecurityContext
 import org.beangle.webmvc.annotation.{mapping, param}
+import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.Major
@@ -51,9 +51,32 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     put("modes", getCodes(classOf[StdAlterType]))
   }
 
-  override def getQueryBuilder: OqlBuilder[StdAlterApply] = {
+  override def search(): View = {
+    val query = getQueryBuilder
+    val active = getBoolean("active", true)
+    if (active) {
+      query.where("locate(:me,','||stdAlterApply.assignees||',')>0", s",${Securities.user},")
+      put("auditable", true)
+    } else {
+      given project: Project = getProject
+
+      val user = getUser
+      query.where("exists(from stdAlterApply.steps as step where step.assignee=:user)", user)
+    }
+    put("active", if active then "1" else "0")
+    val applies = entityDao.search(query)
+    put("stdAlterApplies", applies)
+    forward()
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[StdAlterApply] = {
     val query = super.getQueryBuilder
-    query.where("locate(:me,','||stdAlterApply.assignees||',')>0", s",${Securities.user},")
+    get("stdCodeName") foreach { cn =>
+      val codeName = cn.trim()
+      if (Strings.isNotBlank(codeName)) {
+        query.where("stdAlterApply.std.code like :codeName or stdAlterApply.std.name like :codeName", s"%${codeName}%")
+      }
+    }
     query
   }
 

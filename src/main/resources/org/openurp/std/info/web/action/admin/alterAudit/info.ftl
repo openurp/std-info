@@ -19,23 +19,22 @@
 
   <table class="table table-sm" style="table-layout:fixed;width:100%;">
     [#assign std= apply.std/]
-    <tr>
-      <td class="title width15">学号：</td>
-      <td>${std.code} </td>
-      <td class="title width15">姓名：</td>
-      <td>${std.name}</td>
+    <tr >
+      <td class="title width15" style="vertical-align: middle;">学生：</td>
+      <td style="vertical-align: middle;">[@ems.avatar username=std.code width="40px"/]${std.name} ${std.code} </td>
+      <td class="title width15" style="vertical-align: middle;">[#if std.tutor??]导师：[#else]辅导员：[/#if]</td>
+      <td style="vertical-align: middle;">
+        [#if std.tutor??][@ems.avatar username=std.tutor.code width="40px"/]${std.tutor.name}
+        [#else]
+          [#if std.squad.mentor??][@ems.avatar username=std.squad.mentor.code width="40px"/]${(std.squad.mentor.name)!}[/#if]
+        [/#if]
+      </td>
     </tr>
     <tr>
-      <td class="title">培养层次：</td>
-      <td>${(std.level.name)!}</td>
-      <td class="title">[#if std.tutor??]导师：[#else]辅导员：[/#if]</td>
-      <td>[#if std.tutor??]${std.tutor.name}[#else]${(std.squad.mentor.name)!}[/#if]</td>
-    </tr>
-    <tr>
+      <td class="title">年级：</td>
+      <td>${std.grade.name} ${(std.level.name)!}</td>
       <td class="title">院系：</td>
       <td>${std.department.name}</td>
-      <td class="title">填写时间：</td>
-      <td>${(apply.applyAt?string("MM-dd HH:mm"))!}</td>
     </tr>
     <tr>
       <td class="title">专业/方向：</td>

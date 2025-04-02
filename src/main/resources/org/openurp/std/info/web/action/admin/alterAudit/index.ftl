@@ -1,20 +1,20 @@
 [#ftl]
 [@b.head/]
-[#include "../alterApply/alter-nav.ftl"/]
-
-<div class="search-container">
-  <div class="search-panel">
-    [@b.form name="stdAlterIndexForm" action="!search" title="ui.searchForm" target="contentDiv" theme="search"]
-       [@b.textfields names="stdAlterApply.std.code;学号,stdAlterApply.std.name;姓名,stdAlterApply.std.state.grade.code;年级" maxlength="25"/]
-       [@b.select name="stdAlterApply.std.level.id" label="培养层次" items=levels empty="..."/]
-       [@b.select name="stdAlterApply.std.state.department.id" label="院系" items=departments empty="..."/]
-       [@b.select name="stdAlterApply.std.state.major.id" label="专业" items=majors empty="..."/]
-       [@b.select label="异动类型" name="stdAlterApply.alterType.id" items=modes empty="..." /]
-       <input type="hidden" name="orderBy" value="stdAlterApply.applyAt desc" />
+<div class="container-fluid">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i>学籍异动审批</a>
+      </div>
+    </div>
+  </nav>
+  [@b.tabs class="nav-tabs nav-tabs-compact"]
+    [@b.tab label="待审批"]
+      [@b.div href="!search?orderBy=stdAlterApply.applyAt desc"/]
     [/@]
-  </div>
-  <div class="search-list">
-    [@b.div id="contentDiv" href="!search?orderBy=stdAlterApply.applyAt desc" /]
-  </div>
+    [@b.tab label="已审批"]
+      [@b.div href="!search?active=0&orderBy=stdAlterApply.applyAt desc" /]
+    [/@]
+  [/@]
 </div>
 [@b.foot/]
