@@ -9,7 +9,6 @@
     [@b.col property="std.state.grade.name" title="年级"/]
     [@b.col property="std.state.major.name" title="专业"/]
     [@b.col property="alterType.name" title="异动类型"/]
-    [@b.col property="status" title="状态" /]
     [@b.col property="alterFrom" title="生效日期"]${stdAlterApply.alterFrom}[/@]
   [/@]
 [/@]

@@ -53,7 +53,7 @@ class AlterApplySearchAction extends ActionSupport, EntityAction[StdAlterApply],
 
   override protected def getQueryBuilder: OqlBuilder[StdAlterApply] = {
     val query = super.getQueryBuilder
-    query.where("stdAlterApply.passed=true")
+    query.where("stdAlterApply.status='已办结'")
     query
   }
 

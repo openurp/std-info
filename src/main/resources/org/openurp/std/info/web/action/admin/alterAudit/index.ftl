@@ -1,5 +1,6 @@
 [#ftl]
 [@b.head/]
+[#include "../alterApply/alter-nav.ftl"/]
 <div class="container-fluid">
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">

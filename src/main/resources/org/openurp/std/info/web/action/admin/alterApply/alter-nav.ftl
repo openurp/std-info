@@ -1,5 +1,6 @@
 [#ftl]
   [@b.nav class="nav-tabs nav-tabs-compact"]
-    [#if ems.permitted('/admin/alter-apply')][@b.navitem href="alter-apply"]异动申请管理[/@][/#if]
-    [@b.navitem href="alter-apply-search"]异动申请查询[/@]
+    [#if ems.permitted('/admin/alter-audit')][@b.navitem href="alter-audit"]申请审批[/@][/#if]
+    [#if ems.permitted('/admin/alter-apply-search')][@b.navitem href="alter-apply-search"]申请查询[/@][/#if]
+    [#if ems.permitted('/admin/alter-apply')][@b.navitem href="alter-apply"]申请管理[/@][/#if]
   [/@]
