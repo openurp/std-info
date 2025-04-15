@@ -18,7 +18,6 @@
 package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.EntityDao
 import org.beangle.doc.docx.DocTemplate
 import org.beangle.ems.app.EmsApp
@@ -128,8 +127,8 @@ object StdDocHelper {
 
     data.put("code", graduate.certificateNo.getOrElse("--"))
 
-    val url = this.getClass.getResource("/org/openurp/std/info/template/minorCertificationDoc.docx")
-    DocTemplate.process(url, data)
+    val path = s"${std.project.school.id}/${std.project.id}/org/openurp/std/info/template/minorCertificationDoc.docx"
+    DocTemplate.process(EmsApp.getResource(path).get, data)
   }
 
 }
