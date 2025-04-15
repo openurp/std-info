@@ -21,10 +21,12 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.EntityDao
 import org.beangle.doc.docx.DocTemplate
+import org.beangle.ems.app.EmsApp
 import org.openurp.base.std.model.Graduate
 import org.openurp.std.info.model.MajorStudent
 
 import java.time.LocalDate
+import scala.language.postfixOps
 
 object StdDocHelper {
 
@@ -84,8 +86,8 @@ object StdDocHelper {
     data.put("M", month)
     data.put("d", day)
 
-    val url = ClassLoaders.getResource(s"org/openurp/std/info/templates/${std.project.id}/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx"))
-    DocTemplate.process(url.get, data)
+    val path = s"${std.project.school.id}/${std.project.id}/org/openurp/std/info/template/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx")
+    DocTemplate.process(EmsApp.getResource(path).get, data)
   }
 
   /** 生成专业证书
@@ -126,7 +128,7 @@ object StdDocHelper {
 
     data.put("code", graduate.certificateNo.getOrElse("--"))
 
-    val url = this.getClass.getResource("/org/openurp/std/info/templates/minorCertificationDoc.docx")
+    val url = this.getClass.getResource("/org/openurp/std/info/template/minorCertificationDoc.docx")
     DocTemplate.process(url, data)
   }
 
