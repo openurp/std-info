@@ -4,11 +4,11 @@
 [#else]
   <table class="infoTable">
     <tr>
-      <td class="title" width="100px">考生号:</td>
+      <td class="title" width="110px">考生号:</td>
       <td>${(examinee.code?html)!}</td>
-      <td class="title" width="100px">准考证号:</td>
+      <td class="title" width="110px">准考证号:</td>
       <td>${(examinee.examNo?html)!}</td>
-      <td class="title" width="100px">生源地:</td>
+      <td class="title" width="110px">生源地:</td>
       <td>${(examinee.originDivision.name?html)!}</td>
     </tr>
     <tr>

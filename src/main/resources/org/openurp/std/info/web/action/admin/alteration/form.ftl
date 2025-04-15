@@ -82,7 +82,7 @@
         </td>
         <td style="text-align:right;">预计毕业日期:</td>
         <td style="overflow:auto;">
-          [#if graduateOnConfig]
+          [#if alterConfig.alterGraduateOn]
             [@b.date  label="" name="graduateOn" format="yyyy-MM-dd"  value= maxGraduateOn/]
           [#else]
             不做变动

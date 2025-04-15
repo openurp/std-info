@@ -3,6 +3,8 @@
 [@b.grid items=stdAlterApplies var="stdAlterApply"]
   [@b.gridbar]
     bar.addItem("删除",action.remove());
+    bar.addItem("手动生效",action.multi("approve"));
+    bar.addItem("下载",action.single("doc",null,null,"_blank"));
   [/@]
   [@b.row]
     [@b.boxcol/]
@@ -14,6 +16,9 @@
     [@b.col property="alterType.name" title="异动类型"/]
     [@b.col property="status" title="状态" /]
     [@b.col property="alterFrom" title="生效日期"]${stdAlterApply.alterFrom}[/@]
+    [@b.col title="申请文件"]
+      [@b.a href="!doc?stdAlterApply.id="+stdAlterApply.id target="_blank"]下载[/@]
+    [/@]
   [/@]
 [/@]
 [@b.foot/]

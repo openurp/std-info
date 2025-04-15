@@ -20,6 +20,7 @@ package org.openurp.std.info
 import org.beangle.commons.cdi.BindModule
 import org.openurp.base.std.service.impl.StudentServiceImpl
 import org.openurp.edu.program.domain.DefaultProgramProvider
+import org.openurp.std.info.service.impl.StdAlterationServiceImpl
 import org.openurp.std.info.service.{StudentInfoService, StudentManager}
 import org.openurp.std.info.web.action.{admin, mentor, student}
 import org.openurp.std.info.web.helper.UserHelper
@@ -53,6 +54,7 @@ class DefaultModule extends BindModule {
     bind(classOf[student.AlterApplyAction])
     // services
     bind(classOf[StudentServiceImpl])
+    bind(classOf[StdAlterationServiceImpl])
     bind(classOf[DefaultProgramProvider])
   }
 }

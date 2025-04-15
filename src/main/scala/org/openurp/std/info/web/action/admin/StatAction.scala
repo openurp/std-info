@@ -18,6 +18,7 @@
 package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.reflect.BeanInfos
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.stat.{Columns, Matrix}
 import org.beangle.webmvc.support.ActionSupport
@@ -95,6 +96,9 @@ class StatAction extends ActionSupport, ProjectSupport {
     val matrix = new Matrix(ds.build(), datas)
     put("matrix", matrix)
     put("project", project)
+    if (!BeanInfos.cached(classOf[Matrix])) {
+      BeanInfos.of(classOf[Matrix])
+    }
     forward()
   }
 }

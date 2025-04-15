@@ -84,8 +84,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
     val builder = new StdSearchHelper(entityDao, project).build()
-    builder
-    //queryByDepart(builder, "student.state.department")
+    queryByDepart(builder, "student.state.department")
   }
 
   protected override def editSetting(student: Student): Unit = {

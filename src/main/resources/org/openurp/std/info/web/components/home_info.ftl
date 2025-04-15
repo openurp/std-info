@@ -1,11 +1,11 @@
 [#ftl]
   <table class="infoTable">
     <tr>
-      <td class="title" width="100px">家庭电话:</td>
+      <td class="title" width="110px">家庭电话:</td>
       <td>${(home.phone?html)!}</td>
-      <td class="title" width="100px">家庭邮编:</td>
+      <td class="title" width="110px">家庭邮编:</td>
       <td>${(home.postcode?html)!}</td>
-      <td class="title" width="100px">户籍:</td>
+      <td class="title" width="110px">户籍:</td>
       <td>${(home.formerAddr?html)!}</td>
     </tr>
     <tr>

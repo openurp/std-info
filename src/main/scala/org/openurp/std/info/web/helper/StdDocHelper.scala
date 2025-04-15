@@ -20,7 +20,7 @@ package org.openurp.std.info.web.helper
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.ClassLoaders
 import org.beangle.data.dao.EntityDao
-import org.beangle.doc.docx.DocHelper
+import org.beangle.doc.docx.DocTemplate
 import org.openurp.base.std.model.Graduate
 import org.openurp.std.info.model.MajorStudent
 
@@ -85,7 +85,7 @@ object StdDocHelper {
     data.put("d", day)
 
     val url = ClassLoaders.getResource(s"org/openurp/std/info/templates/${std.project.id}/" + (if (std.project.minor) "minorDegreeDoc.docx" else "majorDegreeDoc.docx"))
-    DocHelper.toDoc(url.get, data)
+    DocTemplate.process(url.get, data)
   }
 
   /** 生成专业证书
@@ -127,7 +127,7 @@ object StdDocHelper {
     data.put("code", graduate.certificateNo.getOrElse("--"))
 
     val url = this.getClass.getResource("/org/openurp/std/info/templates/minorCertificationDoc.docx")
-    DocHelper.toDoc(url, data)
+    DocTemplate.process(url, data)
   }
 
 }

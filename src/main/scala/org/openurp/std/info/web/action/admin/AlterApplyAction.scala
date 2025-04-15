@@ -17,21 +17,27 @@
 
 package org.openurp.std.info.web.action.admin
 
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.commons.json.{Json, JsonObject}
 import org.beangle.commons.lang.Strings
 import org.beangle.ems.app.EmsApp
 import org.beangle.ems.app.oa.Flows
 import org.beangle.webmvc.annotation.{mapping, param}
 import org.beangle.webmvc.support.action.RestfulAction
-import org.beangle.webmvc.view.View
+import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Project
 import org.openurp.code.std.model.StdAlterType
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.alter.model.StdAlterApply
-import org.openurp.std.info.web.helper.AlterApplyInfo
+import org.openurp.std.alter.model.{AlterMeta, StdAlterApply, StdAlteration, StdAlterationItem}
+import org.openurp.std.info.service.StdAlterationService
+import org.openurp.std.info.web.helper.{AlterApplyInfo, StdAlterationDocGenerator}
+
+import java.time.ZoneId
 
 class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
+
+  var stdAlterationService: StdAlterationService = _
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -68,6 +74,19 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     super.removeAndRedirect(applies)
   }
 
+  /** 批准生效
+   *
+   * @return
+   */
+  def approve(): View = {
+    val applies = entityDao.find(classOf[StdAlterApply], getLongIds("stdAlterApply"))
+
+    applies foreach { apply =>
+      stdAlterationService.approve(apply)
+    }
+    redirect("search", "审批成功")
+  }
+
   @mapping(value = "{id}")
   override def info(@param("id") id: String): View = {
     val apply = entityDao.get(classOf[StdAlterApply], id.toLong)
@@ -80,5 +99,11 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     }
     put("auditable", false)
     forward("../alterAudit/info")
+  }
+
+  def doc():View={
+    val apply = entityDao.get(classOf[StdAlterApply], getLongId("stdAlterApply"))
+    val std = apply.std
+    Stream(StdAlterationDocGenerator.generate(apply),MediaTypes.ApplicationDocx,s"${std.code} ${std.name} ${apply.alterType.name}申请表.docx")
   }
 }

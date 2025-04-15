@@ -4,11 +4,11 @@
 [#else]
   <table class="infoTable">
     <tr>
-      <td class="title" width="100px">电子邮箱:</td>
+      <td class="title" width="110px">电子邮箱:</td>
       <td>${(contact.email?html)!}</td>
-      <td class="title" width="100px">电话:</td>
+      <td class="title" width="110px">电话:</td>
       <td>${(contact.phone?html)!}</td>
-      <td class="title" width="100px">移动电话:</td>
+      <td class="title" width="110px">移动电话:</td>
       <td>${(contact.mobile?html)!}</td>
     </tr>
     <tr>

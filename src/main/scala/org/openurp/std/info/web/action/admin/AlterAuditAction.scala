@@ -24,7 +24,6 @@ import org.beangle.ems.app.Ems
 import org.beangle.ems.app.oa.Flows
 import org.beangle.security.Securities
 import org.beangle.webmvc.annotation.{mapping, param}
-import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.Major
@@ -32,13 +31,12 @@ import org.openurp.base.model.{Project, User}
 import org.openurp.code.std.model.StdAlterType
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.alter.model.StdAlterApply
+import org.openurp.std.info.service.StdAlterationService
 import org.openurp.std.info.web.helper.AlterApplyInfo
-
-import javax.sql.DataSource
 
 class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
 
-  var datasource: DataSource = _
+  var stdAlterationService: StdAlterationService = _
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -136,6 +134,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val data = new JsonObject()
     Flows.uploadSignature(get("sign"), "/alter-apply", apply.id, auditor, data)
     data.update("passed", passed)
+    var completeAndPassed = false
     rs._1.activeTasks foreach { task =>
       val process = Flows.complete(processId, task.id, Flows.payload(auditor, comments, data))
       apply.newStep(task.name, task.assignees).audit(me, passed, comments)
@@ -143,12 +142,17 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
       if (activeTasks.isEmpty) {
         apply.assignees = None
         apply.status = "已办结"
+        apply.passed = Some(passed)
+        completeAndPassed = passed
       } else {
         val nt = activeTasks.head
         apply.newStep(nt.name, nt.assignees)
       }
     }
     entityDao.saveOrUpdate(apply)
+    if (completeAndPassed) {
+      stdAlterationService.approve(apply)
+    }
     redirect("search", "审核成功")
   }
 

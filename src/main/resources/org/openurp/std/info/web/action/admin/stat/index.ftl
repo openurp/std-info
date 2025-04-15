@@ -21,9 +21,9 @@
       <caption style="text-align: center;caption-side: top;padding-bottom: 0.25rem;">按${dyLabel} ${dxLabel}分布</caption>
       <thead>
         <th width="15%">${dyLabel}</th>
-        [#assign grades = matrix.getDimension(dx).values?values?sort_by("id")/]
+        [#assign grades = matrix.getColumn(dx).values?keys?sort/]
         [#list grades as grade]
-        <th>${grade.code}</th>
+        <th>${matrix.getColumn(dx).values.get(grade)}</th>
         [/#list]
         <td width="10%">合计</td>
       </thead>
@@ -32,13 +32,14 @@
       [#assign lmatrix = matrix.groupBy(dy)/]
       [#assign gmatrix = matrix.groupBy(dx)/]
       [#assign rows=0/]
-      [#list lgmatrix.getDimension(dy).values?values?sort_by("code") as  v]
+      [#assign dyValues = lgmatrix.getColumn(dy).values/]
+      [#list dyValues?keys?sort as k]
       <tr>
-        <td>[@b.a href="!index?${dy}.id=${v.id}"]${v.name}[/@]</td>
+        <td>[@b.a href="!index?${dy}.id=${k}"]${dyValues.get(k)}[/@]</td>
         [#list grades as grade]
-        <td>[@displayCounter lgmatrix.getCounter(v.id,grade.id)!/]</td>
+        <td>[@displayCounter lgmatrix.getCounter(k,grade)!/]</td>
         [/#list]
-        <td>[@displayCounter lmatrix.getCounter(v.id)! /] </td>
+        <td>[@displayCounter lmatrix.getCounter(k)! /] </td>
       </tr>
       [#assign rows = rows + 1/]
       [/#list]
@@ -47,7 +48,7 @@
       <tr>
         <td>合计</td>
         [#list grades as g]
-        <td>[@displayCounter gmatrix.getCounter(g.id)! /]</td>
+        <td>[@displayCounter gmatrix.getCounter(g)! /]</td>
         [/#list]
         <td>[@displayCounter gmatrix.sum /]</td>
       </tr>

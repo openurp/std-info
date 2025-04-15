@@ -7,11 +7,11 @@
 </style>
   <table class="infoTable" align="center" width="100%">
     <tr>
-      <td class="title" width="100px">学号姓名:</td>
+      <td class="title" width="110px">学号姓名:</td>
       <td>${student.code}[#if !student.registed]<sup>无学籍</sup>[/#if] ${student.name}</td>
-      <td class="title" width="100px">年级:</td>
+      <td class="title" width="110px">年级:</td>
       <td>${(student.state.grade)!}</td>
-      <td class="title" width="100px" rowspan="5">照片:</td>
+      <td class="title" width="110px" rowspan="5">照片:</td>
       <td rowspan="5"><img height="110px" src="${avatarUrl}" alt="${(student.name)!}" title="${(student.name)!}"/></td>
     </tr>
     <tr>

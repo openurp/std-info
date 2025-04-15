@@ -24,6 +24,7 @@ import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.{Direction, Major}
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project}
 import org.openurp.base.std.model.{Grade, Squad, Student, StudentState}
 import org.openurp.code.edu.model.{EducationLevel, EducationMode}
@@ -31,6 +32,7 @@ import org.openurp.code.std.model.{StdAlterReason, StdAlterType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.alter.config.AlterConfig
 import org.openurp.std.alter.model.{AlterMeta, StdAlteration, StdAlterationItem}
+import org.openurp.std.info.service.StdAlterationService
 
 import java.time.{Instant, LocalDate}
 
@@ -38,6 +40,8 @@ import java.time.{Instant, LocalDate}
  * 学籍异动维护
  */
 class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAlteration], ProjectSupport {
+
+  var stdAlterationService: StdAlterationService = _
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
@@ -190,7 +194,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       val targetState = student.state.get
       diff(alter, targetState, status)
       entityDao.saveOrUpdate(alter)
-      val msg = applyStd(alter, student)
+      val msg = stdAlterationService.apply(alter, student)
       if Strings.isEmpty(msg) then successes += alter else errors.put(student, msg)
     }
     put("successes", successes)
@@ -206,6 +210,18 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     addItem(alteration, AlterMeta.Squad, state.squad.orNull, changed.squad.orNull)
     addItem(alteration, AlterMeta.Status, state.status, changed.status)
     addItem(alteration, AlterMeta.Inschool, state.inschool, changed.inschool)
+    getDate("graduateOn") foreach { graduateOn =>
+      addItem(alteration, AlterMeta.GraduateOn, state.std.graduateOn, graduateOn)
+    }
+    getDate("endOn") foreach { endOn =>
+      addItem(alteration, AlterMeta.EndOn, state.std.endOn, endOn)
+    }
+    getLong("tutor.id") foreach { tutorId =>
+      addItem(alteration, AlterMeta.Tutor, state.std.tutor.orNull, entityDao.get(classOf[Teacher], tutorId))
+    }
+    getLong("advisor.id") foreach { tutorId =>
+      addItem(alteration, AlterMeta.Advisor, state.std.tutor.orNull, entityDao.get(classOf[Teacher], tutorId))
+    }
   }
 
   private def addItem(alteration: StdAlteration, meta: AlterMeta, older: Any, newer: Any): Unit = {
@@ -259,7 +275,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     val errors = Collections.newMap[Student, String]
     val alterations = entityDao.find(classOf[StdAlteration], getLongIds("stdAlteration"))
     alterations foreach { a =>
-      val msg = applyStd(a, a.std)
+      val msg = stdAlterationService.apply(a, a.std)
       if Strings.isEmpty(msg) then successes += a else errors.put(a.std, msg)
     }
     put("successes", successes)
@@ -278,80 +294,6 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     n.updatedAt = template.updatedAt
     n.remark = template.remark
     n
-  }
-
-  private def applyStd(alteration: StdAlteration, std: Student): String = {
-    var target = std.states.find(x => !alteration.alterOn.isBefore(x.beginOn) && !alteration.alterOn.isAfter(x.endOn))
-    val alterConfig = entityDao.findBy(classOf[AlterConfig], "alterType", alteration.alterType).head
-    if (target.isEmpty) {
-      if (alterConfig.alterEndOn) {
-        target = std.states.sortBy(_.endOn).lastOption
-      }
-    }
-
-    target match
-      case None => "无法进行异动，找不到对应的学籍状态"
-      case Some(t) =>
-        val state =
-          if (alterConfig.alterEndOn) {
-            val endOn = if alteration.alterOn.isAfter(std.endOn) then std.endOn else alteration.alterOn
-            std.endOn = endOn
-            t.endOn = endOn
-            generateState(t, endOn, endOn, alterConfig, alteration)
-          } else {
-            generateState(t, alteration.alterOn, alteration.alterOn, alterConfig, alteration)
-          }
-
-        alteration.items foreach { item =>
-          item.meta match {
-            case AlterMeta.Grade => state.grade = entityDao.get(classOf[Grade], item.newvalue.get.toLong)
-            case AlterMeta.Department => state.department = entityDao.get(classOf[Department], item.newvalue.get.toInt)
-            case AlterMeta.Major => state.major = entityDao.get(classOf[Major], item.newvalue.get.toLong)
-            case AlterMeta.Direction =>
-              item.newvalue match
-                case None => state.direction = None
-                case Some(id) => state.direction = Some(entityDao.get(classOf[Direction], id.toLong))
-            case AlterMeta.Squad =>
-              item.newvalue match
-                case None => state.squad = None
-                case Some(id) => state.squad = Some(entityDao.get(classOf[Squad], id.toLong))
-            case AlterMeta.Inschool =>
-              state.inschool = item.newvalue.get.toBoolean
-            case AlterMeta.Status => state.status = entityDao.get(classOf[StudentStatus], item.newvalue.get.toInt)
-            case AlterMeta.EndOn => state.std.endOn = LocalDate.parse(item.newvalue.get)
-            case _ => throw new RuntimeException(s"cannot support ${item.meta}")
-          }
-        }
-        state.std.calcCurrentState()
-        entityDao.saveOrUpdate(state, target, state.std)
-        ""
-  }
-
-  private def generateState(state: StudentState, beginOn: LocalDate, endOn: LocalDate, alterConfig: AlterConfig, alteration: StdAlteration): StudentState = { // 向后切
-    if (beginOn == state.beginOn) {
-      state
-    } else {
-      val newState = new StudentState
-      newState.std = state.std
-      newState.beginOn = beginOn
-      newState.endOn = state.endOn //保留被截断状态的结束时间
-      newState.grade = state.grade
-      newState.department = state.department
-      newState.major = state.major
-      newState.direction = state.direction
-      newState.squad = state.squad
-      newState.status = state.status
-      newState.campus = state.campus
-      newState.inschool = state.inschool
-      newState.remark = Some(alteration.reason.map(_.name).getOrElse(alteration.alterType.name))
-      if (beginOn == state.beginOn) {
-        state.beginOn = endOn.plusDays(1)
-      } else {
-        state.endOn = beginOn.minusDays(1)
-      }
-      state.std.states += newState
-      newState
-    }
   }
 
 }

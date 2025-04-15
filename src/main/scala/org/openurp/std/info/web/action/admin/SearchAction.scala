@@ -23,8 +23,8 @@ import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.Ems
 import org.beangle.webmvc.annotation.{ignore, mapping}
 import org.beangle.webmvc.support.ActionSupport
-import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
+import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.base.service.Features
@@ -68,7 +68,7 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
 
   override protected def getQueryBuilder: OqlBuilder[Student] = {
     val builder = new StdSearchHelper(entityDao, getProject).build()
-    queryByDepart(builder, "student.state.department")
+    queryByDimension(builder, "student.state.department", "student.stdType")
   }
 
   def search(): View = {

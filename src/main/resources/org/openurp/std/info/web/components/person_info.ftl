@@ -4,11 +4,11 @@
 [#else]
   <table class="infoTable">
     <tr>
-      <td class="title" width="100px">姓名:</td>
+      <td class="title" width="110px">姓名:</td>
       <td>${student.name?html}</td>
-      <td class="title" width="100px">姓名拼音:</td>
+      <td class="title" width="110px">姓名拼音:</td>
       <td>${(student.person.phoneticName?html)!}</td>
-      <td class="title" width="100px">曾用名:</td>
+      <td class="title" width="110px">曾用名:</td>
       <td>${(student.person.formerName?html)!}</td>
     </tr>
     <tr>
