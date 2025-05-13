@@ -29,11 +29,9 @@ import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Project
 import org.openurp.code.std.model.StdAlterType
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.alter.model.{AlterMeta, StdAlterApply, StdAlteration, StdAlterationItem}
+import org.openurp.std.alter.model.StdAlterApply
 import org.openurp.std.info.service.StdAlterationService
 import org.openurp.std.info.web.helper.{AlterApplyInfo, StdAlterationDocGenerator}
-
-import java.time.ZoneId
 
 class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
 
@@ -74,6 +72,32 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     super.removeAndRedirect(applies)
   }
 
+  def backForm(): View = {
+    val apply = entityDao.get(classOf[StdAlterApply], getLongId("stdAlterApply"))
+    apply.processId foreach { processId =>
+      val p = Flows.getProcess(processId)
+      val passedTasks = p.tasks.map(_.name).toSet
+      val flow = Flows.getFlow(p.flowCode)
+      val activities = flow.activities.filter(x => passedTasks.contains(x.name)).sortBy(_.idx)
+      put("activities", activities)
+    }
+    put("apply", apply)
+    forward()
+  }
+
+  def back(): View = {
+    val apply = entityDao.get(classOf[StdAlterApply], getLongId("stdAlterApply"))
+    val activityIdx = getInt("activityIdx", 0)
+    val last = apply.steps.find(_.idx == activityIdx).get
+    apply.steps.subtractAll(apply.steps.find(_.idx > last.idx))
+    last.auditAt = None
+    last.passed = None
+    apply.status = last.name
+    apply.assignees = Some(last.assignee.map(_.code).mkString(","))
+    entityDao.saveOrUpdate(apply)
+    redirect("search", "设置成功")
+  }
+
   /** 批准生效
    *
    * @return
@@ -101,9 +125,9 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     forward("../alterAudit/info")
   }
 
-  def doc():View={
+  def doc(): View = {
     val apply = entityDao.get(classOf[StdAlterApply], getLongId("stdAlterApply"))
     val std = apply.std
-    Stream(StdAlterationDocGenerator.generate(apply),MediaTypes.ApplicationDocx,s"${std.code} ${std.name} ${apply.alterType.name}申请表.docx")
+    Stream(StdAlterationDocGenerator.generate(apply), MediaTypes.ApplicationDocx, s"${std.code} ${std.name} ${apply.alterType.name}申请表.docx")
   }
 }

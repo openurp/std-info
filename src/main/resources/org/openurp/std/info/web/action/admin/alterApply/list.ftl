@@ -5,6 +5,7 @@
     bar.addItem("删除",action.remove());
     bar.addItem("手动生效",action.multi("approve"));
     bar.addItem("下载",action.single("doc",null,null,"_blank"));
+    bar.addItem("设置回退",action.single("backForm"));
   [/@]
   [@b.row]
     [@b.boxcol/]

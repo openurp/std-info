@@ -2,6 +2,7 @@
 [#assign statuses={'active':'在籍在校','unactive':'在籍不在校','available':'在籍','unavailable':'不在籍','active_unregisted':'不在籍在校'}/]
 [#assign fields={'student.state.campus.name':'校区',
                  'student.person.code':'证件号码',
+                 'student.graduateOn':'预计毕业日期',
                  'examinee.code':'考生号',
                  'examinee.originDivision.name':'生源地',
                  'examinee.enrollMode.name':'入学方式',

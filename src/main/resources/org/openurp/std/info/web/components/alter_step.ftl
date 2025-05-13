@@ -71,6 +71,7 @@ ol {
 .ui-step-5 li { width: 25%; }
 .ui-step-6 li { width: 20%; }
 .ui-step-7 li { width: 16.6%; }
+.ui-step-8 li { width: 14.2%; }
 
 .step-done .ui-step-cont-number { background-color: #667ba4; }
 .step-done .ui-step-cont-text { color: #667ba4; }

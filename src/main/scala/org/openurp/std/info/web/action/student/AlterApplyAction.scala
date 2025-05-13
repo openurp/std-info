@@ -24,7 +24,6 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.oa.Flows
 import org.beangle.ems.app.web.WebBusinessLogger
 import org.beangle.ems.app.{Ems, EmsApp}
-import org.beangle.template.api.DynaProfile
 import org.beangle.webmvc.context.Params
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.beangle.webmvc.view.View
@@ -136,7 +135,7 @@ class AlterApplyAction extends StudentSupport {
     }
     //保存和记录日志
     entityDao.saveOrUpdate(apply)
-    //businessLogger.info(s"提交了${apply.alterType.name}的异动申请", apply.id, Map.empty)
+    businessLogger.info(s"提交了${apply.alterType.name}的异动申请", apply.id, Map.empty)
     redirect("index", "提交成功")
   }
 
@@ -169,7 +168,7 @@ class AlterApplyAction extends StudentSupport {
       apply.processId = None
       if (apply.steps.filter(_.idx > 0).exists(_.passed.nonEmpty)) {
         entityDao.saveOrUpdate(apply)
-        //businessLogger.info(s"取消了${apply.alterType.name}的异动申请", apply.id, Map.empty)
+        businessLogger.info(s"取消了${apply.alterType.name}的异动申请", apply.id, Map.empty)
       } else {
         entityDao.remove(apply)
       }

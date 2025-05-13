@@ -24,11 +24,13 @@ import org.beangle.ems.app.Ems
 import org.beangle.ems.app.oa.Flows
 import org.beangle.security.Securities
 import org.beangle.webmvc.annotation.{mapping, param}
+import org.beangle.webmvc.context.Params
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.Major
-import org.openurp.base.model.{Project, User}
+import org.openurp.base.model.Project
 import org.openurp.code.std.model.StdAlterType
+import org.openurp.starter.web.helper.ProjectProfile
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.alter.model.StdAlterApply
 import org.openurp.std.info.service.StdAlterationService
@@ -89,11 +91,13 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
       redirect("search", "没有纳入流程管理，无法审核")
     } else {
       val rs = checkAudit(apply.processId.get)
-      put("alter", Json.parse(apply.alterDataJson))
+      put("alterData", Json.parse(apply.alterDataJson))
+      put("formData", Json.parse(apply.formDataJson))
       put("signature_url", Ems.api + s"/platform/oa/signatures/${Securities.user}.png")
       if (Strings.isEmpty(rs._3)) {
         put("process", rs._1)
         put("tasks", rs._2)
+        ProjectProfile.set(apply.std.project)
         forward()
       } else {
         addError(rs._3)
@@ -126,11 +130,17 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val processId = apply.processId.get
     val rs = checkAudit(processId)
 
-    val me = entityDao.findBy(classOf[User], "code" -> Securities.user, "school" -> project.school).head
+    val me = getUser
     val auditor = Flows.user(me.code, me.name)
     val comments = get("comments")
     val passed = getBoolean("passed", true)
 
+    val formData = Params.sub("form")
+    if (formData.nonEmpty) {
+      val fd = Json.parse(apply.formDataJson).asInstanceOf[JsonObject]
+      fd.addAll(formData)
+      apply.formDataJson = fd.toJson
+    }
     val data = new JsonObject()
     Flows.uploadSignature(get("sign"), "/alter-apply", apply.id, auditor, data)
     data.update("passed", passed)
@@ -162,9 +172,9 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     put("apply", apply)
     put("applyInfo", AlterApplyInfo.build(List(apply)).head)
     if (Strings.isBlank(apply.alterDataJson)) {
-      put("alter", new JsonObject())
+      put("alterData", new JsonObject())
     } else {
-      put("alter", Json.parse(apply.alterDataJson))
+      put("alterData", Json.parse(apply.alterDataJson))
     }
     put("auditable", false)
     apply.processId foreach { processId =>

@@ -1,0 +1,13 @@
+[#ftl]
+[@b.head/]
+[@b.toolbar title="设置回退"]bar.addBack();[/@]
+[@b.form action="!back" theme="list"]
+  [@b.field label="流程"]${apply.std.code} ${apply.std.name} ${apply.alterType.name}[/@]
+  [@b.field label="发起时间"]${apply.applyAt?string('yyyy-MM-dd')}[/@]
+  [@b.select name="activityIdx" label="回退步骤" required="true" items=activities?sort_by('idx')?reverse option="idx,name"/]
+  [@b.formfoot]
+    <input type="hidden" name="stdAlterApply.id" value="${apply.id}"/>
+   [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit"/]
+  [/@]
+[/@]
+[@b.foot/]

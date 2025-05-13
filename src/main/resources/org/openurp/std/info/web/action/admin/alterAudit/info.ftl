@@ -50,11 +50,11 @@
       <td class="title">异动原因：</td>
       <td colspan="3">${apply.reason}</td>
     </tr>
-    [#if alter?size!=0]
+    [#if alterData?size!=0]
     <tr>
       <td class="title">变更内容：</td>
       <td colspan="3">
-      [#list alter as k,ai]
+      [#list alterData as k,ai]
         ${ai.meta}: ${ai.oldtext!} -> ${ai.newtext!}[#sep]<br>
       [/#list]
       </td>
