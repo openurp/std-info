@@ -91,7 +91,20 @@
                 <h3 class="timeline-header">${step.name}</h3>
                 <div class="timeline-body">
                 [#if step.passed??]
-                  ${step.assignee.name} ${step.comments!}
+
+                  [#if applyInfo.flow.name=='提前毕业']
+                    [#assign taskData = applyInfo.getTask(step.name).data/]
+                    [#assign rules={'rule1':'各门必修课成绩均在90分及以上','rule2':'各门选修课成绩均在85分及以上','rule3':'已完成培养计划所规定的课程学分要求','rule4':'学位音乐会要求的完成要求场次','rule5':'综合测评符合学校规定要求'} /]
+                    [#assign taskParams={"研究生部核实":["rule1","rule2","rule3","rule4"],"辅导员审核":["rule5"]} /]
+                    [#if taskParams[step.name]??]
+                    [#list taskParams[step.name] as r]
+                      ${r_index+1}. ${rules[r]} [#if (formData["depart."+r]!'0')=="1"]√[#else]<span style="color:red">不满足</span>[/#if] <br>[#t/]
+                    [/#list]
+                    [/#if]
+                    [#if step.name!="研究生部核实"]${step.assignee.name} ${step.comments!}[/#if]
+                  [#else]
+                    ${step.assignee.name} ${step.comments!}
+                  [/#if]
                   [#list applyInfo.getSigns(step.name) as sign_url]
                     <img src="${sign_url}" style="height: 50px;margin:0px;">
                   [/#list]
@@ -99,6 +112,8 @@
                   <span class="text-muted">未审核</span>
                   [#if auditable]
                     [@b.a href="!auditForm?stdAlterApply.id=${apply.id}" class="btn btn-sm btn-primary"]开始审核...[/@]
+                  [#elseif cannotAuditReason??]
+                    <span class="text-muted">${cannotAuditReason}</span>
                   [/#if]
                 [/#if]
                 </div>

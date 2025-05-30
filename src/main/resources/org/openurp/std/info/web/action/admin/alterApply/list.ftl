@@ -16,7 +16,7 @@
     [@b.col property="std.state.major.name" title="专业"/]
     [@b.col property="alterType.name" title="异动类型"/]
     [@b.col property="status" title="状态" /]
-    [@b.col property="alterFrom" title="生效日期"]${stdAlterApply.alterFrom}[/@]
+    [@b.col property="alterFrom" title="生效日期"]${stdAlterApply.alterFrom!'待审批'}[/@]
     [@b.col title="申请文件"]
       [@b.a href="!doc?stdAlterApply.id="+stdAlterApply.id target="_blank"]下载[/@]
     [/@]

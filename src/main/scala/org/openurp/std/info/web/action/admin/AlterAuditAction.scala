@@ -92,7 +92,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     } else {
       val rs = checkAudit(apply.processId.get)
       put("alterData", Json.parse(apply.alterDataJson))
-      put("formData", Json.parse(apply.formDataJson))
+      put("formData", if Strings.isBlank(apply.formDataJson) || apply.formDataJson == "{}" then new JsonObject else Json.parse(apply.formDataJson))
       put("signature_url", Ems.api + s"/platform/oa/signatures/${Securities.user}.png")
       if (Strings.isEmpty(rs._3)) {
         put("process", rs._1)
@@ -103,6 +103,8 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
         addError(rs._3)
         put("apply", apply)
         put("applyInfo", AlterApplyInfo.build(List(apply)).head)
+        put("auditable", false)
+        put("cannotAuditReason", rs._3)
         forward("info")
       }
     }
@@ -144,6 +146,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val data = new JsonObject()
     Flows.uploadSignature(get("sign"), "/alter-apply", apply.id, auditor, data)
     data.update("passed", passed)
+    data.addAll(formData)
     var completeAndPassed = false
     rs._1.activeTasks foreach { task =>
       val process = Flows.complete(processId, task.id, Flows.payload(auditor, comments, data))
@@ -171,6 +174,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val apply = entityDao.get(classOf[StdAlterApply], id.toLong)
     put("apply", apply)
     put("applyInfo", AlterApplyInfo.build(List(apply)).head)
+    put("formData", if Strings.isBlank(apply.formDataJson) || apply.formDataJson == "{}" then new JsonObject else Json.parse(apply.formDataJson))
     if (Strings.isBlank(apply.alterDataJson)) {
       put("alterData", new JsonObject())
     } else {
@@ -179,7 +183,11 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     put("auditable", false)
     apply.processId foreach { processId =>
       val rs = checkAudit(processId)
-      put("auditable", Strings.isEmpty(rs._3))
+      val auditable = Strings.isEmpty(rs._3)
+      put("auditable", auditable)
+      if (!auditable) {
+        put("cannotAuditReason", rs._3)
+      }
     }
     forward()
   }

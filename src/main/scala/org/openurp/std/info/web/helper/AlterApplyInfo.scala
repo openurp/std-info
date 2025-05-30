@@ -70,6 +70,10 @@ class AlterApplyInfo(val alterApply: StdAlterApply) {
   var flow: Option[Flows.Flow] = None
   var process: Option[Flows.Process] = None
 
+  def getTask(name: String): Option[Flows.Task] = {
+    process.get.tasks.find(_.name == name)
+  }
+
   def addSign(task: Flows.Task, signer: String, sign: String): Unit = {
     val taskSigns = signs.getOrElseUpdate(task, Collections.newMap[String, String])
     taskSigns.put(signer, sign)

@@ -116,10 +116,11 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val apply = entityDao.get(classOf[StdAlterApply], id.toLong)
     put("apply", apply)
     put("applyInfo", AlterApplyInfo.build(List(apply)).head)
+    put("formData", if Strings.isBlank(apply.formDataJson) || apply.formDataJson == "{}" then new JsonObject else Json.parse(apply.formDataJson))
     if (Strings.isBlank(apply.alterDataJson)) {
-      put("alter", new JsonObject())
+      put("alterData", new JsonObject())
     } else {
-      put("alter", Json.parse(apply.alterDataJson))
+      put("alterData", Json.parse(apply.alterDataJson))
     }
     put("auditable", false)
     forward("../alterAudit/info")
