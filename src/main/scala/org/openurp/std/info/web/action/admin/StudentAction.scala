@@ -141,6 +141,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
     p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌", "homeTown" -> "籍贯")
+    p.add("phoneticName" -> "英文名")
 
     val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
     contact.add("mobile", "手机")
@@ -188,7 +189,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
       person = entityDao.findBy(classOf[Person], "code", person.code).headOption.getOrElse(person)
     }
     val project = getProject
-    person.name.formattedName = student.name
+    person.name = student.name
     student.registed = true
     student.project = project
     student.gender = person.gender
@@ -243,7 +244,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     populate(person, "person")
     person.updatedAt = Instant.now()
     student.gender = person.gender
-    person.name.formattedName = student.name
+    person.name = student.name
     entityDao.saveOrUpdate(person, student)
     userHelper.createUser(student, getStdUserCode(student), None)
 
@@ -266,12 +267,11 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val forceUpdate = getBoolean("forceUpdate", false)
     val people = Collections.newBuffer[Person]
     stds foreach { std =>
-      if (std.enName.isEmpty || forceUpdate) {
+      if (std.person.phoneticName.isEmpty || forceUpdate) {
         val response = HttpUtils.getText(Ems.api + "/tools/sns/person/pinyin/" + URLEncoder.encode(std.name, Charsets.UTF_8) + ".json")
         if (response.isOk) {
           val enName = response.getText.trim
-          std.enName = Some(enName)
-          std.person.phoneticName = std.enName
+          std.person.phoneticName = Some(enName)
           people += std.person
         }
       }

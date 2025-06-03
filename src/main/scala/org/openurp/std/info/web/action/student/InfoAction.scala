@@ -45,10 +45,12 @@ class InfoAction extends StudentSupport {
 
   def edit(): View = {
     val std = getStudent
-    given project:Project = std.project
+
+    given project: Project = std.project
+
     put("std", std)
-    val editables = Strings.split(getConfig("std.info.self.editables",""),",").toSet
-    put("editables",editables)
+    val editables = Strings.split(getConfig("std.info.self.editables", ""), ",").toSet
+    put("editables", editables)
     put("contact", entityDao.findBy(classOf[Contact], "std", std).headOption.getOrElse(new Contact))
     put("home", entityDao.findBy(classOf[Home], "std", std).headOption.getOrElse(new Home))
     put("person", std.person)
@@ -66,9 +68,7 @@ class InfoAction extends StudentSupport {
 
     get("enName") foreach { en =>
       val enName = en.trim()
-      std.enName = Some(enName)
       std.person.phoneticName = Some(enName)
-      user.enName = Some(enName)
     }
     get("email") foreach { e =>
       val email = e.trim()

@@ -30,7 +30,7 @@ val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
-val openurp_std_core = "org.openurp.std" % "openurp-std-core" % "0.0.18"
+val openurp_std_core = "org.openurp.std" % "openurp-std-core" % "0.0.19"
 
 lazy val root = (project in file("."))
   .enablePlugins(WarPlugin, TomcatPlugin)

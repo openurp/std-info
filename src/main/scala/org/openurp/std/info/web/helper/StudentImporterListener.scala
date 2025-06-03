@@ -183,7 +183,7 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project:
       val personCode = data.get(PERSON_CODE).orNull.asInstanceOf[String]
       val stdName = data.get(PERSON_FORMATEDNAME).orNull.asInstanceOf[String]
       person.code = personCode
-      person.name.formattedName = stdName
+      person.name = stdName
       person.updatedAt = Instant.now()
       student.gender = person.gender
       student.project = project
