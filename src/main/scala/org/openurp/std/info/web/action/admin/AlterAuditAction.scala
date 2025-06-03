@@ -19,6 +19,7 @@ package org.openurp.std.info.web.action.admin
 
 import org.beangle.commons.json.{Json, JsonObject}
 import org.beangle.commons.lang.Strings
+import org.beangle.commons.net.http.HttpUtils
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.Ems
 import org.beangle.ems.app.oa.Flows
@@ -93,7 +94,11 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
       val rs = checkAudit(apply.processId.get)
       put("alterData", Json.parse(apply.alterDataJson))
       put("formData", if Strings.isBlank(apply.formDataJson) || apply.formDataJson == "{}" then new JsonObject else Json.parse(apply.formDataJson))
-      put("signature_url", Ems.api + s"/platform/oa/signatures/${Securities.user}.png")
+      val defaultSigUrl = Ems.api + s"/platform/oa/signatures/${Securities.user}.png"
+      val defaultSig = HttpUtils.getData(defaultSigUrl)
+      if (defaultSig.isOk && defaultSig.content.isInstanceOf[Array[Byte]] && defaultSig.content.asInstanceOf[Array[Byte]].length > 0) {
+        put("signature_url", defaultSigUrl)
+      }
       if (Strings.isEmpty(rs._3)) {
         put("process", rs._1)
         put("tasks", rs._2)

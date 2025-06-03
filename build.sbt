@@ -23,14 +23,14 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
-val apiVer = "0.42.0"
-val starterVer = "0.3.55"
-val baseVer = "0.4.48"
+val apiVer = "0.43.0"
+val starterVer = "0.3.57"
+val baseVer = "0.4.50"
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
-val openurp_std_core = "org.openurp.std" % "openurp-std-core" % "0.0.17"
+val openurp_std_core = "org.openurp.std" % "openurp-std-core" % "0.0.18"
 
 lazy val root = (project in file("."))
   .enablePlugins(WarPlugin, TomcatPlugin)

@@ -15,7 +15,11 @@
     [@b.textarea name="comments" id="comments" required="true" rows="4" style="width:80%" label="审核意见" placeholder="请填写意见" value="同意"]
       <div style="display: block;margin-left: 6.25rem;">可填写其他审核意见和补充内容</div>
     [/@]
-    [@b.esign label="签名" name="sign" required="true" width="600" height="200" remoteHref=signature_url/]
+    [#if signature_url??]
+      [@b.esign label="签名" name="sign" required="true" width="600" height="200" remoteHref=signature_url/]
+    [#else]
+      [@b.esign label="签名" name="sign" required="true" width="600" height="200"/]
+    [/#if]
     [@b.formfoot]
       <input name="stdAlterApply.id" value="${apply.id}" type="hidden"/>
       [@b.submit value="提交"/]
