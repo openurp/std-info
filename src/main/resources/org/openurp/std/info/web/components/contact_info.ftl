@@ -2,13 +2,28 @@
 [#if !((contact.id)??)]
 <div style="color: red">当前学生联系信息还未配置！</div>
 [#else]
-  <table class="infoTable">
+<style>
+  td.title{
+    padding: 0.2rem 0rem;
+    text-align: right;
+    color: #6c757d !important;
+  }
+</style>
+  <table class="table table-sm" style="table-layout:fixed">
+    <colgroup>
+      <col width="13%">
+      <col width="20%">
+      <col width="13%">
+      <col width="20%">
+      <col width="14%">
+      <col width="20%">
+    </colgroup>
     <tr>
-      <td class="title" width="110px">电子邮箱:</td>
+      <td class="title">电子邮箱:</td>
       <td>${(contact.email?html)!}</td>
-      <td class="title" width="110px">电话:</td>
+      <td class="title">电话:</td>
       <td>${(contact.phone?html)!}</td>
-      <td class="title" width="110px">移动电话:</td>
+      <td class="title">移动电话:</td>
       <td>${(contact.mobile?html)!}</td>
     </tr>
     <tr>

@@ -2,17 +2,32 @@
 [#if !((examinee.id)??)]
 <div style="color: red">当前考生信息还未配置！</div>
 [#else]
-  <table class="infoTable">
+<style>
+  td.title{
+    padding: 0.2rem 0rem;
+    text-align: right;
+    color: #6c757d !important;
+  }
+</style>
+  <table class="table table-sm" style="table-layout:fixed">
+    <colgroup>
+      <col width="13%">
+      <col width="20%">
+      <col width="13%">
+      <col width="20%">
+      <col width="14%">
+      <col width="20%">
+    </colgroup>
     <tr>
-      <td class="title" width="110px">考生号:</td>
+      <td class="title">考生号:</td>
       <td>${(examinee.code?html)!}</td>
-      <td class="title" width="110px">准考证号:</td>
+      <td class="title">准考证号:</td>
       <td>${(examinee.examNo?html)!}</td>
-      <td class="title" width="110px">生源地:</td>
+      <td class="title">生源地:</td>
       <td>${(examinee.originDivision.name?html)!}</td>
     </tr>
     <tr>
-      <td class="title" width="11%">毕业学校:</td>
+      <td class="title">毕业学校:</td>
       <td>${(examinee.schoolName?html)!}</td>
       <td class="title">毕业日期:</td>
       <td>${(examinee.graduateOn?string("yyyy-MM-dd"))!}</td>

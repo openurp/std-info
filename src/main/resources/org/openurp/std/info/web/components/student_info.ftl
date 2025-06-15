@@ -1,17 +1,26 @@
 [#ftl]
 <style>
-.list.infoTable tbody > tr.red {
-  background-color: DarkSalmon;
-}
-
+  td.title{
+    padding: 0.2rem 0rem;
+    text-align: right;
+    color: #6c757d !important;
+  }
 </style>
-  <table class="infoTable" align="center" width="100%">
+  <table class="table table-sm" style="table-layout:fixed">
+    <colgroup>
+      <col width="13%">
+      <col width="20%">
+      <col width="13%">
+      <col width="20%">
+      <col width="14%">
+      <col width="20%">
+    </colgroup>
     <tr>
-      <td class="title" width="110px">学号姓名:</td>
+      <td class="title">学号姓名:</td>
       <td>${student.code}[#if !student.registed]<sup>无学籍</sup>[/#if] ${student.name}</td>
-      <td class="title" width="110px">年级:</td>
+      <td class="title">年级:</td>
       <td>${(student.state.grade)!}</td>
-      <td class="title" width="110px" rowspan="5">照片:</td>
+      <td class="title" rowspan="5">照片:</td>
       <td rowspan="5"><img height="110px" src="${avatarUrl}" alt="${(student.name)!}" title="${(student.name)!}"/></td>
     </tr>
     <tr>

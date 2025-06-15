@@ -2,13 +2,28 @@
 [#if !((student.person.id)??)]
 <div style="color: red">当前学生基本信息还未配置！</div>
 [#else]
-  <table class="infoTable">
+<style>
+  td.title{
+    padding: 0.2rem 0rem;
+    text-align: right;
+    color: #6c757d !important;
+  }
+</style>
+  <table class="table table-sm" style="table-layout:fixed;margin-bottom: 0px;">
+    <colgroup>
+      <col width="13%">
+      <col width="20%">
+      <col width="13%">
+      <col width="20%">
+      <col width="14%">
+      <col width="20%">
+    </colgroup>
     <tr>
-      <td class="title" width="110px">姓名:</td>
+      <td class="title">姓名:</td>
       <td>${student.name?html}</td>
-      <td class="title" width="110px">姓名拼音:</td>
+      <td class="title">姓名拼音:</td>
       <td>${(student.person.phoneticName?html)!}</td>
-      <td class="title" width="110px">曾用名:</td>
+      <td class="title">曾用名:</td>
       <td>${(student.person.formerName?html)!}</td>
     </tr>
     <tr>

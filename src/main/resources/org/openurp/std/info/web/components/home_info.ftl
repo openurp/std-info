@@ -1,11 +1,26 @@
 [#ftl]
-  <table class="infoTable">
+<style>
+  td.title{
+    padding: 0.2rem 0rem;
+    text-align: right;
+    color: #6c757d !important;
+  }
+</style>
+  <table class="table table-sm" style="table-layout:fixed">
+    <colgroup>
+      <col width="13%">
+      <col width="20%">
+      <col width="13%">
+      <col width="20%">
+      <col width="14%">
+      <col width="20%">
+    </colgroup>
     <tr>
-      <td class="title" width="110px">家庭电话:</td>
+      <td class="title">家庭电话:</td>
       <td>${(home.phone?html)!}</td>
-      <td class="title" width="110px">家庭邮编:</td>
+      <td class="title">家庭邮编:</td>
       <td>${(home.postcode?html)!}</td>
-      <td class="title" width="110px">户籍:</td>
+      <td class="title">户籍:</td>
       <td>${(home.formerAddr?html)!}</td>
     </tr>
     <tr>
