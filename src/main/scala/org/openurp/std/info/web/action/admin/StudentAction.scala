@@ -141,7 +141,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
     p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌", "homeTown" -> "籍贯")
-    p.add("phoneticName" -> "英文名")
+    p.add("phoneticName" -> "姓名拼音")
 
     val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
     contact.add("mobile", "手机")

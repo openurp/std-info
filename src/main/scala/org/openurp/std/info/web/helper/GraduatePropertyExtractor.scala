@@ -42,8 +42,8 @@ class GraduatePropertyExtractor(entityDao: EntityDao, season: Option[GraduateSea
   season foreach { s =>
     val query = OqlBuilder.from(classOf[President], "p")
     query.where("p.school=:school", s.project.school)
-    query.where("p.beginOn<=:date", s.graduateOn.atEndOfMonth())
-    query.where("p.endOn is null or p.endOn>=:date", s.graduateOn.atEndOfMonth())
+    query.where("p.beginOn<=:date", s.graduateIn.atEndOfMonth())
+    query.where("p.endOn is null or p.endOn>=:date", s.graduateIn.atEndOfMonth())
     president = entityDao.search(query).headOption
   }
 

@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 class DesciplineHelper(season: GraduateSeason) {
 
-  var graduateOn: LocalDate = season.graduateOn.atDay(1)
+  var graduateOn: LocalDate = season.graduateIn.atDay(1)
 
   def getDisciplineCode(major: Major): String = {
     major.getDisciplineCode(graduateOn)
