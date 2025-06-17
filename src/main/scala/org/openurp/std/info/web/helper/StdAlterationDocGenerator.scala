@@ -35,7 +35,7 @@ object StdAlterationDocGenerator {
 
   def generate(apply: StdAlterApply): InputStream = {
     val formatter = DateTimeFormatter.ofPattern("YYYY 年 MM 月 dd 日")
-    val path = s"${apply.std.project.school.id}/${apply.std.project.id}/org/openurp/std/info/template/${apply.alterType.name}申请单.docx";
+    val path = s"${apply.std.project.school.id}/${apply.std.project.id}/org/openurp/std/info/template/${apply.alterType.id}.docx";
     val bytes = EmsApp.getResource(path) match
       case None => Array.empty[Byte]
       case Some(url) =>

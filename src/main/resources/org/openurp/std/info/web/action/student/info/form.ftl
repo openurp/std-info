@@ -4,7 +4,7 @@
 [@b.form action="!save" theme="list"]
   [@b.field label="注意事项"]<span class="text-warning">部分信息用于上报上级教育部门，请如实填写</span>[/@]
   [@b.field label="学生"]${student.code} ${student.name}[/@]
-  [@b.textfield id="phoneticName" name="enName" label="姓名拼音" value=student.enName! required="true"/]
+  [@b.textfield id="phoneticName" name="phoneticName" label="姓名拼音" value=person.phoneticName! required="true"/]
   [#if editables?seq_contains('politicalStatus')]
   [@base.code type="political-statuses" label="政治面貌" name="person.politicalStatus.id" empty="..." value=(person.politicalStatus)! required="true"/]
   [/#if]
