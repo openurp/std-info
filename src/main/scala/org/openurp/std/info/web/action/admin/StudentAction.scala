@@ -129,7 +129,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
     std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
     std.add("studyType.name" -> "学习形式", "duration" -> "学制", "level.name" -> "培养层次")
-    std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型", "level.name" -> "培养层次")
+    std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型")
     std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.direction.name" -> "专业方向")
     std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "入学日期", "endOn" -> "预计离校日期")
     std.add("maxEndOn" -> "最晚离校日期", "remark" -> "备注", "graduationDeferred" -> "是否延期毕业")
