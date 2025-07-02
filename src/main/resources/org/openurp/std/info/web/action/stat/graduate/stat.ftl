@@ -18,8 +18,9 @@
   border-color:#006CB2;
   vertical-align: middle;
   font-style: normal;
-  width:70%;
+  width:90%;
 }
+
 .stat_report > table.listTable tr:first-child {
   height: 44px;
   font-weight: bold;
@@ -43,7 +44,7 @@
   vertical-align: middle;
 }
 </style>
-  <div class="card card-info card-primary card-outline">
+  <div class="card card-primary card-outline">
     <div class="card-header">
       <h3 class="card-title">毕业人数统计</h3>
     </div>
@@ -52,7 +53,7 @@
     </div>
   </div>
 
-  <div class="card card-info card-primary card-outline">
+  <div class="card card-primary card-outline">
     <div class="card-header">
       <h3 class="card-title">学位授予人数统计</h3>
     </div>

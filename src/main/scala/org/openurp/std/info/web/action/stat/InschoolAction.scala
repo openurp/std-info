@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.info.web.action.admin
+package org.openurp.std.info.web.action.stat
 
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.reflect.BeanInfos
@@ -33,7 +33,7 @@ import java.time.LocalDate
 
 /** 在校人数统计
  */
-class StatAction extends ActionSupport, ProjectSupport {
+class InschoolAction extends ActionSupport, ProjectSupport {
 
   var entityDao: EntityDao = _
 

@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.info.web.action.admin
+package org.openurp.std.info.web.action.stat
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.support.action.EntityAction
 import org.beangle.webmvc.view.View
-import org.beangle.webmvc.support.action.{EntityAction, RestfulAction}
 import org.openurp.base.edu.model.Major
 import org.openurp.base.model.Department
 import org.openurp.base.std.model.{Graduate, GraduateSeason}
@@ -30,15 +30,21 @@ import org.openurp.code.person.model.Gender
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.web.helper.{DesciplineHelper, GraduateStat, GraduateStatHelper}
 
-class GraduateStatAction extends ActionSupport with EntityAction[Graduate] with ProjectSupport {
+/** 毕业生信息统计
+ */
+class GraduateAction extends ActionSupport, EntityAction[Graduate], ProjectSupport {
 
   var entityDao: EntityDao = _
 
   def index(): View = {
-    val query = OqlBuilder.from(classOf[GraduateSeason], "season")
-    query.where("season.project=:project", getProject)
-    query.orderBy("season.code desc")
-    put("seasons", entityDao.search(query))
+    val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
+    query.where("g.season.project=:project", getProject)
+    query.groupBy("g.season.id")
+    query.select("g.season.id,count(*)")
+    val datas = entityDao.search(query).map(x => (x(0).asInstanceOf[Long], x(1))).toMap
+    val seasons = entityDao.find(classOf[GraduateSeason], datas.keySet).sortBy(_.code).reverse
+    put("datas",datas)
+    put("seasons", seasons)
     forward()
   }
 
@@ -77,7 +83,7 @@ class GraduateStatAction extends ActionSupport with EntityAction[Graduate] with 
     put("graduateStats", graduateStats.toSeq)
     put("graduateStatHelper", new GraduateStatHelper)
     put("project", getProject)
-    put("season",season)
+    put("season", season)
 
     forward()
   }
@@ -112,7 +118,7 @@ class GraduateStatAction extends ActionSupport with EntityAction[Graduate] with 
     })
     put("graduateStats", gradautionStats.toSeq)
     put("graduateStatHelper", new GraduateStatHelper)
-    put("season",season)
+    put("season", season)
     forward()
   }
 }

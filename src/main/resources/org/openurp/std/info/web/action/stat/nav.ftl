@@ -1,0 +1,6 @@
+[#ftl]
+  [@b.nav class="nav-tabs nav-tabs-compact"]
+    [#if ems.permitted('/stat/inschool')][@b.navitem href="inschool!index"]在校统计[/@][/#if]
+    [#if ems.permitted('/stat/graduate')][@b.navitem href="graduate!index"]毕业统计[/@][/#if]
+    [#if ems.permitted('/stat/chsi')][@b.navitem href="chsi!index"]学信网上报[/@][/#if]
+  [/@]

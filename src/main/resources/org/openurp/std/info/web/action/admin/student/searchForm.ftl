@@ -26,6 +26,7 @@
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
   [@b.textfield name="student.state.direction.name" label="专业方向"/]
   [@b.textfield name="student.state.squad.name" label="班级"/]
+
   [@b.textfield name="student.duration" label="学制" onKeyup="validateData(this);"/]
   [#if tutorSupported][@b.textfield name="student.tutor.name" label="导师"/][/#if]
   [@b.select name="status" label="状态" items=statuses empty="..." value="active"/]

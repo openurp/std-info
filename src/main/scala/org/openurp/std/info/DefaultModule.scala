@@ -22,18 +22,16 @@ import org.openurp.base.std.service.impl.StudentServiceImpl
 import org.openurp.edu.program.domain.DefaultProgramProvider
 import org.openurp.std.info.service.impl.StdAlterationServiceImpl
 import org.openurp.std.info.service.{StudentInfoService, StudentManager}
-import org.openurp.std.info.web.action.{admin, mentor, student}
+import org.openurp.std.info.web.action.{admin, mentor, stat, student}
 import org.openurp.std.info.web.helper.UserHelper
 
 class DefaultModule extends BindModule {
 
   override protected def binding(): Unit = {
     bind(classOf[admin.GraduateAction])
-    bind(classOf[admin.GraduateStatAction])
     bind(classOf[admin.MajorStudentAction])
     bind(classOf[admin.SearchAction], classOf[admin.StudentAction], classOf[admin.ContactAction])
     bind(classOf[admin.CertificateAction])
-    bind(classOf[admin.StatAction])
     bind(classOf[admin.AlterConfigAction], classOf[admin.AlterationAction])
     bind(classOf[admin.AlterAuditAction], classOf[admin.AlterApplyAction], classOf[admin.AlterApplySearchAction])
     bind(classOf[admin.RegisterAction], classOf[admin.RegisterSessionAction])
@@ -41,6 +39,10 @@ class DefaultModule extends BindModule {
     bind(classOf[admin.PersonCheckAction])
     bind(classOf[admin.ThesisAction])
     bind(classOf[StudentManager], classOf[StudentInfoService])
+
+    bind(classOf[stat.InschoolAction])
+    bind(classOf[stat.ChsiAction])
+    bind(classOf[stat.GraduateAction])
 
     bind(classOf[UserHelper])
 

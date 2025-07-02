@@ -1,8 +1,6 @@
 [#ftl]
 [@b.head/]
-  [@b.toolbar title='在校学生信息统计']
-    bar.addBack();
-  [/@]
+[#include "../nav.ftl"/]
   <style>
     .alert-success{
       color: #155724;
@@ -57,6 +55,7 @@
     </table>
   [/#macro]
   <div class="container">
+    [#if level?? || depart?? || stdType?? || eduType?? ||campus?? ]
     <div class="alert alert-success">
       在校学生分布：[#if level??]${level.name}[/#if]
        [#if depart??]${depart.name}[/#if]
@@ -64,6 +63,8 @@
        [#if eduType??]${eduType.name}[/#if]
        [#if campus??]${campus.name}[/#if]
     </div>
+    [/#if]
+
     [@displayMatrix "grade" "level" "年级" "培养层次" /]
     [@displayMatrix "grade" "depart" "年级" "院系" /]
     [@displayMatrix "grade" "stdType" "年级" "学生类别" /]
