@@ -4,7 +4,7 @@
 [@b.toolbar title="毕业信息"]
   bar.addItem("毕业统计", "graduateStat()");
   function graduateStat() {
-    bg.form.submit(document.indexForm,  "${b.url("graduate-stat")}", "_blank");
+    bg.form.submit(document.indexForm,  "${b.url("/stat/graduate")}", "_blank");
   }
 [/@]
 <div class="search-container">

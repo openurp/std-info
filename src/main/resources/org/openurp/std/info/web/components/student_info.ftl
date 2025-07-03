@@ -6,7 +6,7 @@
     color: #6c757d !important;
   }
 </style>
-  <table class="table table-sm" style="table-layout:fixed">
+  <table class="table table-sm" style="table-layout:fixed;" >
     <colgroup>
       <col width="13%">
       <col width="20%">
@@ -76,18 +76,17 @@
 
   [#-- 学籍状态日志 --]
   [#if student.states?size>1]
-  <div style="height: 5px"></div>
-  <table class="list infoTable">
+  <table class="table table-sm">
     <thead>
-      <tr style="text-align:center">
-        <th width="15%">时间</th>
-        <th width="6%">年级</th>
-        <th width="10%">院系</th>
-        <th>专业、方向、班级</th>
-        <th width="6%">是否在校</th>
-        <th width="6%">状态</th>
-        <th width="8%">校区</th>
-        <th width="6%">备注</th>
+      <tr style="text-align:center" class="text-muted">
+        <th width="15%" style="font-weight: normal;">时间</th>
+        <th width="6%" style="font-weight: normal;">年级</th>
+        <th width="10%" style="font-weight: normal;">院系</th>
+        <th style="font-weight: normal;">专业、方向、班级</th>
+        <th width="6%" style="font-weight: normal;">是否在校</th>
+        <th width="9%" style="font-weight: normal;">状态</th>
+        <th width="8%" style="font-weight: normal;">校区</th>
+        <th width="8%" style="font-weight: normal;">备注</th>
       </tr>
     </thead>
     <tbody>
