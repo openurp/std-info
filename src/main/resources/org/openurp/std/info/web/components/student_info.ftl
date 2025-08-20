@@ -5,6 +5,13 @@
     text-align: right;
     color: #6c757d !important;
   }
+  .table-mini th{
+    color:#6c757d !important;
+    font-weight: normal;
+  }
+  .table-mini{
+    table-layout: fixed;
+  }
 </style>
   <table class="table table-sm" style="table-layout:fixed;" >
     <colgroup>
@@ -76,22 +83,24 @@
 
   [#-- 学籍状态日志 --]
   [#if student.states?size>1]
-  <table class="table table-sm">
+  <table class="table table-sm table-mini">
     <thead>
-      <tr style="text-align:center" class="text-muted">
-        <th width="15%" style="font-weight: normal;">时间</th>
-        <th width="6%" style="font-weight: normal;">年级</th>
-        <th width="10%" style="font-weight: normal;">院系</th>
-        <th style="font-weight: normal;">专业、方向、班级</th>
-        <th width="6%" style="font-weight: normal;">是否在校</th>
-        <th width="9%" style="font-weight: normal;">状态</th>
-        <th width="8%" style="font-weight: normal;">校区</th>
-        <th width="8%" style="font-weight: normal;">备注</th>
+      <tr style="text-align:center">
+        <th width="3%"></th>
+        <th width="15%">时间</th>
+        <th width="6%">年级</th>
+        <th width="10%">院系</th>
+        <th>专业、方向、班级</th>
+        <th width="6%">是否在校</th>
+        <th width="9%">状态</th>
+        <th width="8%">校区</th>
+        <th width="8%">备注</th>
       </tr>
     </thead>
     <tbody>
       [#list student.states?sort_by("beginOn")?reverse as state]
       <tr[#if (state.id!0) != student.state.id] class="text-muted"[/#if] style="text-align:center">
+        <td>[#if (state.id!0) == student.state.id]🚩[/#if]</td>
         <td>${state.beginOn?string("yyyy-MM-dd")}~${(state.endOn?string("yyyy-MM-dd"))!}</td>
         <td>${state.grade}</td>
         <td>${state.department.shortName!state.department.name}</td>
