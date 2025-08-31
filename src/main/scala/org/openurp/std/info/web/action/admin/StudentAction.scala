@@ -29,10 +29,12 @@ import org.beangle.doc.transfer.importer.listener.ForeignerListener
 import org.beangle.doc.transfer.importer.{ImportSetting, MultiEntityImporter}
 import org.beangle.ems.app.Ems
 import org.beangle.webmvc.annotation.{ignore, mapping, response}
+import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.edu.model.*
+import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.*
 import org.openurp.base.service.Features
 import org.openurp.base.std.model.*
@@ -135,8 +137,8 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     std.add("maxEndOn" -> "最晚离校日期", "remark" -> "备注", "graduationDeferred" -> "是否延期毕业")
     std.add("graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
     if squadSupported then std.add("state.squad.name", "班级")
-    if tutorSupported then std.add("tutor.name", "导师姓名")
-    if advisorSupported then std.add("advisor.name", "学位论文导师姓名")
+    if tutorSupported then std.add("majorTutorNames", "导师姓名")
+    if advisorSupported then std.add("thesisTutor.name", "论文指导教师")
 
     val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
     p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
@@ -222,10 +224,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
         if std.user == null then std.code else std.user.code
   }
 
-  /**
-   * 保存学籍信息
-   *
-   * @throws Exception
+  /** 保存学籍信息
    */
   @throws[Exception]
   override def save(): View = {
@@ -238,6 +237,17 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
       first.beginOn = student.beginOn
       last.endOn = student.endOn
     }
+
+    if (ActionContext.current.params.get("tutor.id") != null) {
+      val tutorIds = getAll("tutor.id", classOf[Long])
+      student.updateTutors(entityDao.find(classOf[Teacher], tutorIds), Tutorship.Major)
+    }
+
+    if (ActionContext.current.params.get("advisor.id") != null) {
+      val advisorIds = getAll("advisor.id", classOf[Long])
+      student.updateTutors(entityDao.find(classOf[Teacher], advisorIds), Tutorship.Thesis)
+    }
+
     student.calcCurrentState()
     student.updatedAt = Instant.now()
     val person = student.person
@@ -245,6 +255,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     person.updatedAt = Instant.now()
     student.gender = person.gender
     person.name = student.name
+
     entityDao.saveOrUpdate(person, student)
     userHelper.createUser(student, getStdUserCode(student), None)
 

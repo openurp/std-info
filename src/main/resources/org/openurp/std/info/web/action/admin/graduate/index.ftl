@@ -24,7 +24,7 @@
         [@b.textfield name="graduate.degree.name" label="学位" /]
         [@b.date label="学位授予" name="graduate.degreeAwardOn" value="" format="yyyy-MM-dd" readOnly="readOnly"/]
         [@b.textfield name="graduate.diplomaNo" label="学位证书" /]
-        [#if tutorSupported][@b.textfield name="graduate.std.tutor.staff.name" label="导师姓名" /][/#if]
+        [#if tutorSupported][@b.textfield name="tutor.name" label="导师姓名" /][/#if]
         [@b.select label="有学位" name="degree" items={}]
           <option value="2">...</option>
           <option value="1">有</option>

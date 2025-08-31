@@ -15,7 +15,7 @@
         [@b.form action="!submit" theme="list"]
           [@b.field label="学生"]${std.code} ${std.name} ${std.department.name}[/@]
           [@b.field label="培养层次"]${(std.level.name)!}[/@]
-          [@b.field label="专业、方向"]${(std.major.name)!} ${(std.direction.name)!} 导师${(tutor.name)!}[/@]
+          [@b.field label="专业、方向"]${(std.major.name)!} ${(std.direction.name)!} 导师[#list std.majorTutors as t]${t.name}[#sep],[/#list][/@]
           [@b.field label="异动类型"]${(alterType.name)!}[/@]
           [#if needEndOn]
           [@b.startend label="开始~结束日期" name="apply.alterFrom,apply.alterTo" required="true"/]

@@ -15,8 +15,8 @@
     <tr>
       <td class="title width15">年级：</td>
       <td>${std.grade.name} ${(std.level.name)!}</td>
-      <td class="title width15">[#if std.tutor??]导师：[#else]辅导员：[/#if]</td>
-      <td>[#if std.tutor??]${std.tutor.name}[#else]${(std.squad.mentor.name)!}[/#if]</td>
+      <td class="title width15">[#if std.majorTutors?size>0]导师：[#else]辅导员：[/#if]</td>
+      <td>[#if std.majorTutors?size][#list std.majorTutors as t]${t.name}[#sep,][/#list][#else]${(std.squad.mentor.name)!}[/#if]</td>
     </tr>
     <tr>
       <td class="title">院系：</td>

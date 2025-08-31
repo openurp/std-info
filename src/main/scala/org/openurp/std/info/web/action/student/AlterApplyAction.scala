@@ -70,10 +70,9 @@ class AlterApplyAction extends StudentSupport {
       std.direction foreach { d =>
         tms = tms.filter { x => x.directions.contains(d) }
       }
-      val tutors = tms.map(_.staff).toSet.removedAll(std.tutor)
+      val tutors = tms.map(_.staff).toSet.removedAll(std.majorTutors)
       put("tutors", tutors)
     }
-    put("tutor", std.tutor)
     put("mentor", std.squad.flatMap(_.mentor))
     ProjectProfile.set(std.project)
     put("signature_url", Ems.api + s"/platform/oa/signatures/${std.code}.png")
@@ -86,7 +85,7 @@ class AlterApplyAction extends StudentSupport {
     env.update("student.code", std.code)
     env.update("student.name", std.name)
     env.update("student.department.code", std.department.code)
-    env.update("student.tutor.code", std.tutor.map(_.code).getOrElse("--"))
+    env.update("student.tutor.code", std.tutors.map(_.tutor.code).mkString(","))
     env.update("student.mentor.code", std.squad.flatMap(_.mentor.map(_.code)).getOrElse("--"))
     env.update("student.stdType.name", std.stdType.name)
 
@@ -143,8 +142,8 @@ class AlterApplyAction extends StudentSupport {
     val rs = new JsonObject
     getLong("alter.tutor.id") foreach { tutorId =>
       val obj = new JsonObject
-      obj.update("oldvalue", std.tutor.map(_.id.toString).getOrElse(""))
-      obj.update("oldtext", std.tutor.map(_.name).getOrElse(""))
+      obj.update("oldvalue", std.tutors.map(_.id.toString).mkString(","))
+      obj.update("oldtext", std.tutors.map(_.tutor.name).mkString(","))
       obj.update("newvalue", tutorId)
       val tutor = entityDao.get(classOf[Staff], tutorId)
       obj.update("newtext", tutor.name)

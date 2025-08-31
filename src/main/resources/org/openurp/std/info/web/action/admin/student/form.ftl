@@ -48,9 +48,9 @@
           onchange="syncGraduateOn(this)"
           comment="最晚离校，不随学籍异动而变化"/]
           [@base.code type="study-types" label="学习形式" name="student.studyType.id" required="true" empty="..." value=(student.studyType.id)! /]
-          [@base.teacher label="导师" name="student.tutor.id" empty="..." value=student.tutor! style="width: 400px"/]
+          [@base.teacher label="导师" name="tutor.id" empty="..." values=student.majorTutors style="width: 400px" multiple="true"/]
           [#if advisorSupported]
-          [@base.teacher label="学位论文导师" name="student.advisor.id" empty="..." value=student.advisor! style="width: 400px"/]
+          [@base.teacher label="论文指导教师" name="advisor.id" empty="..." value=student.thesisTutor! style="width: 400px"/]
           [/#if]
           [@b.select label="标签" name="labelIds" items=stdLabels values=student.labels?values /]
           [@b.radios label="是否延期毕业" name="student.graduationDeferred" required="true" value=student.graduationDeferred?string(1, 0)/]

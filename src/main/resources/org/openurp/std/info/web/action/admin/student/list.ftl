@@ -54,7 +54,7 @@
         [/@]
         [/#if]
         [#if tutorSupported]
-        [@b.col property="tutor.name" title="导师" width="80px"/]
+        [@b.col property="majorTutorNames" title="导师" width="80px" sortable="false"/]
         [/#if]
         [@b.col property="state.status.name" title="学籍状态"  width="60px"/]
         [@b.col property="studyType.name" title="学习形式" width="80px"/]

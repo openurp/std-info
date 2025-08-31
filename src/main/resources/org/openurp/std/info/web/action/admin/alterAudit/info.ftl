@@ -22,9 +22,12 @@
     <tr >
       <td class="title width15" style="vertical-align: middle;">学生：</td>
       <td style="vertical-align: middle;">[@ems.avatar username=std.code width="40px"/]${std.name} ${std.code} </td>
-      <td class="title width15" style="vertical-align: middle;">[#if std.tutor??]导师：[#else]辅导员：[/#if]</td>
+      <td class="title width15" style="vertical-align: middle;">[#if std.majorTutors?size>0]导师：[#else]辅导员：[/#if]</td>
       <td style="vertical-align: middle;">
-        [#if std.tutor??][@ems.avatar username=std.tutor.code width="40px"/]${std.tutor.name}
+        [#if std.majorTutors?size>0]
+          [#list std.majorTutors as t]
+            [@ems.avatar username=t.code width="40px"/]${t.name}
+          [/#list]
         [#else]
           [#if std.squad.mentor??][@ems.avatar username=std.squad.mentor.code width="40px"/]${(std.squad.mentor.name)!}[/#if]
         [/#if]

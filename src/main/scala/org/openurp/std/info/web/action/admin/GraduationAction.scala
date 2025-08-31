@@ -17,6 +17,7 @@
 
 package org.openurp.std.info.web.action.admin
 
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.webmvc.annotation.ignore
@@ -57,6 +58,13 @@ class GraduationAction extends ActionSupport, ProjectSupport, EntityAction[Stude
     val query = super.getQueryBuilder
     val season = entityDao.get(classOf[GraduateSeason], getLongId("season"))
     query.where(s"exists(from ${classOf[Graduation].getName} gr where gr.std=student and gr.batch.season=:season)", season)
+    //查询导师
+    get("tutor.name").foreach(n => {
+      if (Strings.isNotBlank(n)) {
+        query.where("exists(from graduation.student.tutors t where t.tutor.name like :tutorName)", s"%${n.trim()}%")
+      }
+    })
+    query
   }
 
   @ignore

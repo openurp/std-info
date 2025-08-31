@@ -21,8 +21,8 @@ import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.{Enums, Objects, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.annotation.mapping
-import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.beangle.webmvc.view.View
 import org.openurp.base.edu.model.{Direction, Major}
 import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project}
@@ -217,10 +217,10 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       addItem(alteration, AlterMeta.EndOn, state.std.endOn, endOn)
     }
     getLong("tutor.id") foreach { tutorId =>
-      addItem(alteration, AlterMeta.Tutor, state.std.tutor.orNull, entityDao.get(classOf[Teacher], tutorId))
+      addItem(alteration, AlterMeta.Tutor, state.std.majorTutors.headOption, entityDao.get(classOf[Teacher], tutorId))
     }
-    getLong("advisor.id") foreach { tutorId =>
-      addItem(alteration, AlterMeta.Advisor, state.std.tutor.orNull, entityDao.get(classOf[Teacher], tutorId))
+    getLong("advisor.id") foreach { advisorId =>
+      addItem(alteration, AlterMeta.Advisor, state.std.thesisTutor.orNull, entityDao.get(classOf[Teacher], advisorId))
     }
   }
 

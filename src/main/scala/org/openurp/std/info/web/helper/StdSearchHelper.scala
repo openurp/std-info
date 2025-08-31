@@ -18,11 +18,11 @@
 package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Order
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
 import org.beangle.webmvc.context.Params
-import org.beangle.webmvc.support.ActionSupport
 import org.beangle.webmvc.support.helper.QueryHelper
-import org.openurp.base.model.{Department, Project}
+import org.openurp.base.model.Project
 import org.openurp.base.std.model.{Graduate, Student}
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 
@@ -54,8 +54,14 @@ class StdSearchHelper(entityDao: EntityDao, project: Project) {
     Params.getInt("stdLabel.id").foreach(stdLabelId => {
       builder.where("exists (from student.labels label where label.id = :labelId)", stdLabelId)
     })
-//    builder.where("length(student.person.code)=18 and to_char(student.person.birthday,'yyyyMMdd')<> substr(student.person.code,7,8)")
-//    builder.where("student.person.idType.id=1")
+    //查询导师
+    Params.get("tutor.name").foreach(n => {
+      if (Strings.isNotBlank(n)) {
+        builder.where("exists(from student.tutors t where t.tutor.name like :tutorName)", s"%${n.trim()}%")
+      }
+    })
+    //    builder.where("length(student.person.code)=18 and to_char(student.person.birthday,'yyyyMMdd')<> substr(student.person.code,7,8)")
+    //    builder.where("student.person.idType.id=1")
     builder.orderBy(Params.get(Order.OrderStr).getOrElse("student.state.grade.id desc,student.code"))
     builder.tailOrder("student.id")
     builder

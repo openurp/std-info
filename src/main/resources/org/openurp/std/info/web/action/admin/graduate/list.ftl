@@ -57,7 +57,7 @@
                      "std.person.birthday:出生日期,std.person.code:身份证号,std.person.nation.name:民族,"+
                      "examinee.code:考生号,diplomaNo:学位证书号,certificateNo:毕业证书编号,certificateSeqNo:毕业证书序列号,"+
                      "degreeAwardOn:学位授予日期,result.name:毕结业情况,degree.name:学位,std.state.squad.mentor.name:辅导员,"+
-                     "std.state.squad.master.name:班主任[#if tutorSupported],std.tutor.name:导师[/#if]");
+                     "std.state.squad.master.name:班主任[#if tutorSupported],std.majorTutorNames:导师[/#if]");
     bg.form.addInput(form, "convertToString", "0");
     bg.form.addInput(form, "fileName", "毕业信息");
     bg.form.submit(form, "${b.url('!exportData')}","_self");

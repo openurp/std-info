@@ -16,7 +16,7 @@
   [@b.select name="student.state.major.id" label="专业" items=majors empty="..."/]
   [@b.select name="student.stdType.id" label="学生类别" items=stdTypes empty="..."/]
   [@b.textfield name="student.duration" label="学制" onKeyup="validateData(this);"/]
-  [#if tutorSupported][@b.textfield name="student.tutor.name" label="导师"/][/#if]
+  [#if tutorSupported][@b.textfield name="tutor.name" label="导师"/][/#if]
   [@b.select name="status" label="状态" items=statuses empty="..." value="active"/]
   [@b.select name="student.state.status.id" label="学籍状态" items=states?sort_by("name") empty="..."/]
   [@b.textfield name="student.state.squad.name" label="班级"/]

@@ -67,9 +67,9 @@
       <td>${(student.beginOn?string("yyyy-MM-dd"))!}~${(student.graduateOn?string("yyyy-MM-dd"))!}[#if (graduate.graduateOn)??]<span class="text-muted">[#if graduate.graduateOn!=student.graduateOn]实际${graduate.graduateOn?string('yyyy-MM-dd')}[#else]如期毕业[/#if]</span>[/#if]</td>
       <td class="title">学籍状态:</td>
       <td>${(student.state.status.name)?if_exists} [#if student.graduationDeferred]延期[/#if]</td>
-      <td class="title">[#if student.tutor??]导师[#else]班主任[/#if]:</td>
+      <td class="title">[#if student.majorTutors?size>0]导师[#else]班主任[/#if]:</td>
       <td>
-      [#if student.tutor??]${(student.tutor.name)!}[#else]${(student.state.squad.master.name)!}[/#if]
+      [#if student.majorTutors?size>0][#list student.majorTutors as t]${t.name}[#sep],[/#list][#else]${(student.state.squad.master.name)!}[/#if]
       [#if student.advisor??]&nbsp;&nbsp;学位论文导师:${student.advisor.name}[/#if]
       </td>
     </tr>

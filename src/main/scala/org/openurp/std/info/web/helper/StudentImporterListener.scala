@@ -25,7 +25,7 @@ import org.beangle.doc.transfer.importer.{AbstractImporter, ImportListener, Impo
 import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Person, Project}
 import org.openurp.base.service.UserRepo
-import org.openurp.base.std.model.{Student, StudentState}
+import org.openurp.base.std.model.{Student, StudentState, Tutorship}
 import org.openurp.std.info.model.{Contact, Examinee}
 
 import java.time.format.DateTimeFormatter
@@ -199,10 +199,11 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project:
     userRepo.createUser(student, getStdUserCode(data, student), None)
     entityDao.saveOrUpdate(person, student)
 
-    val tutorCode = data.get("tutor.code").orNull.asInstanceOf[String]
-    findTeacher(tutorCode, tr) foreach (t => student.tutor = Some(t))
+    val tutorCodes = data.get("tutor.code").orNull.asInstanceOf[String]
+    updateTutors(student, tutorCodes, tr)
+
     val advisorCode = data.get("advisor.code").orNull.asInstanceOf[String]
-    findTeacher(advisorCode, tr) foreach (t => student.advisor = Some(t))
+    updateAdvisor(student, advisorCode, tr)
     entityDao.saveOrUpdate(student)
 
     if (null != contact) {
@@ -217,19 +218,42 @@ class StudentImporterListener(entityDao: EntityDao, userRepo: UserRepo, project:
     }
   }
 
-  private def findTeacher(staffCodeName: String, tr: ImportResult): Option[Teacher] = {
+  /** 更新学生导师
+   *
+   * @param std
+   * @param staffCodeName
+   * @param tr
+   * @return
+   */
+  private def updateTutors(std: Student, staffCodeName: String, tr: ImportResult): Unit = {
+    if Strings.isNotBlank(staffCodeName) then
+      val query = OqlBuilder.from(classOf[Teacher], "t")
+      query.where("t.staff.school = :school", project.school)
+      val names = Strings.split(staffCodeName, ",")
+      if (names.length == 1) {
+        query.where("t.staff.code = :code or t.staff.name = :name", staffCodeName, staffCodeName)
+      } else {
+        query.where("t.staff.code in(:codes) or t.staff.name in (:names)", names, names)
+      }
+      val tutors = entityDao.search(query)
+      if (tutors.nonEmpty) {
+        std.updateTutors(tutors, Tutorship.Major)
+      } else {
+        tr.addFailure("找不到导师", staffCodeName)
+      }
+  }
+
+  private def updateAdvisor(std: Student, staffCodeName: String, tr: ImportResult): Unit = {
     if Strings.isNotBlank(staffCodeName) then
       val query = OqlBuilder.from(classOf[Teacher], "t")
       query.where("t.staff.school = :school", project.school)
       query.where("t.staff.code = :code or t.staff.name =:name", staffCodeName, staffCodeName)
       val tutors = entityDao.search(query)
       if (tutors.size == 1) {
-        tutors.headOption
+        std.updateTutors(tutors, Tutorship.Thesis)
       } else {
-        tr.addFailure("找不到导师", staffCodeName)
-        None
+        tr.addFailure("找不到指导老师", staffCodeName)
       }
-    else None
   }
 
   private def putStateInStudent(student: Student, state: StudentState): Unit = {
