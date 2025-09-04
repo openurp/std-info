@@ -80,6 +80,7 @@ class AlterApplyInfo(val alterApply: StdAlterApply) {
   }
 
   def getSigns(taskName: String): Iterable[String] = {
+    println((taskName, signs.find(_._1.name == taskName).map(_._2.values).size))
     signs.find(_._1.name == taskName).map(_._2.values).getOrElse(List.empty)
   }
 

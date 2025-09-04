@@ -1,12 +1,5 @@
 [#ftl]
-<style>
-  td.title{
-    padding: 0.2rem 0rem;
-    text-align: right;
-    color: #6c757d !important;
-  }
-</style>
-  <table class="table table-sm" style="table-layout:fixed">
+  <table class="table table-sm table-detail">
     <colgroup>
       <col width="13%">
       <col width="20%">

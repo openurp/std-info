@@ -57,7 +57,12 @@ class StdSearchHelper(entityDao: EntityDao, project: Project) {
     //查询导师
     Params.get("tutor.name").foreach(n => {
       if (Strings.isNotBlank(n)) {
-        builder.where("exists(from student.tutors t where t.tutor.name like :tutorName)", s"%${n.trim()}%")
+        val names = Strings.split(n)
+        if (names.length == 1) {
+          builder.where("exists(from student.tutors t where t.tutor.name like :tutorName)", s"%${n.trim()}%")
+        } else {
+          builder.where("exists(from student.tutors t where t.tutor.name in(:tutorNames))", names)
+        }
       }
     })
     //    builder.where("length(student.person.code)=18 and to_char(student.person.birthday,'yyyyMMdd')<> substr(student.person.code,7,8)")

@@ -87,13 +87,21 @@ class AlterApplyAction extends RestfulAction[StdAlterApply], ProjectSupport {
 
   def back(): View = {
     val apply = entityDao.get(classOf[StdAlterApply], getLongId("stdAlterApply"))
+
     val activityIdx = getInt("activityIdx", 0)
     val last = apply.steps.find(_.idx == activityIdx).get
     apply.steps.subtractAll(apply.steps.find(_.idx > last.idx))
     last.auditAt = None
     last.passed = None
     apply.status = last.name
-    apply.assignees = Some(last.assignee.map(_.code).mkString(","))
+    apply.processId match {
+      case None => apply.assignees = Some(last.assignee.map(_.code).mkString(","))
+      case Some(pid) =>
+        val p = Flows.getProcess(pid)
+        p.tasks find (_.name == last.name) foreach { t =>
+          apply.assignees = t.assignees
+        }
+    }
     entityDao.saveOrUpdate(apply)
     redirect("search", "设置成功")
   }

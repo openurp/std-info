@@ -6,7 +6,7 @@
     bar.addBack("${b.text("action.back")}");
   [/@]
   [#macro panel title]
-  <div class="card card-info card-outline">
+  <div class="card card-primary card-outline">
     <div class="card-header">
       <h3 class="card-title">${title}</h3>
     </div>
@@ -18,7 +18,7 @@
     [#include "/org/openurp/std/info/web/components/student_info.ftl"/]
   [/@]
 
-  <div class="card card-info card-outline">
+  <div class="card card-primary card-outline">
     <div class="card-header">
       <h3 class="card-title">基本信息</h3>
       [@b.card_tools]

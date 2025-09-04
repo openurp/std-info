@@ -59,4 +59,5 @@ class DefaultModule extends BindModule {
     bind(classOf[StdAlterationServiceImpl])
     bind(classOf[DefaultProgramProvider])
   }
+
 }

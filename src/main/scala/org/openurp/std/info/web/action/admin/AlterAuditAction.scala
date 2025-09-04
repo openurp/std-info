@@ -155,7 +155,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     var completeAndPassed = false
     rs._1.activeTasks foreach { task =>
       val process = Flows.complete(processId, task.id, Flows.payload(auditor, comments, data))
-      apply.newStep(task.name, task.assignees).audit(me, passed, comments)
+      apply.newStep(task.name, task.idx, task.assignees).audit(me, passed, comments)
       val activeTasks = process.activeTasks
       if (activeTasks.isEmpty) {
         apply.assignees = None
@@ -164,7 +164,7 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
         completeAndPassed = passed
       } else {
         val nt = activeTasks.head
-        apply.newStep(nt.name, nt.assignees)
+        apply.newStep(nt.name, nt.idx, nt.assignees)
       }
     }
     entityDao.saveOrUpdate(apply)

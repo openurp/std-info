@@ -119,7 +119,7 @@ class AlterApplyAction extends StudentSupport {
 
       var task = process.activeTasks.head
       apply.processId = Some(process.id)
-      val step = apply.newStep(task.name, task.assignees)
+      val step = apply.newStep(task.name, task.idx, task.assignees)
       step.audit(std.user, true, None)
 
       process = Flows.complete(process.id, task.id, Flows.Payload(issuer, List("提交申请"), files, env, data))
@@ -129,7 +129,7 @@ class AlterApplyAction extends StudentSupport {
         apply.status = "已办结"
       } else {
         task = activeTasks.head
-        apply.newStep(task.name, task.assignees)
+        apply.newStep(task.name, task.idx, task.assignees)
       }
     }
     //保存和记录日志
