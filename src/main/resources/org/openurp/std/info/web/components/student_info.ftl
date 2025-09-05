@@ -56,7 +56,7 @@
       <td class="title">[#if student.majorTutors?size>0]导师[#else]班主任[/#if]:</td>
       <td>
       [#if student.majorTutors?size>0][#list student.majorTutors as t]${t.name}[#sep],[/#list][#else]${(student.state.squad.master.name)!}[/#if]
-      [#if student.advisor??]&nbsp;&nbsp;学位论文导师:${student.advisor.name}[/#if]
+      [#if student.thesisTutor??]&nbsp;&nbsp;<span class="text-muted">论文指导:</span>&nbsp;${student.thesisTutor.name}[/#if]
       </td>
     </tr>
     <tr>
