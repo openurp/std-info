@@ -45,7 +45,6 @@
           [@b.radios label="是否有学籍" name="student.registed" required="true" value=student.registed?string(1, 0)/]
           [@b.startend label="入学~预计毕业" name="student.beginOn,student.graduateOn" required="true" start=student.beginOn end=student.graduateOn style="width: 120px"/]
           [@b.startend label="预计离校~最晚" name="student.endOn,student.maxEndOn" required="true" start=student.endOn end=student.maxEndOn style="width: 120px"
-          onchange="syncGraduateOn(this)"
           comment="最晚离校，不随学籍异动而变化"/]
           [@base.code type="study-types" label="学习形式" name="student.studyType.id" required="true" empty="..." value=(student.studyType.id)! /]
           [@base.teacher label="导师" name="tutor.id" empty="..." values=student.majorTutors style="width: 400px" multiple="true"/]

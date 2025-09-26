@@ -22,17 +22,19 @@ import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.webmvc.annotation.ignore
 import org.beangle.webmvc.support.ActionSupport
-import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
-import org.openurp.base.edu.model.{Direction, Major}
+import org.beangle.webmvc.view.View
+import org.openurp.base.edu.model.{Major, MajorDirection}
 import org.openurp.base.model.Project
 import org.openurp.base.std.model.{GraduateSeason, Student}
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.model.{GraduateResult, Graduation}
+import org.openurp.std.graduation.model.Graduation
 import org.openurp.std.info.web.helper.StudentPropertyExtractor
 
+/** 应届毕业生名单
+ */
 class GraduationAction extends ActionSupport, ProjectSupport, EntityAction[Student], ExportSupport[Student] {
   var entityDao: EntityDao = _
 
@@ -43,7 +45,7 @@ class GraduationAction extends ActionSupport, ProjectSupport, EntityAction[Stude
     put("stdTypes", getCodes(classOf[StdType]))
     put("departments", getDeparts)
     put("majors", findInProject(classOf[Major]))
-    put("directions", findInProject(classOf[Direction]))
+    put("directions", findInProject(classOf[MajorDirection]))
     put("graduateSeasons", findInProject(classOf[GraduateSeason]))
     forward()
   }

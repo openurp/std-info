@@ -137,41 +137,45 @@ class AlterAuditAction extends RestfulAction[StdAlterApply], ProjectSupport {
     val processId = apply.processId.get
     val rs = checkAudit(processId)
 
-    val me = getUser
-    val auditor = Flows.user(me.code, me.name)
-    val comments = get("comments")
-    val passed = getBoolean("passed", true)
+    if (Strings.isEmpty(rs._3)) {
+      val me = getUser
+      val auditor = Flows.user(me.code, me.name)
+      val comments = get("comments")
+      val passed = getBoolean("passed", true)
 
-    val formData = Params.sub("form")
-    if (formData.nonEmpty) {
-      val fd = Json.parse(apply.formDataJson).asInstanceOf[JsonObject]
-      fd.addAll(formData)
-      apply.formDataJson = fd.toJson
-    }
-    val data = new JsonObject()
-    Flows.uploadSignature(get("sign"), "/alter-apply", apply.id, auditor, data)
-    data.update("passed", passed)
-    data.addAll(formData)
-    var completeAndPassed = false
-    rs._1.activeTasks foreach { task =>
-      val process = Flows.complete(processId, task.id, Flows.payload(auditor, comments, data))
-      apply.newStep(task.name, task.idx, task.assignees).audit(me, passed, comments)
-      val activeTasks = process.activeTasks
-      if (activeTasks.isEmpty) {
-        apply.assignees = None
-        apply.status = "已办结"
-        apply.passed = Some(passed)
-        completeAndPassed = passed
-      } else {
-        val nt = activeTasks.head
-        apply.newStep(nt.name, nt.idx, nt.assignees)
+      val formData = Params.sub("form")
+      if (formData.nonEmpty) {
+        val fd = Json.parse(apply.formDataJson).asInstanceOf[JsonObject]
+        fd.addAll(formData)
+        apply.formDataJson = fd.toJson
       }
+      val data = new JsonObject()
+      Flows.uploadSignature(get("sign"), "/alter-apply", apply.id, auditor, data)
+      data.update("passed", passed)
+      data.addAll(formData)
+      var completeAndPassed = false
+      rs._1.activeTasks foreach { task =>
+        val process = Flows.complete(processId, task.id, Flows.payload(auditor, comments, data))
+        apply.newStep(task.name, task.idx, task.assignees).audit(me, passed, comments)
+        val activeTasks = process.activeTasks
+        if (activeTasks.isEmpty) {
+          apply.assignees = None
+          apply.status = "已办结"
+          apply.passed = Some(passed)
+          completeAndPassed = passed
+        } else {
+          val nt = activeTasks.head
+          apply.newStep(nt.name, nt.idx, nt.assignees)
+        }
+      }
+      entityDao.saveOrUpdate(apply)
+      if (completeAndPassed) {
+        stdAlterationService.approve(apply)
+      }
+      redirect("search", rs._3)
+    } else {
+      redirect("search", "审核成功")
     }
-    entityDao.saveOrUpdate(apply)
-    if (completeAndPassed) {
-      stdAlterationService.approve(apply)
-    }
-    redirect("search", "审核成功")
   }
 
   @mapping(value = "{id}")

@@ -31,7 +31,7 @@ import org.beangle.webmvc.annotation.response
 import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.beangle.webmvc.view.{Stream, View}
-import org.openurp.base.edu.model.{Direction, Major}
+import org.openurp.base.edu.model.{Major, MajorDirection}
 import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
 import org.openurp.base.service.Features
@@ -41,12 +41,13 @@ import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
 import org.openurp.code.std.model.{StdType, StudentStatus}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.info.model.MajorStudent
-import org.openurp.std.info.web.helper.{GraduatePropertyExtractor, StdDocHelper}
-import org.openurp.std.info.web.listener.GraduateImportListener
+import org.openurp.std.info.web.helper.{GraduateImportListener, GraduatePropertyExtractor, StdDocHelper}
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.time.LocalDate
 
+/** 毕业生信息
+ */
 class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], ImportSupport[Graduate], ProjectSupport {
 
   var studentService: StudentService = _
@@ -58,7 +59,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     put("stdTypes", getCodes(classOf[StdType]))
     put("departments", getDeparts)
     put("majors", findInProject(classOf[Major]))
-    put("directions", findInProject(classOf[Direction]))
+    put("directions", findInProject(classOf[MajorDirection]))
     put("graduateSeasons", findInProject(classOf[GraduateSeason]))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
     super.indexSetting()
@@ -204,9 +205,12 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
   }
 
   protected override def configImport(setting: ImportSetting): Unit = {
+    val project = getProject
     val fl = new ForeignerListener(entityDao)
     fl.addForeigerKey("name")
-    setting.listeners = List(fl, new GraduateImportListener(entityDao, getProject))
+    fl.addScope(classOf[GraduateSeason], Map("project" -> project))
+
+    setting.listeners = List(fl, new GraduateImportListener(entityDao, project))
   }
 
   override protected def configExport(context: ExportContext): Unit = {

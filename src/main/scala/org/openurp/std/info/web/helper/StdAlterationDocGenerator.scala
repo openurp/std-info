@@ -19,11 +19,10 @@ package org.openurp.std.info.web.helper
 
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.json.{Json, JsonObject}
-import org.beangle.commons.lang.{ClassLoaders, Strings}
-import org.beangle.commons.net.http.HttpUtils
-import org.beangle.doc.docx.{DocHelper, DocTemplate}
+import org.beangle.commons.lang.Strings
+import org.beangle.doc.docx.DocTemplate
+import org.beangle.ems.app.EmsApp
 import org.beangle.ems.app.oa.Flows
-import org.beangle.ems.app.{Ems, EmsApp}
 import org.openurp.std.alter.model.{StdAlterApply, StdAlterApplyStep}
 
 import java.io.{ByteArrayInputStream, InputStream}
@@ -79,6 +78,13 @@ object StdAlterationDocGenerator {
   }
 
   private def getPrefix(step: StdAlterApplyStep): String = {
-    s"step${step.idx}"
+    if (step.idx == 0) {
+      "申请人"
+    } else {
+      var name = step.name
+      name = Strings.replace(name, "批准", "")
+      name = Strings.replace(name, "审核", "")
+      name
+    }
   }
 }

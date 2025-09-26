@@ -23,7 +23,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.view.View
-import org.openurp.base.edu.model.{Direction, Major}
+import org.openurp.base.edu.model.{Major, MajorDirection}
 import org.openurp.base.hr.model.Teacher
 import org.openurp.base.model.{Department, Project}
 import org.openurp.base.std.model.{Grade, Squad, Student, StudentState}
@@ -77,7 +77,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("departments", getDeparts)
     val majorQuery = OqlBuilder.from(classOf[Major]).where("major.project=:project", project)
     put("majors", entityDao.search(majorQuery))
-    val directionQuery = OqlBuilder.from(classOf[Direction]).where("direction.project=:project", project)
+    val directionQuery = OqlBuilder.from(classOf[MajorDirection]).where("direction.project=:project", project)
     put("directions", entityDao.search(directionQuery))
     put("levels", getCodes(classOf[EducationLevel]))
     put("educationModes", getCodes(classOf[EducationMode]))
@@ -106,7 +106,7 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     put("grades", entityDao.findBy(classOf[Grade], "project", project))
     put("departments", project.departments)
     put("majors", entityDao.findBy(classOf[Major], "project", project))
-    put("directions", entityDao.findBy(classOf[Direction], "project", project))
+    put("directions", entityDao.findBy(classOf[MajorDirection], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
     val alterConfig = entityDao.get(classOf[AlterConfig], getLongId("alterConfig"))
@@ -257,8 +257,8 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
       case m: Major =>
         val major = entityDao.get(classOf[Major], m.id)
         (major.id.toString, major.name)
-      case di: Direction =>
-        val direction = entityDao.get(classOf[Direction], di.id)
+      case di: MajorDirection =>
+        val direction = entityDao.get(classOf[MajorDirection], di.id)
         (direction.id.toString, direction.name)
       case s: Squad =>
         val squad = entityDao.get(classOf[Squad], s.id)

@@ -21,7 +21,7 @@
         <th width="15%">${dyLabel}</th>
         [#assign grades = matrix.getColumn(dx).values?keys?sort/]
         [#list grades as grade]
-        <th>${matrix.getColumn(dx).values.get(grade)}</th>
+        <th>${matrix.getColumn(dx).values.get(grade).name}</th>
         [/#list]
         <td width="10%">合计</td>
       </thead>
@@ -33,7 +33,7 @@
       [#assign dyValues = lgmatrix.getColumn(dy).values/]
       [#list dyValues?keys?sort as k]
       <tr>
-        <td>[@b.a href="!index?${dy}.id=${k}"]${dyValues.get(k)}[/@]</td>
+        <td>[@b.a href="!index?${dy}.id=${k}"]${dyValues.get(k).name}[/@]</td>
         [#list grades as grade]
         <td>[@displayCounter lgmatrix.getCounter(k,grade)!/]</td>
         [/#list]

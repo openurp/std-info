@@ -97,7 +97,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     put("stdLabels", project.stdLabels)
     put("departments", project.departments)
     put("majors", entityDao.findBy(classOf[Major], "project", project))
-    put("directions", entityDao.findBy(classOf[Direction], "project", project))
+    put("directions", entityDao.findBy(classOf[MajorDirection], "project", project))
     put("squads", entityDao.findBy(classOf[Squad], "project", project))
 
     if (student.persisted) {
@@ -315,7 +315,7 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     val stdTypes = project.stdTypes.map(x => x.code + " " + x.name).toSeq.sorted
     val majors = findInProject(classOf[Major]).map(x => x.code + " " + x.name)
     val grades = findInProject(classOf[Grade]).map(x => x.code)
-    val directions = findInProject(classOf[Direction]).map(x => x.code + " " + x.name)
+    val directions = findInProject(classOf[MajorDirection]).map(x => x.code + " " + x.name)
     val campuses = project.campuses.map(x => x.code + " " + x.name).toSeq.sorted
     val statuses = getCodes(classOf[StudentStatus]).sortBy(_.code).map(x => x.code + " " + x.name)
 
