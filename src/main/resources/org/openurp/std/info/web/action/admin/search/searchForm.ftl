@@ -10,7 +10,7 @@
                  'contact.mobile':'移动电话',
                  'student.person.nation.name':'民族',
                  'student.person.country.name':'国家地区'}/]
-[#if advisorSupported!false][#assign fields=fields+{'student.advisor.name':'学位论文导师'}/] [/#if]
+[#if advisorSupported!false][#assign fields=fields+{'advisor.name':'学位论文导师'}/] [/#if]
 [#assign fields=fields+{'student.remark':'备注'}/]
 
 [@b.form name="studentSearchForm" id="studentSearchForm" action="!search" title="ui.searchForm" target="studentList" theme="search"]

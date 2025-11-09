@@ -23,7 +23,7 @@ import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
 import org.beangle.webmvc.context.Params
 import org.beangle.webmvc.support.helper.QueryHelper
 import org.openurp.base.model.Project
-import org.openurp.base.std.model.{Graduate, Student}
+import org.openurp.base.std.model.{Graduate, Student, Tutorship}
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 
 import java.time.LocalDate
@@ -59,14 +59,22 @@ class StdSearchHelper(entityDao: EntityDao, project: Project) {
       if (Strings.isNotBlank(n)) {
         val names = Strings.split(n)
         if (names.length == 1) {
-          builder.where("exists(from student.tutors t where t.tutor.name like :tutorName)", s"%${n.trim()}%")
+          builder.where(s"exists(from student.tutors t where t.tutorship=${Tutorship.Major.id} and t.tutor.name like :tutorName)", s"%${n.trim()}%")
         } else {
-          builder.where("exists(from student.tutors t where t.tutor.name in(:tutorNames))", names)
+          builder.where(s"exists(from student.tutors t where t.tutorship=${Tutorship.Major.id} and t.tutor.name in(:tutorNames))", names)
         }
       }
     })
-    //    builder.where("length(student.person.code)=18 and to_char(student.person.birthday,'yyyyMMdd')<> substr(student.person.code,7,8)")
-    //    builder.where("student.person.idType.id=1")
+    Params.get("advisor.name").foreach(n => {
+      if (Strings.isNotBlank(n)) {
+        val names = Strings.split(n)
+        if (names.length == 1) {
+          builder.where(s"exists(from student.tutors t where t.tutorship=${Tutorship.Thesis.id} and t.tutor.name like :tutorName)", s"%${n.trim()}%")
+        } else {
+          builder.where(s"exists(from student.tutors t where t.tutorship=${Tutorship.Thesis.id} and t.tutor.name in(:tutorNames))", names)
+        }
+      }
+    })
     builder.orderBy(Params.get(Order.OrderStr).getOrElse("student.state.grade.id desc,student.code"))
     builder.tailOrder("student.id")
     builder

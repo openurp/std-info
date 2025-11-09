@@ -51,6 +51,8 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
     given project: Project = getProject
 
     put("tutorSupported", getConfig(Features.Std.TutorSupported))
+    put("advisorSupported", getConfig(Features.Std.AdvisorSupported))
+
     put("departments", project.departments) // 院系部门
     put("stdTypes", project.stdTypes) // 学生类别
     put("majors", findInProject(classOf[Major]))

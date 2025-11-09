@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<orm>
-  <naming>
-    <profile package="org.openurp.std.info.app" pluralize="true" schema="app"/>
-    <profile package="org.beangle.ems.meta" pluralize="true" schema="app" prefix="sys_"/>
-    <profile package="org.openurp.edu.eams.system.prefer" pluralize="true" schema="app" prefix="sys_"/>
-  </naming>
-</orm>

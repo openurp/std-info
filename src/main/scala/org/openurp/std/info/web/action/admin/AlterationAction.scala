@@ -75,14 +75,11 @@ class AlterationAction extends RestfulAction[StdAlteration], ExportSupport[StdAl
     given project: Project = getProject
 
     put("departments", getDeparts)
-    val majorQuery = OqlBuilder.from(classOf[Major]).where("major.project=:project", project)
-    put("majors", entityDao.search(majorQuery))
-    val directionQuery = OqlBuilder.from(classOf[MajorDirection]).where("direction.project=:project", project)
-    put("directions", entityDao.search(directionQuery))
+    put("majors", entityDao.findBy(classOf[Major], "project", project))
+    put("directions", entityDao.findBy(classOf[MajorDirection], "project", project))
     put("levels", getCodes(classOf[EducationLevel]))
     put("educationModes", getCodes(classOf[EducationMode]))
-    val ac = OqlBuilder.from(classOf[AlterConfig], "ac").where("ac.project=:project", project)
-    put("alterConfigs", entityDao.search(ac))
+    put("alterConfigs", entityDao.findBy(classOf[AlterConfig], "project", project))
     forward()
   }
 

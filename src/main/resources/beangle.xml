@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<beangle xmlns="http://beangle.github.io/schema/framework"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://beangle.github.io/schema/framework http://beangle.github.io/schema/framework-1.0.xsd">
+  <ems app-name="std-info-webapp"/>
+
+  <cdi>
+    <module class="org.openurp.std.info.DefaultModule"/>
+    <module class="org.openurp.std.info.SmsModule"/>
+    <module class="org.openurp.std.info.CronModule"/>
+    <module class="org.openurp.starter.web.ProjectModule"/>
+    <module class="org.beangle.serializer.text.DefaultModule"/>
+    <module class="org.beangle.serializer.json.DefaultModule"/>
+    <module class="org.beangle.serializer.xml.DefaultModule"/>
+  </cdi>
+
+  <mvc>
+    <profile package="org.openurp.std.info.web.action">
+      <url path="/" suffix="" style="seo"/>
+      <interceptor name="web.Interceptor.hibernate"/>
+      <interceptor name="web.Interceptor.security"/>
+    </profile>
+  </mvc>
+
+</beangle>
