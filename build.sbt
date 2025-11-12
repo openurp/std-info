@@ -24,8 +24,8 @@ ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
 val apiVer = "0.48.1"
-val starterVer = "0.4.4"
-val baseVer = "0.4.59"
+val starterVer = "0.4.5"
+val baseVer = "0.4.60"
 val stdCoreVer = "0.0.26"
 
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
@@ -41,5 +41,4 @@ lazy val root = (project in file("."))
     common,
     libraryDependencies ++= Seq(openurp_stater_web, openurp_std_api, openurp_edu_api, openurp_base_tag),
     libraryDependencies ++= Seq(beangle_cdi, beangle_doc_docx, beangle_notify, openurp_std_core),
-    libraryDependencies ++= Seq(beangle_webmvc, beangle_ems_app)
   )
