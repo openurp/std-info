@@ -22,7 +22,7 @@ import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.{Charsets, Strings}
 import org.beangle.commons.net.http.HttpUtils
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{Operation, OqlBuilder}
 import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
@@ -413,5 +413,13 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
     get("code").foreach { code => builder.where("person.code = :code", code) }
     put("person", entityDao.first(builder))
     forward()
+  }
+
+  @ignore
+  protected override def removeAndRedirect(stds: Seq[Student]): View = {
+    val examinees = entityDao.findBy(classOf[Examinee], "std", stds)
+    val contacts = entityDao.findBy(classOf[Contact], "std", stds)
+    entityDao.execute(Operation.remove(examinees).remove(contacts).remove(stds))
+    redirect("search", "info.remove.success")
   }
 }

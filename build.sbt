@@ -40,5 +40,6 @@ lazy val root = (project in file("."))
     name := "openurp-std-info-webapp",
     common,
     libraryDependencies ++= Seq(openurp_stater_web, openurp_std_api, openurp_edu_api, openurp_base_tag),
-    libraryDependencies ++= Seq(beangle_cdi, beangle_doc_docx, beangle_notify, openurp_std_core)
+    libraryDependencies ++= Seq(beangle_cdi, beangle_doc_docx, beangle_notify, openurp_std_core),
+    libraryDependencies ++= Seq(beangle_webmvc, beangle_ems_app)
   )
