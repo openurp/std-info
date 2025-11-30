@@ -81,7 +81,6 @@ class StudentAction extends RestfulAction[Student], ExportSupport[Student], Impo
 
   override def getQueryBuilder: OqlBuilder[Student] = {
     given project: Project = getProject
-
     put("project", project)
     put("squadSupported", getConfig(Features.Std.SquadSupported))
     put("tutorSupported", getConfig(Features.Std.TutorSupported))

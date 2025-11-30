@@ -35,7 +35,7 @@ import org.openurp.base.edu.model.{Major, MajorDirection}
 import org.openurp.base.hr.model.President
 import org.openurp.base.model.Project
 import org.openurp.base.service.Features
-import org.openurp.base.std.model.{Graduate, GraduateSeason}
+import org.openurp.base.std.model.{Graduate, GraduateSeason, Student, StudentState}
 import org.openurp.base.std.service.StudentService
 import org.openurp.code.edu.model.{Degree, EducationLevel, EducationResult}
 import org.openurp.code.std.model.{StdType, StudentStatus}
@@ -158,7 +158,7 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
    */
   def batchUpdateStdState(): View = {
     val gradeId = getLongId("graduate.season")
-    val graduates = entityDao.findBy(classOf[Graduate], "season.id", gradeId)
+    val graduates = entityDao.findBy(classOf[Graduate], "season.id" -> gradeId) //, "std.id" -> 2022101522375014001L)
     val statuses = entityDao.getAll(classOf[StudentStatus])
     val results = entityDao.getAll(classOf[EducationResult])
     val resultStatus = Collections.newMap[EducationResult, StudentStatus]
@@ -169,12 +169,43 @@ class GraduateAction extends RestfulAction[Graduate], ExportSupport[Graduate], I
     graduates foreach { g =>
       resultStatus.get(g.result) match {
         case None => missingCount += 1
-        case Some(s) => studentService.graduate(g.std, g.graduateOn.orElse(g.finishOn).get, s)
+        case Some(s) => graduate(g.std, g.graduateOn.orElse(g.finishOn).get, s)
       }
     }
     if missingCount > 0 then
       redirect("search", s"成功批量更改${graduates.size - missingCount}，尚有${missingCount}个学生无法找到对应的学籍状态")
     else redirect("search", s"成功更改${graduates.size}条学籍状态")
+  }
+
+  def graduate(std: Student, endOn: LocalDate, graduated: StudentStatus): Unit = {
+    val inschool = entityDao.get(classOf[StudentStatus], 1)
+    val graduateState =
+      std.states.filter(x => x.beginOn == x.endOn).sortBy(_.endOn).lastOption.getOrElse {
+        val state = std.state.get
+        val previousDay = endOn.minusDays(1L)
+        state.endOn = previousDay
+        if (state.status == graduated) {
+          state.status = inschool
+          state.inschool = true
+        }
+        entityDao.saveOrUpdate(state)
+        val newState = new StudentState
+        newState.std = state.std
+        newState.grade = state.grade
+        newState.department = state.department
+        newState.campus = state.campus
+        newState.major = state.major
+        newState.direction = state.direction
+        newState.squad = state.squad
+        newState
+      }
+    graduateState.inschool = false
+    graduateState.status = graduated
+    graduateState.beginOn = endOn
+    graduateState.endOn = endOn
+    std.state = Option(graduateState)
+    std.endOn = endOn
+    entityDao.saveOrUpdate(graduateState, std)
   }
 
   @response
