@@ -4,7 +4,7 @@
 <div class="search-container">
     <div class="search-panel">
       [@b.form name="searchForm" action="!search" title="ui.searchForm" target="checkList" theme="search"]
-        [@b.select name="season.id" label="毕业界别" items=seasons?sort_by('graduateOn')?reverse required="true"/]
+        [@b.select name="season.id" label="毕业界别" items=seasons?sort_by('graduateIn')?reverse required="true"/]
         [@b.textfield name="thesis.std.code" label="学号"/]
         [@b.textfield name="thesis.std.name" label="姓名"/]
         [@b.textfield name="thesis.advisor" label="教师姓名"/]
