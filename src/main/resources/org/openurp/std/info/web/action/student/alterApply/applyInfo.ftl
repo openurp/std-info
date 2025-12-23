@@ -13,7 +13,7 @@
       <td class="title">异动类型：</td>
       <td>${apply.alterType.name}</td>
       <td class="title">生效日期：</td>
-      <td>${apply.alterFrom?string("yyyy-MM-dd")} ~ ${(apply.alterTo?string("yyyy-MM-dd"))!}</td>
+      <td>${(apply.alterFrom?string("yyyy-MM-dd"))!} ~ ${(apply.alterTo?string("yyyy-MM-dd"))!}</td>
       <td class="title">填写时间：</td>
       <td>${(apply.applyAt?string("yyyy-MM-dd HH:mm"))!}</td>
     </tr>

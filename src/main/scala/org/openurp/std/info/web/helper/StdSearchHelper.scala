@@ -17,12 +17,13 @@
 
 package org.openurp.std.info.web.helper
 
-import org.beangle.commons.collection.Order
+import org.beangle.commons.collection.{Collections, Order}
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{Condition, EntityDao, OqlBuilder}
-import org.beangle.webmvc.context.Params
+import org.beangle.webmvc.context.{ActionContext, Params}
 import org.beangle.webmvc.support.helper.QueryHelper
-import org.openurp.base.model.Project
+import org.openurp.base.model.{Person, Project}
+import org.openurp.base.service.{Features, ProjectConfigService}
 import org.openurp.base.std.model.{Graduate, Student, Tutorship}
 import org.openurp.std.info.model.{Contact, Examinee, Home}
 
@@ -98,5 +99,50 @@ class StdSearchHelper(entityDao: EntityDao, project: Project) {
         }
       }
     })
+  }
+
+  def setExportAttributes(configService: ProjectConfigService): Unit = {
+    val squadSupported = configService.get[Boolean](project, Features.Std.SquadSupported)
+    val tutorSupported = configService.get[Boolean](project, Features.Std.TutorSupported)
+    val advisorSupported = configService.get[Boolean](project, Features.Std.AdvisorSupported)
+
+    val std = EntityMeta(classOf[Student].getName, "学籍信息", Collections.newBuffer[PropertyMeta])
+    std.add("code" -> "学号", "name" -> "姓名", "state.grade.code" -> "年级")
+    std.add("studyType.name" -> "学习形式", "duration" -> "学制", "level.name" -> "培养层次")
+    std.add("stdType.name" -> "学生类别", "eduType.name" -> "培养类型")
+    std.add("state.department.name" -> "院系", "state.major.name" -> "专业", "state.major.code" -> "专业代码")
+    std.add("state.direction.name" -> "专业方向", "state.direction.code" -> "专业方向代码")
+    std.add("state.campus.name" -> "校区", "registed" -> "学历生", "beginOn" -> "入学日期", "endOn" -> "预计离校日期")
+    std.add("maxEndOn" -> "最晚离校日期", "remark" -> "备注", "graduationDeferred" -> "是否延期毕业")
+    std.add("graduateOn" -> "预计毕业日期", "state.status.name" -> "学籍状态")
+    if squadSupported then std.add("state.squad.name", "班级")
+    if (tutorSupported) {
+      std.add("majorTutorNames", "导师姓名")
+      std.add("majorTutors(code)", "导师工号")
+    }
+    if advisorSupported then std.add("thesisTutor.name", "论文指导教师")
+
+    val p = EntityMeta(classOf[Person].getName, "基本信息", Collections.newBuffer[PropertyMeta])
+    p.add("gender.name" -> "性别", "birthday" -> "出生日期", "nation.name" -> "民族", "country.name" -> "国家地区")
+    p.add("idType.name" -> "证件类型", "code" -> "证件号码", "politicalStatus.name" -> "政治面貌", "homeTown" -> "籍贯")
+    p.add("phoneticName" -> "姓名拼音")
+
+    val contact = EntityMeta(classOf[Contact].getName, "联系信息", Collections.newBuffer[PropertyMeta])
+    contact.add("mobile", "手机")
+    contact.add("address", "联系地址")
+    contact.add("email", "电子邮箱")
+
+    val examinee = EntityMeta(classOf[Examinee].getName, "考生信息", Collections.newBuffer[PropertyMeta])
+    examinee.add("code" -> "考生号", "examNo" -> "准考证号", "educationMode.name" -> "培养方式")
+    examinee.add("originDivision.name" -> "生源地", "schoolName" -> "毕业学校", "graduateOn" -> "毕业日期")
+    examinee.add("score" -> "录取成绩", "enrollMode.name" -> "入学方式")
+    if tutorSupported then
+      examinee.add("client" -> "委培单位")
+
+    val context = ActionContext.current
+    context.attribute("std", std)
+    context.attribute("person", p)
+    context.attribute("contact", contact)
+    context.attribute("examinee", examinee)
   }
 }

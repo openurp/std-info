@@ -2,7 +2,7 @@ import org.openurp.parent.Dependencies.*
 import org.openurp.parent.Settings.*
 
 ThisBuild / organization := "org.openurp.std.info"
-ThisBuild / version := "0.0.22-SNAPSHOT"
+ThisBuild / version := "0.0.22"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -23,10 +23,10 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Student Info"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-info/index.html"))
 
-val apiVer = "0.48.2"
-val starterVer = "0.4.8"
-val baseVer = "0.4.63"
-val stdCoreVer = "0.0.28"
+val apiVer = "0.49.0"
+val starterVer = "0.4.9"
+val baseVer = "0.4.64"
+val stdCoreVer = "0.0.29"
 
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
@@ -40,5 +40,5 @@ lazy val root = (project in file("."))
     name := "openurp-std-info-webapp",
     common,
     libraryDependencies ++= Seq(openurp_stater_web, openurp_std_api, openurp_edu_api, openurp_base_tag),
-    libraryDependencies ++= Seq(beangle_cdi, beangle_doc_docx, beangle_notify, openurp_std_core),
+    libraryDependencies ++= Seq(beangle_cdi, beangle_doc_docx, beangle_notify, openurp_std_core)
   )

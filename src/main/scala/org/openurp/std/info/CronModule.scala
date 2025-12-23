@@ -28,7 +28,7 @@ class CronModule extends BindModule {
     bind(classOf[ScheduledTaskRegistrar]).nowire("triggerTasks", "triggerTasksList")
 
     bind(classOf[StudentStateFixer]).lazyInit(false)
-    bindTask(classOf[StudentStateFixer], "0 0 8,22 * * *")
+    bindTask(classOf[StudentStateFixer], "0 0 8,14,22 * * *")
   }
 
   protected def bindTask[T <: Runnable](clazz: Class[T], expression: String): Unit = {

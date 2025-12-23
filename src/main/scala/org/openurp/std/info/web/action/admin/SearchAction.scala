@@ -96,6 +96,16 @@ class SearchAction extends ActionSupport, EntityAction[Student], ProjectSupport,
     forward()
   }
 
+  /**
+   * 显示导出字段
+   *
+   * @return
+   */
+  def displayExpAttrs(): View = {
+    new StdSearchHelper(entityDao, getProject).setExportAttributes(configService)
+    forward()
+  }
+
   @ignore
   override def configExport(context: ExportContext): Unit = {
     context.extractor = new StudentPropertyExtractor(entityDao)
